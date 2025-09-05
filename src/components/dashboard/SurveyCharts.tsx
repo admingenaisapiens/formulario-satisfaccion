@@ -144,15 +144,15 @@ export const SurveyCharts = () => {
 
   // Prepare chart data
   const barChartData = [
-    { name: 'Facilidad\nReserva', value: averages.booking_ease || 0 },
-    { name: 'Satisfacción\nEspera', value: averages.wait_time_satisfaction || 0 },
-    { name: 'Claridad\nComunicación', value: averages.communication_clarity || 0 },
-    { name: 'Amabilidad\nRecepción', value: averages.reception_friendliness || 0 },
-    { name: 'Ambiente\nClínica', value: averages.clinic_environment || 0 },
-    { name: 'Escucha\nDoctor', value: averages.doctor_listening || 0 },
-    { name: 'Claridad\nExplicación', value: averages.explanation_clarity || 0 },
-    { name: 'Tiempo\nConsulta', value: averages.consultation_time || 0 },
-    { name: 'Confianza\nTratamiento', value: averages.treatment_trust || 0 },
+    { name: 'Reserva', value: averages.booking_ease || 0 },
+    { name: 'Espera', value: averages.wait_time_satisfaction || 0 },
+    { name: 'Comunicación', value: averages.communication_clarity || 0 },
+    { name: 'Recepción', value: averages.reception_friendliness || 0 },
+    { name: 'Ambiente', value: averages.clinic_environment || 0 },
+    { name: 'Escucha', value: averages.doctor_listening || 0 },
+    { name: 'Explicación', value: averages.explanation_clarity || 0 },
+    { name: 'Tiempo', value: averages.consultation_time || 0 },
+    { name: 'Confianza', value: averages.treatment_trust || 0 },
   ];
 
   const pieChartData = [
