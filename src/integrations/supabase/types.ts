@@ -14,7 +14,87 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      doctors: {
+        Row: {
+          created_at: string
+          email: string
+          full_name: string
+          id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          full_name: string
+          id?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          full_name?: string
+          id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      survey_responses: {
+        Row: {
+          additional_comments: string | null
+          booking_ease: number
+          clinic_environment: number
+          communication_clarity: number
+          consultation_time: number
+          created_at: string
+          doctor_listening: number
+          explanation_clarity: number
+          id: string
+          nps_score: number
+          reception_friendliness: number
+          treatment_trust: number
+          updated_at: string
+          wait_time_satisfaction: number
+          waiting_time: string
+        }
+        Insert: {
+          additional_comments?: string | null
+          booking_ease: number
+          clinic_environment: number
+          communication_clarity: number
+          consultation_time: number
+          created_at?: string
+          doctor_listening: number
+          explanation_clarity: number
+          id?: string
+          nps_score: number
+          reception_friendliness: number
+          treatment_trust: number
+          updated_at?: string
+          wait_time_satisfaction: number
+          waiting_time: string
+        }
+        Update: {
+          additional_comments?: string | null
+          booking_ease?: number
+          clinic_environment?: number
+          communication_clarity?: number
+          consultation_time?: number
+          created_at?: string
+          doctor_listening?: number
+          explanation_clarity?: number
+          id?: string
+          nps_score?: number
+          reception_friendliness?: number
+          treatment_trust?: number
+          updated_at?: string
+          wait_time_satisfaction?: number
+          waiting_time?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
