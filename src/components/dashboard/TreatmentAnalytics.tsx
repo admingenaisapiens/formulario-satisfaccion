@@ -458,12 +458,15 @@ export const TreatmentAnalytics = () => {
               <div className="p-3 bg-white/20 rounded-2xl backdrop-blur-sm">
                 <Activity className="w-8 h-8" />
               </div>
-              <div>
-                <h1 className="text-4xl font-bold mb-2">Análisis de Tratamientos</h1>
-                <p className="text-blue-100 text-lg">
-                  Dashboard completo de métricas y estadísticas médicas
-                </p>
-              </div>
+            <div>
+              <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-2">Análisis de Tratamientos</h1>
+              <p className="text-blue-100 text-sm sm:text-base md:text-lg hidden sm:block">
+                Dashboard completo de métricas y estadísticas médicas
+              </p>
+              <p className="text-blue-100 text-xs sm:hidden">
+                Métricas médicas
+              </p>
+            </div>
             </div>
             <div className="absolute -right-20 -top-20 w-40 h-40 bg-white/10 rounded-full blur-3xl"></div>
             <div className="absolute -left-10 -bottom-10 w-32 h-32 bg-purple-300/20 rounded-full blur-2xl"></div>
@@ -476,15 +479,15 @@ export const TreatmentAnalytics = () => {
             <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -skew-x-12 translate-x-full group-hover:translate-x-[-200%] transition-transform duration-1000"></div>
             <CardHeader className="relative pb-2">
               <div className="flex items-center justify-between">
-                <CardTitle className="text-sm font-medium text-emerald-100">Total Tratamientos</CardTitle>
+                <CardTitle className="text-xs sm:text-sm font-medium text-emerald-100">Total Tratamientos</CardTitle>
                 <div className="p-2 bg-white/20 rounded-xl backdrop-blur-sm">
-                  <Stethoscope className="h-5 w-5" />
+                  <Stethoscope className="h-4 w-4 sm:h-5 sm:w-5" />
                 </div>
               </div>
             </CardHeader>
             <CardContent className="relative">
-              <div className="text-3xl font-bold mb-1">{surveys.length}</div>
-              <p className="text-emerald-100 text-sm">
+              <div className="text-2xl sm:text-3xl font-bold mb-1">{surveys.length}</div>
+              <p className="text-emerald-100 text-xs">
                 Consultas registradas
               </p>
             </CardContent>
@@ -494,21 +497,21 @@ export const TreatmentAnalytics = () => {
             <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -skew-x-12 translate-x-full group-hover:translate-x-[-200%] transition-transform duration-1000"></div>
             <CardHeader className="relative pb-2">
               <div className="flex items-center justify-between">
-                <CardTitle className="text-sm font-medium text-violet-100">Cita Más Frecuente</CardTitle>
+                <CardTitle className="text-xs sm:text-sm font-medium text-violet-100">Cita Más Frecuente</CardTitle>
                 <div className="p-2 bg-white/20 rounded-xl backdrop-blur-sm">
-                  <Users className="h-5 w-5" />
+                  <Users className="h-4 w-4 sm:h-5 sm:w-5" />
                 </div>
               </div>
             </CardHeader>
             <CardContent className="relative">
-              <div className="text-3xl font-bold mb-1">
+              <div className="text-2xl sm:text-3xl font-bold mb-1">
                 {appointmentTypeData.length > 0 ? 
                   appointmentTypeData.reduce((prev, current) => (prev.value > current.value) ? prev : current).name 
                   : 'N/A'
                 }
               </div>
-              <p className="text-violet-100 text-sm">
-                Tipo de consulta predominante
+              <p className="text-violet-100 text-xs">
+                Tipo predominante
               </p>
             </CardContent>
           </Card>
@@ -517,18 +520,18 @@ export const TreatmentAnalytics = () => {
             <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -skew-x-12 translate-x-full group-hover:translate-x-[-200%] transition-transform duration-1000"></div>
             <CardHeader className="relative pb-2">
               <div className="flex items-center justify-between">
-                <CardTitle className="text-sm font-medium text-orange-100">Zona Más Tratada</CardTitle>
+                <CardTitle className="text-xs sm:text-sm font-medium text-orange-100">Zona Más Tratada</CardTitle>
                 <div className="p-2 bg-white/20 rounded-xl backdrop-blur-sm">
-                  <MapPin className="h-5 w-5" />
+                  <MapPin className="h-4 w-4 sm:h-5 sm:w-5" />
                 </div>
               </div>
             </CardHeader>
             <CardContent className="relative">
-              <div className="text-3xl font-bold mb-1">
+              <div className="text-2xl sm:text-3xl font-bold mb-1">
                 {bodyZoneData.length > 0 ? bodyZoneData[0].label : 'N/A'}
               </div>
-              <p className="text-orange-100 text-sm">
-                {bodyZoneData.length > 0 ? `${bodyZoneData[0].count} casos (${bodyZoneData[0].percentage}%)` : 'Sin datos'}
+              <p className="text-orange-100 text-xs">
+                {bodyZoneData.length > 0 ? `${bodyZoneData[0].count} casos` : 'Sin datos'}
               </p>
             </CardContent>
           </Card>
@@ -545,8 +548,8 @@ export const TreatmentAnalytics = () => {
                     <Users className="w-6 h-6 text-white" />
                   </div>
                   <div>
-                    <span className="text-xl font-bold">Tipos de Cita</span>
-                    <p className="text-sm font-normal text-gray-600 mt-1">Modalidad de consulta médica</p>
+                    <span className="text-lg sm:text-xl font-bold">Tipos de Cita</span>
+                    <p className="text-xs sm:text-sm font-normal text-gray-600 mt-1">Modalidad de consulta</p>
                   </div>
                 </CardTitle>
               </CardHeader>
@@ -649,8 +652,8 @@ export const TreatmentAnalytics = () => {
                     <Stethoscope className="w-6 h-6 text-white" />
                   </div>
                   <div>
-                    <span className="text-xl font-bold">Tipos de Tratamiento</span>
-                    <p className="text-sm font-normal text-gray-600 mt-1">Terapias más utilizadas</p>
+                    <span className="text-lg sm:text-xl font-bold">Tipos de Tratamiento</span>
+                    <p className="text-xs sm:text-sm font-normal text-gray-600 mt-1">Terapias más utilizadas</p>
                   </div>
                 </CardTitle>
               </CardHeader>

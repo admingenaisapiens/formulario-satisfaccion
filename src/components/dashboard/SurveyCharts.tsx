@@ -267,9 +267,12 @@ export const SurveyCharts = () => {
               <BarChart3 className="w-8 h-8" />
             </div>
             <div>
-              <h1 className="text-4xl font-bold mb-2">Análisis de Resultados</h1>
-              <p className="text-blue-100 text-lg">
+              <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-2">Análisis de Resultados</h1>
+              <p className="text-blue-100 text-sm sm:text-base md:text-lg hidden sm:block">
                 Visualización gráfica de las respuestas de satisfacción de pacientes
+              </p>
+              <p className="text-blue-100 text-xs sm:hidden">
+                Gráficos de satisfacción
               </p>
             </div>
           </div>
@@ -286,8 +289,8 @@ export const SurveyCharts = () => {
                 <CalendarIcon className="w-6 h-6 text-white" />
               </div>
               <div>
-                <span className="text-xl font-bold">Filtro de Fecha</span>
-                <p className="text-sm font-normal text-gray-600 mt-1">Selecciona el período de tiempo para analizar los datos</p>
+                <span className="text-lg sm:text-xl font-bold">Filtro de Fecha</span>
+                <p className="text-xs sm:text-sm font-normal text-gray-600 mt-1">Selecciona el período de tiempo</p>
               </div>
             </CardTitle>
           </CardHeader>
@@ -354,8 +357,8 @@ export const SurveyCharts = () => {
           <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -skew-x-12 translate-x-full group-hover:translate-x-[-200%] transition-transform duration-1000"></div>
           <CardHeader className="relative pb-2 flex flex-row items-center justify-between space-y-0">
             <div>
-              <CardTitle className="text-sm font-medium text-blue-100">Total Respuestas</CardTitle>
-              <div className="text-3xl font-bold mb-1 mt-2">{filteredSurveys.length}</div>
+              <CardTitle className="text-xs sm:text-sm font-medium text-blue-100">Total Respuestas</CardTitle>
+              <div className="text-2xl sm:text-3xl font-bold mb-1 mt-2">{filteredSurveys.length}</div>
               <p className="text-blue-100 text-xs">Encuestas completadas</p>
             </div>
             <div className="p-3 bg-white/15 rounded-2xl backdrop-blur-sm">
@@ -368,8 +371,8 @@ export const SurveyCharts = () => {
           <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -skew-x-12 translate-x-full group-hover:translate-x-[-200%] transition-transform duration-1000"></div>
           <CardHeader className="relative pb-2 flex flex-row items-center justify-between space-y-0">
             <div>
-              <CardTitle className="text-sm font-medium text-emerald-100">Puntuación NPS</CardTitle>
-              <div className="text-3xl font-bold mb-1 mt-2">{npsData.nps}</div>
+              <CardTitle className="text-xs sm:text-sm font-medium text-emerald-100">Puntuación NPS</CardTitle>
+              <div className="text-2xl sm:text-3xl font-bold mb-1 mt-2">{npsData.nps}</div>
               <p className="text-emerald-100 text-xs">Net Promoter Score</p>
             </div>
             <div className="p-3 bg-white/15 rounded-2xl backdrop-blur-sm">
@@ -382,8 +385,8 @@ export const SurveyCharts = () => {
           <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -skew-x-12 translate-x-full group-hover:translate-x-[-200%] transition-transform duration-1000"></div>
           <CardHeader className="relative pb-2 flex flex-row items-center justify-between space-y-0">
             <div>
-              <CardTitle className="text-sm font-medium text-violet-100">Satisfacción Promedio</CardTitle>
-              <div className="text-3xl font-bold mb-1 mt-2">{Math.round(averageSatisfaction * 100) / 100}/5</div>
+              <CardTitle className="text-xs sm:text-sm font-medium text-violet-100">Satisfacción Promedio</CardTitle>
+              <div className="text-2xl sm:text-3xl font-bold mb-1 mt-2">{Math.round(averageSatisfaction * 100) / 100}/5</div>
               <p className="text-violet-100 text-xs">Promedio general</p>
             </div>
             <div className="p-3 bg-white/15 rounded-2xl backdrop-blur-sm">
@@ -396,11 +399,11 @@ export const SurveyCharts = () => {
           <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -skew-x-12 translate-x-full group-hover:translate-x-[-200%] transition-transform duration-1000"></div>
           <CardHeader className="relative pb-2 flex flex-row items-center justify-between space-y-0">
             <div>
-              <CardTitle className="text-sm font-medium text-orange-100">Con Comentarios</CardTitle>
-              <div className="text-3xl font-bold mb-1 mt-2">
+              <CardTitle className="text-xs sm:text-sm font-medium text-orange-100">Con Comentarios</CardTitle>
+              <div className="text-2xl sm:text-3xl font-bold mb-1 mt-2">
                 {filteredSurveys.filter(s => s.additional_comments && s.additional_comments.trim() !== '').length}
               </div>
-              <p className="text-orange-100 text-xs">Respuestas con feedback</p>
+              <p className="text-orange-100 text-xs">Con feedback</p>
             </div>
             <div className="p-3 bg-white/15 rounded-2xl backdrop-blur-sm">
               <MessageSquare className="h-7 w-7" />

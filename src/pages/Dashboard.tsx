@@ -93,21 +93,24 @@ export default function Dashboard() {
                 <BarChart3 className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
               </div>
               <div className="text-white">
-                <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-1">Dashboard Médico</h1>
-                <p className="text-blue-100 text-sm sm:text-base lg:text-lg hidden sm:block">
+                <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold mb-1">Dashboard Médico</h1>
+                <p className="text-blue-100 text-xs sm:text-sm md:text-base lg:text-lg hidden sm:block">
                   Sistema de Análisis de Encuestas de Satisfacción
+                </p>
+                <p className="text-blue-100 text-xs sm:hidden">
+                  Análisis de Encuestas
                 </p>
               </div>
             </div>
             <div className="flex items-center space-x-2 sm:space-x-4 w-full sm:w-auto justify-end">
-              <div className="text-right hidden lg:block bg-white/10 backdrop-blur-sm rounded-xl px-4 py-2">
-                <p className="text-sm font-medium text-white">{user.email}</p>
-                <p className="text-xs text-blue-100">Doctor Especialista</p>
+              <div className="text-right hidden lg:block bg-white/10 backdrop-blur-sm rounded-xl px-2 sm:px-4 py-1 sm:py-2">
+                <p className="text-xs sm:text-sm font-medium text-white truncate max-w-[150px]">{user.email}</p>
+                <p className="text-xs text-blue-100">Doctor</p>
               </div>
               <Button 
                 variant="outline" 
                 onClick={handleLogout}
-                className="bg-white/10 border-white/20 text-white hover:bg-white/20 backdrop-blur-sm text-sm"
+                className="bg-white/10 border-white/20 text-white hover:bg-white/20 backdrop-blur-sm text-xs sm:text-sm px-2 sm:px-4"
               >
                 <LogOut className="w-4 h-4 sm:mr-2" />
                 <span className="hidden sm:inline">Cerrar Sesión</span>
