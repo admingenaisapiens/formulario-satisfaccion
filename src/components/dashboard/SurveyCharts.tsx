@@ -401,17 +401,17 @@ export const SurveyCharts = () => {
                 explanation: { label: "Explicación", color: "hsl(var(--accent))" },
                 time: { label: "Tiempo Consulta", color: "hsl(var(--chart-1))" }
               }}
-              className="h-80"
+              className="h-72"
             >
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={barChartData} margin={{ top: 20, right: 30, left: 20, bottom: 50 }}>
+                <BarChart data={barChartData} margin={{ top: 15, right: 20, left: 15, bottom: 45 }}>
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis 
                     dataKey="category" 
                     tick={{ fontSize: 11 }}
                     angle={-45}
                     textAnchor="end"
-                    height={80}
+                    height={70}
                     interval={0}
                   />
                   <YAxis domain={[0, 5]} />
