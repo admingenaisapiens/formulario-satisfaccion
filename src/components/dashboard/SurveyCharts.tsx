@@ -348,101 +348,85 @@ export const SurveyCharts = () => {
         </CardContent>
       </Card>
 
-      {/* Enhanced Summary Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <Card className="group relative overflow-hidden border-0 shadow-xl bg-gradient-to-br from-blue-500 to-indigo-600 text-white hover:scale-105 transition-all duration-300">
-          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -skew-x-12 translate-x-full group-hover:translate-x-[-200%] transition-transform duration-1000"></div>
-          <CardHeader className="relative pb-2">
-            <div className="flex items-center justify-between">
+      {/* Enhanced Summary Cards - Improved Design */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+        <Card className="group relative overflow-hidden border-0 shadow-lg bg-gradient-to-br from-blue-500/90 to-indigo-600/90 text-white hover:scale-105 transition-all duration-300 h-32">
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -skew-x-12 translate-x-full group-hover:translate-x-[-200%] transition-transform duration-1000"></div>
+          <CardHeader className="relative pb-2 flex flex-row items-center justify-between space-y-0">
+            <div>
               <CardTitle className="text-sm font-medium text-blue-100">Total Respuestas</CardTitle>
-              <div className="p-2 bg-white/20 rounded-xl backdrop-blur-sm">
-                <Users className="h-5 w-5" />
-              </div>
+              <div className="text-3xl font-bold mb-1 mt-2">{filteredSurveys.length}</div>
+              <p className="text-blue-100 text-xs">Encuestas completadas</p>
+            </div>
+            <div className="p-3 bg-white/15 rounded-2xl backdrop-blur-sm">
+              <Users className="h-7 w-7" />
             </div>
           </CardHeader>
-          <CardContent className="relative">
-            <div className="text-3xl font-bold mb-1">{filteredSurveys.length}</div>
-            <p className="text-blue-100 text-sm">
-              Encuestas completadas
-            </p>
-          </CardContent>
         </Card>
 
-        <Card className="group relative overflow-hidden border-0 shadow-xl bg-gradient-to-br from-emerald-500 to-teal-600 text-white hover:scale-105 transition-all duration-300">
-          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -skew-x-12 translate-x-full group-hover:translate-x-[-200%] transition-transform duration-1000"></div>
-          <CardHeader className="relative pb-2">
-            <div className="flex items-center justify-between">
+        <Card className="group relative overflow-hidden border-0 shadow-lg bg-gradient-to-br from-emerald-500/90 to-teal-600/90 text-white hover:scale-105 transition-all duration-300 h-32">
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -skew-x-12 translate-x-full group-hover:translate-x-[-200%] transition-transform duration-1000"></div>
+          <CardHeader className="relative pb-2 flex flex-row items-center justify-between space-y-0">
+            <div>
               <CardTitle className="text-sm font-medium text-emerald-100">Puntuación NPS</CardTitle>
-              <div className="p-2 bg-white/20 rounded-xl backdrop-blur-sm">
-                <TrendingUp className="h-5 w-5" />
-              </div>
+              <div className="text-3xl font-bold mb-1 mt-2">{npsData.nps}</div>
+              <p className="text-emerald-100 text-xs">Net Promoter Score</p>
+            </div>
+            <div className="p-3 bg-white/15 rounded-2xl backdrop-blur-sm">
+              <TrendingUp className="h-7 w-7" />
             </div>
           </CardHeader>
-          <CardContent className="relative">
-            <div className="text-3xl font-bold mb-1">{npsData.nps}</div>
-            <p className="text-emerald-100 text-sm">
-              Net Promoter Score
-            </p>
-          </CardContent>
         </Card>
 
-        <Card className="group relative overflow-hidden border-0 shadow-xl bg-gradient-to-br from-violet-500 to-purple-600 text-white hover:scale-105 transition-all duration-300">
-          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -skew-x-12 translate-x-full group-hover:translate-x-[-200%] transition-transform duration-1000"></div>
-          <CardHeader className="relative pb-2">
-            <div className="flex items-center justify-between">
+        <Card className="group relative overflow-hidden border-0 shadow-lg bg-gradient-to-br from-violet-500/90 to-purple-600/90 text-white hover:scale-105 transition-all duration-300 h-32">
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -skew-x-12 translate-x-full group-hover:translate-x-[-200%] transition-transform duration-1000"></div>
+          <CardHeader className="relative pb-2 flex flex-row items-center justify-between space-y-0">
+            <div>
               <CardTitle className="text-sm font-medium text-violet-100">Satisfacción Promedio</CardTitle>
-              <div className="p-2 bg-white/20 rounded-xl backdrop-blur-sm">
-                <Star className="h-5 w-5" />
-              </div>
+              <div className="text-3xl font-bold mb-1 mt-2">{Math.round(averageSatisfaction * 100) / 100}/5</div>
+              <p className="text-violet-100 text-xs">Promedio general</p>
+            </div>
+            <div className="p-3 bg-white/15 rounded-2xl backdrop-blur-sm">
+              <Star className="h-7 w-7" />
             </div>
           </CardHeader>
-          <CardContent className="relative">
-            <div className="text-3xl font-bold mb-1">{Math.round(averageSatisfaction * 100) / 100}/5</div>
-            <p className="text-violet-100 text-sm">
-              Promedio general de satisfacción
-            </p>
-          </CardContent>
         </Card>
 
-        <Card className="group relative overflow-hidden border-0 shadow-xl bg-gradient-to-br from-orange-500 to-red-600 text-white hover:scale-105 transition-all duration-300">
-          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -skew-x-12 translate-x-full group-hover:translate-x-[-200%] transition-transform duration-1000"></div>
-          <CardHeader className="relative pb-2">
-            <div className="flex items-center justify-between">
+        <Card className="group relative overflow-hidden border-0 shadow-lg bg-gradient-to-br from-orange-500/90 to-red-600/90 text-white hover:scale-105 transition-all duration-300 h-32">
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -skew-x-12 translate-x-full group-hover:translate-x-[-200%] transition-transform duration-1000"></div>
+          <CardHeader className="relative pb-2 flex flex-row items-center justify-between space-y-0">
+            <div>
               <CardTitle className="text-sm font-medium text-orange-100">Con Comentarios</CardTitle>
-              <div className="p-2 bg-white/20 rounded-xl backdrop-blur-sm">
-                <MessageSquare className="h-5 w-5" />
+              <div className="text-3xl font-bold mb-1 mt-2">
+                {filteredSurveys.filter(s => s.additional_comments && s.additional_comments.trim() !== '').length}
               </div>
+              <p className="text-orange-100 text-xs">Respuestas con feedback</p>
+            </div>
+            <div className="p-3 bg-white/15 rounded-2xl backdrop-blur-sm">
+              <MessageSquare className="h-7 w-7" />
             </div>
           </CardHeader>
-          <CardContent className="relative">
-            <div className="text-3xl font-bold mb-1">
-              {filteredSurveys.filter(s => s.additional_comments && s.additional_comments.trim() !== '').length}
-            </div>
-            <p className="text-orange-100 text-sm">
-              Respuestas con feedback adicional
-            </p>
-          </CardContent>
         </Card>
       </div>
 
-      {/* Modern Charts */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        {/* Bar Chart - Enhanced */}
-        <Card className="border-0 shadow-2xl bg-white/80 backdrop-blur-sm hover:shadow-3xl transition-all duration-500 overflow-hidden col-span-1">
-          <div className="bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 p-1">
+      {/* Enhanced Modern Charts */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
+        {/* Bar Chart - Optimized */}
+        <Card className="border-0 shadow-xl bg-white/95 backdrop-blur-sm hover:shadow-2xl transition-all duration-500 overflow-hidden">
+          <div className="bg-gradient-to-r from-blue-500/80 via-indigo-500/80 to-purple-500/80 p-1">
             <CardHeader className="bg-white m-1 rounded-lg">
               <CardTitle className="flex items-center gap-3 text-gray-800">
-                <div className="p-3 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl shadow-lg">
+                <div className="p-3 bg-gradient-to-br from-blue-500/90 to-indigo-600/90 rounded-xl shadow-lg">
                   <Star className="w-6 h-6 text-white" />
                 </div>
                 <div>
-                  <span className="text-xl font-bold">Puntuaciones Promedio</span>
-                  <p className="text-sm font-normal text-gray-600 mt-1">Evaluación de cada aspecto (escala 1-5)</p>
+                  <span className="text-2xl font-bold">Puntuaciones Promedio</span>
+                  <p className="text-sm font-normal text-gray-600 mt-1">Evaluación de cada aspecto de la experiencia (1-5)</p>
                 </div>
               </CardTitle>
             </CardHeader>
           </div>
-          <CardContent className="pb-4">
+          <CardContent className="p-8 bg-gradient-to-b from-white to-blue-50/30">
             <ChartContainer
               config={{
                 promedio: { label: "Promedio", color: "hsl(var(--primary))" },
@@ -454,31 +438,31 @@ export const SurveyCharts = () => {
                 explanation: { label: "Explicación", color: "hsl(var(--accent))" },
                 time: { label: "Tiempo Consulta", color: "hsl(var(--chart-1))" }
               }}
-              className="h-80 w-full"
+              className="h-96 w-full"
             >
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart 
                   data={barChartData} 
-                  margin={{ top: 25, right: 25, left: 25, bottom: 60 }}
-                  barCategoryGap="15%"
+                  margin={{ top: 30, right: 30, left: 30, bottom: 70 }}
+                  barCategoryGap="12%"
                 >
-                  <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" opacity={0.3} />
+                  <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" opacity={0.2} />
                   <XAxis 
                     dataKey="category" 
-                    tick={{ fontSize: 12, fill: "hsl(var(--foreground))" }}
+                    tick={{ fontSize: 12, fill: "hsl(var(--foreground))", fontWeight: 500 }}
                     angle={-45}
                     textAnchor="end"
-                    height={70}
+                    height={80}
                     interval={0}
                     axisLine={{ stroke: "hsl(var(--border))" }}
                     tickLine={{ stroke: "hsl(var(--border))" }}
                   />
                   <YAxis 
                     domain={[0, 5]} 
-                    tick={{ fontSize: 12, fill: "hsl(var(--foreground))" }}
+                    tick={{ fontSize: 12, fill: "hsl(var(--foreground))", fontWeight: 500 }}
                     axisLine={{ stroke: "hsl(var(--border))" }}
                     tickLine={{ stroke: "hsl(var(--border))" }}
-                    label={{ value: 'Puntuación', angle: -90, position: 'insideLeft', style: { textAnchor: 'middle' } }}
+                    label={{ value: "Puntuación", angle: -90, position: "insideLeft", style: { textAnchor: "middle", fontWeight: 600 } }}
                   />
                   <ChartTooltip 
                     content={<ChartTooltipContent />}
@@ -486,24 +470,28 @@ export const SurveyCharts = () => {
                       `${Number(value).toFixed(1)}/5`,
                       props.payload?.fullName || name
                     ]}
-                    cursor={{ fill: 'hsl(var(--muted))', opacity: 0.2 }}
+                    cursor={{ fill: "hsl(var(--muted))", opacity: 0.15 }}
                   />
                   <Bar 
                     dataKey="promedio" 
-                    fill="hsl(var(--primary))" 
-                    radius={[4, 4, 0, 0]}
+                    fill="url(#barGradient)"
+                    radius={[6, 6, 0, 0]}
                     stroke="hsl(var(--primary))"
                     strokeWidth={1}
-                  />
+                  >
+                    {barChartData.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={`hsl(${220 + index * 15}, 70%, ${60 - index * 2}%)`} />
+                    ))}
+                  </Bar>
                 </BarChart>
               </ResponsiveContainer>
             </ChartContainer>
             
-            {/* Legend/Summary */}
-            <div className="mt-4 pt-4 border-t">
-              <div className="flex items-center justify-between text-sm text-muted-foreground">
-                <span>Promedio general:</span>
-                <span className="font-medium text-foreground">
+            {/* Enhanced Summary */}
+            <div className="mt-6 p-4 bg-gradient-to-r from-blue-50/70 to-indigo-50/70 rounded-2xl border border-blue-100/50">
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-semibold text-gray-700">Promedio General:</span>
+                <span className="text-lg font-bold text-blue-600">
                   {(Object.values(averages).reduce((sum, avg) => sum + (avg || 0), 0) / Object.keys(averages).length).toFixed(1)}/5
                 </span>
               </div>
@@ -511,77 +499,133 @@ export const SurveyCharts = () => {
           </CardContent>
         </Card>
 
-        {/* Pie Chart - NPS Distribution */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Distribución NPS</CardTitle>
-            <CardDescription>
-              Clasificación de clientes según su probabilidad de recomendación
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <ChartContainer
-              config={{
-                promotores: { label: "Promotores", color: "#22c55e" },
-                pasivos: { label: "Pasivos", color: "#f59e0b" },
-                detractores: { label: "Detractores", color: "#ef4444" }
-              }}
-              className="h-64"
-            >
-              <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-                  <Pie
-                    data={pieChartData}
-                    cx="50%"
-                    cy="50%"
-                    labelLine={false}
-                    label={({ name, value }) => `${name}: ${value}`}
-                    outerRadius={80}
-                    fill="#8884d8"
-                    dataKey="value"
-                  >
-                    {pieChartData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={entry.fill} />
-                    ))}
-                  </Pie>
-                  <ChartTooltip content={<ChartTooltipContent />} />
-                </PieChart>
-              </ResponsiveContainer>
-            </ChartContainer>
+        {/* Pie Chart - Enhanced NPS Distribution */}
+        <Card className="border-0 shadow-xl bg-white/95 backdrop-blur-sm hover:shadow-2xl transition-all duration-500 overflow-hidden">
+          <div className="bg-gradient-to-r from-emerald-500/80 via-teal-500/80 to-cyan-500/80 p-1">
+            <CardHeader className="bg-white m-1 rounded-lg">
+              <CardTitle className="flex items-center gap-3 text-gray-800">
+                <div className="p-3 bg-gradient-to-br from-emerald-500/90 to-teal-600/90 rounded-xl shadow-lg">
+                  <TrendingUp className="w-6 h-6 text-white" />
+                </div>
+                <div>
+                  <span className="text-2xl font-bold">Distribución NPS</span>
+                  <p className="text-sm font-normal text-gray-600 mt-1">Clasificación según probabilidad de recomendación</p>
+                </div>
+              </CardTitle>
+            </CardHeader>
+          </div>
+          <CardContent className="p-8 bg-gradient-to-b from-white to-emerald-50/30">
+            <div className="relative flex items-center justify-center">
+              <ChartContainer
+                config={{
+                  promotores: { label: "Promotores", color: "#10b981" },
+                  pasivos: { label: "Pasivos", color: "#f59e0b" },
+                  detractores: { label: "Detractores", color: "#ef4444" }
+                }}
+                className="h-96 w-full"
+              >
+                <ResponsiveContainer width="100%" height="100%">
+                  <PieChart>
+                    <Pie
+                      data={pieChartData}
+                      cx="50%"
+                      cy="50%"
+                      labelLine={false}
+                      label={({ name, value, percent }) => 
+                        value > 0 ? `${name}\n${value} (${(percent * 100).toFixed(0)}%)` : ""
+                      }
+                      outerRadius={130}
+                      innerRadius={45}
+                      fill="#8884d8"
+                      dataKey="value"
+                      stroke="#fff"
+                      strokeWidth={3}
+                    >
+                      {pieChartData.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={entry.fill} />
+                      ))}
+                    </Pie>
+                    <ChartTooltip content={<ChartTooltipContent />} />
+                  </PieChart>
+                </ResponsiveContainer>
+              </ChartContainer>
+              
+              {/* Central NPS Score */}
+              <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                <div className="text-center">
+                  <div className="text-4xl font-bold text-gray-800">{npsData.nps}</div>
+                  <div className="text-sm text-gray-600 font-medium">NPS Score</div>
+                </div>
+              </div>
+            </div>
+            
+            {/* Enhanced NPS Summary */}
+            <div className="mt-6 grid grid-cols-3 gap-4">
+              {[
+                { label: "Promotores", value: npsData.promoters, color: "#10b981", desc: "9-10 puntos" },
+                { label: "Pasivos", value: npsData.passives, color: "#f59e0b", desc: "7-8 puntos" },
+                { label: "Detractores", value: npsData.detractors, color: "#ef4444", desc: "0-6 puntos" }
+              ].map((item, index) => (
+                <div key={item.label} className="text-center p-4 bg-white/70 rounded-xl shadow-md border border-gray-100/50">
+                  <div className="w-4 h-4 rounded-full mx-auto mb-2" style={{ backgroundColor: item.color }}></div>
+                  <div className="text-lg font-bold" style={{ color: item.color }}>{item.value}</div>
+                  <div className="text-xs text-gray-600 font-medium">{item.label}</div>
+                  <div className="text-xs text-gray-500">{item.desc}</div>
+                </div>
+              ))}
+            </div>
           </CardContent>
         </Card>
       </div>
 
-      {/* Time Series Chart - NPS Trend */}
+      {/* Enhanced Time Series Chart */}
       {npsTimeData.length > 1 && (
-        <Card>
-          <CardHeader>
-            <CardTitle>Tendencia NPS a lo Largo del Tiempo</CardTitle>
-            <CardDescription>
-              Evolución de la puntuación NPS mensual
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
+        <Card className="border-0 shadow-xl bg-white/95 backdrop-blur-sm overflow-hidden">
+          <div className="bg-gradient-to-r from-violet-500/80 via-purple-500/80 to-indigo-500/80 p-1">
+            <CardHeader className="bg-white m-1 rounded-lg">
+              <CardTitle className="flex items-center gap-3 text-gray-800">
+                <div className="p-3 bg-gradient-to-br from-violet-500/90 to-purple-600/90 rounded-xl shadow-lg">
+                  <TrendingUp className="w-6 h-6 text-white" />
+                </div>
+                <div>
+                  <span className="text-2xl font-bold">Tendencia NPS Mensual</span>
+                  <p className="text-sm font-normal text-gray-600 mt-1">Evolución de la puntuación NPS a lo largo del tiempo</p>
+                </div>
+              </CardTitle>
+            </CardHeader>
+          </div>
+          <CardContent className="p-8 bg-gradient-to-b from-white to-violet-50/30">
             <ChartContainer
               config={{
                 nps: { label: "NPS", color: "hsl(var(--primary))" },
                 respuestas: { label: "Respuestas", color: "hsl(var(--chart-2))" }
               }}
-              className="h-64"
+              className="h-80 w-full"
             >
               <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={npsTimeData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="mes" />
-                  <YAxis />
+                <LineChart data={npsTimeData} margin={{ top: 30, right: 30, left: 30, bottom: 20 }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" opacity={0.2} />
+                  <XAxis 
+                    dataKey="mes" 
+                    tick={{ fontSize: 12, fill: "hsl(var(--foreground))", fontWeight: 500 }}
+                    axisLine={{ stroke: "hsl(var(--border))" }}
+                    tickLine={{ stroke: "hsl(var(--border))" }}
+                  />
+                  <YAxis 
+                    tick={{ fontSize: 12, fill: "hsl(var(--foreground))", fontWeight: 500 }}
+                    axisLine={{ stroke: "hsl(var(--border))" }}
+                    tickLine={{ stroke: "hsl(var(--border))" }}
+                    label={{ value: "Puntuación NPS", angle: -90, position: "insideLeft", style: { textAnchor: "middle", fontWeight: 600 } }}
+                  />
                   <ChartTooltip content={<ChartTooltipContent />} />
                   <Legend />
                   <Line 
                     type="monotone" 
                     dataKey="nps" 
                     stroke="hsl(var(--primary))" 
-                    strokeWidth={2}
-                    dot={{ fill: "hsl(var(--primary))" }}
+                    strokeWidth={3}
+                    dot={{ fill: "hsl(var(--primary))", strokeWidth: 2, r: 6 }}
+                    activeDot={{ r: 8, strokeWidth: 2 }}
                   />
                 </LineChart>
               </ResponsiveContainer>
