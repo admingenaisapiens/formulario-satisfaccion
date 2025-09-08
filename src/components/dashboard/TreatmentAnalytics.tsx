@@ -166,242 +166,417 @@ export const TreatmentAnalytics = () => {
     };
 
     const getZoneColor = (count: number) => {
-      if (count === 0) return '#e5e7eb';
+      if (count === 0) return '#f8fafc';
       if (count <= 2) return '#fef3c7';
       if (count <= 5) return '#fed7aa';
       if (count <= 10) return '#fca5a5';
-      return '#ef4444';
+      return '#dc2626';
+    };
+
+    const getZoneOpacity = (count: number) => {
+      if (count === 0) return 0.3;
+      if (count <= 2) return 0.6;
+      if (count <= 5) return 0.75;
+      if (count <= 10) return 0.85;
+      return 1;
     };
 
     return (
-      <div className="flex flex-col items-center space-y-4">
-        <svg width="200" height="400" viewBox="0 0 200 400" className="border rounded-lg bg-gray-50">
-          {/* Head */}
-          <circle 
-            cx="100" 
-            cy="40" 
-            r="25" 
-            fill="#e5e7eb" 
-            stroke="#6b7280" 
-            strokeWidth="2"
-          />
-          
-          {/* Neck */}
-          <rect x="90" y="65" width="20" height="15" fill="#e5e7eb" stroke="#6b7280" strokeWidth="1" />
-          
-          {/* Cervical Spine */}
-          <rect 
-            x="85" 
-            y="80" 
-            width="30" 
-            height="20" 
-            fill={getZoneColor(getZoneCount('columna_cervical'))} 
-            stroke="#6b7280" 
-            strokeWidth="2"
-            className="cursor-pointer"
-          />
-          <text x="100" y="92" textAnchor="middle" fontSize="10" fill="#374151">
-            C: {getZoneCount('columna_cervical')}
-          </text>
-          
-          {/* Shoulders */}
-          <circle 
-            cx="65" 
-            cy="110" 
-            r="15" 
-            fill={getZoneColor(getZoneCount('hombro'))} 
-            stroke="#6b7280" 
-            strokeWidth="2"
-            className="cursor-pointer"
-          />
-          <text x="65" y="115" textAnchor="middle" fontSize="8" fill="#374151">
-            {getZoneCount('hombro')}
-          </text>
-          
-          <circle 
-            cx="135" 
-            cy="110" 
-            r="15" 
-            fill={getZoneColor(getZoneCount('hombro'))} 
-            stroke="#6b7280" 
-            strokeWidth="2"
-            className="cursor-pointer"
-          />
-          <text x="135" y="115" textAnchor="middle" fontSize="8" fill="#374151">
-            {getZoneCount('hombro')}
-          </text>
-          
-          {/* Dorsal Spine */}
-          <rect 
-            x="85" 
-            y="100" 
-            width="30" 
-            height="60" 
-            fill={getZoneColor(getZoneCount('columna_dorsal'))} 
-            stroke="#6b7280" 
-            strokeWidth="2"
-            className="cursor-pointer"
-          />
-          <text x="100" y="135" textAnchor="middle" fontSize="10" fill="#374151">
-            D: {getZoneCount('columna_dorsal')}
-          </text>
-          
-          {/* Arms */}
-          <rect x="40" y="120" width="20" height="80" fill="#e5e7eb" stroke="#6b7280" strokeWidth="1" />
-          <rect x="140" y="120" width="20" height="80" fill="#e5e7eb" stroke="#6b7280" strokeWidth="1" />
-          
-          {/* Elbows */}
-          <circle 
-            cx="50" 
-            cy="160" 
-            r="8" 
-            fill={getZoneColor(getZoneCount('codo'))} 
-            stroke="#6b7280" 
-            strokeWidth="2"
-            className="cursor-pointer"
-          />
-          <text x="50" y="165" textAnchor="middle" fontSize="8" fill="#374151">
-            {getZoneCount('codo')}
-          </text>
-          
-          <circle 
-            cx="150" 
-            cy="160" 
-            r="8" 
-            fill={getZoneColor(getZoneCount('codo'))} 
-            stroke="#6b7280" 
-            strokeWidth="2"
-            className="cursor-pointer"
-          />
-          <text x="150" y="165" textAnchor="middle" fontSize="8" fill="#374151">
-            {getZoneCount('codo')}
-          </text>
-          
-          {/* Hands */}
-          <circle 
-            cx="50" 
-            cy="210" 
-            r="12" 
-            fill={getZoneColor(getZoneCount('mano'))} 
-            stroke="#6b7280" 
-            strokeWidth="2"
-            className="cursor-pointer"
-          />
-          <text x="50" y="215" textAnchor="middle" fontSize="8" fill="#374151">
-            {getZoneCount('mano')}
-          </text>
-          
-          <circle 
-            cx="150" 
-            cy="210" 
-            r="12" 
-            fill={getZoneColor(getZoneCount('mano'))} 
-            stroke="#6b7280" 
-            strokeWidth="2"
-            className="cursor-pointer"
-          />
-          <text x="150" y="215" textAnchor="middle" fontSize="8" fill="#374151">
-            {getZoneCount('mano')}
-          </text>
-          
-          {/* Lumbar Spine */}
-          <rect 
-            x="85" 
-            y="160" 
-            width="30" 
-            height="40" 
-            fill={getZoneColor(getZoneCount('columna_lumbar'))} 
-            stroke="#6b7280" 
-            strokeWidth="2"
-            className="cursor-pointer"
-          />
-          <text x="100" y="185" textAnchor="middle" fontSize="10" fill="#374151">
-            L: {getZoneCount('columna_lumbar')}
-          </text>
-          
-          {/* Legs */}
-          <rect x="80" y="200" width="18" height="120" fill="#e5e7eb" stroke="#6b7280" strokeWidth="1" />
-          <rect x="102" y="200" width="18" height="120" fill="#e5e7eb" stroke="#6b7280" strokeWidth="1" />
-          
-          {/* Knees */}
-          <circle 
-            cx="89" 
-            cy="260" 
-            r="12" 
-            fill={getZoneColor(getZoneCount('rodilla'))} 
-            stroke="#6b7280" 
-            strokeWidth="2"
-            className="cursor-pointer"
-          />
-          <text x="89" y="265" textAnchor="middle" fontSize="8" fill="#374151">
-            {getZoneCount('rodilla')}
-          </text>
-          
-          <circle 
-            cx="111" 
-            cy="260" 
-            r="12" 
-            fill={getZoneColor(getZoneCount('rodilla'))} 
-            stroke="#6b7280" 
-            strokeWidth="2"
-            className="cursor-pointer"
-          />
-          <text x="111" y="265" textAnchor="middle" fontSize="8" fill="#374151">
-            {getZoneCount('rodilla')}
-          </text>
-          
-          {/* Feet */}
-          <ellipse 
-            cx="89" 
-            cy="340" 
-            rx="15" 
-            ry="25" 
-            fill={getZoneColor(getZoneCount('pie'))} 
-            stroke="#6b7280" 
-            strokeWidth="2"
-            className="cursor-pointer"
-          />
-          <text x="89" y="345" textAnchor="middle" fontSize="8" fill="#374151">
-            {getZoneCount('pie')}
-          </text>
-          
-          <ellipse 
-            cx="111" 
-            cy="340" 
-            rx="15" 
-            ry="25" 
-            fill={getZoneColor(getZoneCount('pie'))} 
-            stroke="#6b7280" 
-            strokeWidth="2"
-            className="cursor-pointer"
-          />
-          <text x="111" y="345" textAnchor="middle" fontSize="8" fill="#374151">
-            {getZoneCount('pie')}
-          </text>
-        </svg>
+      <div className="flex flex-col items-center space-y-6 p-4">
+        <div className="relative">
+          <svg 
+            width="280" 
+            height="500" 
+            viewBox="0 0 280 500" 
+            className="border-2 border-gray-200 rounded-2xl bg-gradient-to-b from-blue-50 to-white shadow-lg"
+          >
+            {/* Background grid for medical chart feel */}
+            <defs>
+              <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
+                <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#e2e8f0" strokeWidth="0.5" opacity="0.3"/>
+              </pattern>
+              
+              {/* Gradients for better visual depth */}
+              <radialGradient id="bodyGradient" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stopColor="#f1f5f9" />
+                <stop offset="100%" stopColor="#e2e8f0" />
+              </radialGradient>
+              
+              <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+                <feGaussianBlur in="SourceAlpha" stdDeviation="3"/>
+                <feOffset dx="2" dy="2" result="offset"/>
+                <feFlood floodColor="#0000001a"/>
+                <feComposite in2="offset" operator="in"/>
+                <feMerge>
+                  <feMergeNode/>
+                  <feMergeNode in="SourceGraphic"/>
+                </feMerge>
+              </filter>
+            </defs>
+            
+            <rect width="100%" height="100%" fill="url(#grid)" />
+            
+            {/* Head - More detailed and anatomical */}
+            <ellipse 
+              cx="140" 
+              cy="50" 
+              rx="32" 
+              ry="35" 
+              fill="url(#bodyGradient)" 
+              stroke="#64748b" 
+              strokeWidth="2"
+              filter="url(#shadow)"
+            />
+            <circle cx="132" cy="45" r="2" fill="#374151" />
+            <circle cx="148" cy="45" r="2" fill="#374151" />
+            <path d="M 135 55 Q 140 58 145 55" stroke="#374151" strokeWidth="1.5" fill="none" strokeLinecap="round" />
+            
+            {/* Neck - More realistic proportions */}
+            <rect 
+              x="125" 
+              y="85" 
+              width="30" 
+              height="20" 
+              rx="5" 
+              fill="url(#bodyGradient)" 
+              stroke="#64748b" 
+              strokeWidth="1"
+            />
+            
+            {/* Cervical Spine - Enhanced design */}
+            <g className="hover:opacity-80 transition-all duration-300 cursor-pointer">
+              <rect 
+                x="115" 
+                y="105" 
+                width="50" 
+                height="25" 
+                rx="8" 
+                fill={getZoneColor(getZoneCount('columna_cervical'))} 
+                fillOpacity={getZoneOpacity(getZoneCount('columna_cervical'))}
+                stroke="#4f46e5" 
+                strokeWidth="2"
+                filter="url(#shadow)"
+              />
+              <text x="140" y="120" textAnchor="middle" fontSize="12" fontWeight="bold" fill="#1e293b">
+                C: {getZoneCount('columna_cervical')}
+              </text>
+              <text x="140" y="132" textAnchor="middle" fontSize="8" fill="#64748b">
+                Cervical
+              </text>
+            </g>
+            
+            {/* Shoulders - More anatomical shape */}
+            <g className="hover:opacity-80 transition-all duration-300 cursor-pointer">
+              <ellipse 
+                cx="85" 
+                cy="145" 
+                rx="22" 
+                ry="18" 
+                fill={getZoneColor(getZoneCount('hombro'))} 
+                fillOpacity={getZoneOpacity(getZoneCount('hombro'))}
+                stroke="#059669" 
+                strokeWidth="2"
+                filter="url(#shadow)"
+              />
+              <text x="85" y="150" textAnchor="middle" fontSize="10" fontWeight="bold" fill="#1e293b">
+                {getZoneCount('hombro')}
+              </text>
+            </g>
+            
+            <g className="hover:opacity-80 transition-all duration-300 cursor-pointer">
+              <ellipse 
+                cx="195" 
+                cy="145" 
+                rx="22" 
+                ry="18" 
+                fill={getZoneColor(getZoneCount('hombro'))} 
+                fillOpacity={getZoneOpacity(getZoneCount('hombro'))}
+                stroke="#059669" 
+                strokeWidth="2"
+                filter="url(#shadow)"
+              />
+              <text x="195" y="150" textAnchor="middle" fontSize="10" fontWeight="bold" fill="#1e293b">
+                {getZoneCount('hombro')}
+              </text>
+            </g>
+            
+            {/* Dorsal Spine - Enhanced with vertebrae indication */}
+            <g className="hover:opacity-80 transition-all duration-300 cursor-pointer">
+              <rect 
+                x="115" 
+                y="130" 
+                width="50" 
+                height="80" 
+                rx="12" 
+                fill={getZoneColor(getZoneCount('columna_dorsal'))} 
+                fillOpacity={getZoneOpacity(getZoneCount('columna_dorsal'))}
+                stroke="#7c3aed" 
+                strokeWidth="2"
+                filter="url(#shadow)"
+              />
+              {/* Vertebrae lines */}
+              {[0, 1, 2, 3, 4].map(i => (
+                <line 
+                  key={i}
+                  x1="120" 
+                  y1={140 + i * 14} 
+                  x2="160" 
+                  y2={140 + i * 14} 
+                  stroke="#6d28d9" 
+                  strokeWidth="1" 
+                  opacity="0.6"
+                />
+              ))}
+              <text x="140" y="175" textAnchor="middle" fontSize="12" fontWeight="bold" fill="#1e293b">
+                D: {getZoneCount('columna_dorsal')}
+              </text>
+              <text x="140" y="187" textAnchor="middle" fontSize="8" fill="#64748b">
+                Dorsal
+              </text>
+            </g>
+            
+            {/* Arms - More realistic anatomy */}
+            <rect x="50" y="160" width="28" height="100" rx="14" fill="url(#bodyGradient)" stroke="#64748b" strokeWidth="1" />
+            <rect x="202" y="160" width="28" height="100" rx="14" fill="url(#bodyGradient)" stroke="#64748b" strokeWidth="1" />
+            
+            {/* Elbows - Enhanced design */}
+            <g className="hover:opacity-80 transition-all duration-300 cursor-pointer">
+              <circle 
+                cx="64" 
+                cy="210" 
+                r="14" 
+                fill={getZoneColor(getZoneCount('codo'))} 
+                fillOpacity={getZoneOpacity(getZoneCount('codo'))}
+                stroke="#ea580c" 
+                strokeWidth="2"
+                filter="url(#shadow)"
+              />
+              <text x="64" y="215" textAnchor="middle" fontSize="9" fontWeight="bold" fill="#1e293b">
+                {getZoneCount('codo')}
+              </text>
+            </g>
+            
+            <g className="hover:opacity-80 transition-all duration-300 cursor-pointer">
+              <circle 
+                cx="216" 
+                cy="210" 
+                r="14" 
+                fill={getZoneColor(getZoneCount('codo'))} 
+                fillOpacity={getZoneOpacity(getZoneCount('codo'))}
+                stroke="#ea580c" 
+                strokeWidth="2"
+                filter="url(#shadow)"
+              />
+              <text x="216" y="215" textAnchor="middle" fontSize="9" fontWeight="bold" fill="#1e293b">
+                {getZoneCount('codo')}
+              </text>
+            </g>
+            
+            {/* Hands - More detailed */}
+            <g className="hover:opacity-80 transition-all duration-300 cursor-pointer">
+              <ellipse 
+                cx="64" 
+                cy="275" 
+                rx="16" 
+                ry="20" 
+                fill={getZoneColor(getZoneCount('mano'))} 
+                fillOpacity={getZoneOpacity(getZoneCount('mano'))}
+                stroke="#0891b2" 
+                strokeWidth="2"
+                filter="url(#shadow)"
+              />
+              {/* Finger indication lines */}
+              <path d="M 56 265 L 58 255 M 60 265 L 62 255 M 64 265 L 66 255 M 68 265 L 70 255 M 72 265 L 74 255" 
+                    stroke="#0891b2" strokeWidth="1" opacity="0.6" />
+              <text x="64" y="280" textAnchor="middle" fontSize="9" fontWeight="bold" fill="#1e293b">
+                {getZoneCount('mano')}
+              </text>
+            </g>
+            
+            <g className="hover:opacity-80 transition-all duration-300 cursor-pointer">
+              <ellipse 
+                cx="216" 
+                cy="275" 
+                rx="16" 
+                ry="20" 
+                fill={getZoneColor(getZoneCount('mano'))} 
+                fillOpacity={getZoneOpacity(getZoneCount('mano'))}
+                stroke="#0891b2" 
+                strokeWidth="2"
+                filter="url(#shadow)"
+              />
+              <path d="M 208 265 L 206 255 M 212 265 L 210 255 M 216 265 L 214 255 M 220 265 L 218 255 M 224 265 L 222 255" 
+                    stroke="#0891b2" strokeWidth="1" opacity="0.6" />
+              <text x="216" y="280" textAnchor="middle" fontSize="9" fontWeight="bold" fill="#1e293b">
+                {getZoneCount('mano')}
+              </text>
+            </g>
+            
+            {/* Lumbar Spine - Enhanced */}
+            <g className="hover:opacity-80 transition-all duration-300 cursor-pointer">
+              <rect 
+                x="115" 
+                y="210" 
+                width="50" 
+                height="55" 
+                rx="12" 
+                fill={getZoneColor(getZoneCount('columna_lumbar'))} 
+                fillOpacity={getZoneOpacity(getZoneCount('columna_lumbar'))}
+                stroke="#dc2626" 
+                strokeWidth="2"
+                filter="url(#shadow)"
+              />
+              {/* Lumbar vertebrae */}
+              {[0, 1, 2, 3].map(i => (
+                <line 
+                  key={i}
+                  x1="120" 
+                  y1={220 + i * 11} 
+                  x2="160" 
+                  y2={220 + i * 11} 
+                  stroke="#b91c1c" 
+                  strokeWidth="1" 
+                  opacity="0.6"
+                />
+              ))}
+              <text x="140" y="242" textAnchor="middle" fontSize="12" fontWeight="bold" fill="#1e293b">
+                L: {getZoneCount('columna_lumbar')}
+              </text>
+              <text x="140" y="254" textAnchor="middle" fontSize="8" fill="#64748b">
+                Lumbar
+              </text>
+            </g>
+            
+            {/* Legs - More anatomical */}
+            <rect x="110" y="265" width="25" height="140" rx="12" fill="url(#bodyGradient)" stroke="#64748b" strokeWidth="1" />
+            <rect x="145" y="265" width="25" height="140" rx="12" fill="url(#bodyGradient)" stroke="#64748b" strokeWidth="1" />
+            
+            {/* Knees - Enhanced design */}
+            <g className="hover:opacity-80 transition-all duration-300 cursor-pointer">
+              <ellipse 
+                cx="122" 
+                cy="335" 
+                rx="18" 
+                ry="15" 
+                fill={getZoneColor(getZoneCount('rodilla'))} 
+                fillOpacity={getZoneOpacity(getZoneCount('rodilla'))}
+                stroke="#16a34a" 
+                strokeWidth="2"
+                filter="url(#shadow)"
+              />
+              <circle cx="122" cy="335" r="3" fill="#15803d" opacity="0.6" />
+              <text x="122" y="340" textAnchor="middle" fontSize="9" fontWeight="bold" fill="#1e293b">
+                {getZoneCount('rodilla')}
+              </text>
+            </g>
+            
+            <g className="hover:opacity-80 transition-all duration-300 cursor-pointer">
+              <ellipse 
+                cx="158" 
+                cy="335" 
+                rx="18" 
+                ry="15" 
+                fill={getZoneColor(getZoneCount('rodilla'))} 
+                fillOpacity={getZoneOpacity(getZoneCount('rodilla'))}
+                stroke="#16a34a" 
+                strokeWidth="2"
+                filter="url(#shadow)"
+              />
+              <circle cx="158" cy="335" r="3" fill="#15803d" opacity="0.6" />
+              <text x="158" y="340" textAnchor="middle" fontSize="9" fontWeight="bold" fill="#1e293b">
+                {getZoneCount('rodilla')}
+              </text>
+            </g>
+            
+            {/* Feet - More detailed and anatomical */}
+            <g className="hover:opacity-80 transition-all duration-300 cursor-pointer">
+              <ellipse 
+                cx="122" 
+                cy="430" 
+                rx="20" 
+                ry="30" 
+                fill={getZoneColor(getZoneCount('pie'))} 
+                fillOpacity={getZoneOpacity(getZoneCount('pie'))}
+                stroke="#7c2d12" 
+                strokeWidth="2"
+                filter="url(#shadow)"
+              />
+              {/* Toe indication */}
+              <ellipse cx="122" cy="415" rx="12" ry="8" fill="none" stroke="#7c2d12" strokeWidth="1" opacity="0.4" />
+              <text x="122" y="435" textAnchor="middle" fontSize="9" fontWeight="bold" fill="#1e293b">
+                {getZoneCount('pie')}
+              </text>
+            </g>
+            
+            <g className="hover:opacity-80 transition-all duration-300 cursor-pointer">
+              <ellipse 
+                cx="158" 
+                cy="430" 
+                rx="20" 
+                ry="30" 
+                fill={getZoneColor(getZoneCount('pie'))} 
+                fillOpacity={getZoneOpacity(getZoneCount('pie'))}
+                stroke="#7c2d12" 
+                strokeWidth="2"
+                filter="url(#shadow)"
+              />
+              <ellipse cx="158" cy="415" rx="12" ry="8" fill="none" stroke="#7c2d12" strokeWidth="1" opacity="0.4" />
+              <text x="158" y="435" textAnchor="middle" fontSize="9" fontWeight="bold" fill="#1e293b">
+                {getZoneCount('pie')}
+              </text>
+            </g>
+            
+            {/* Medical cross decoration */}
+            <g transform="translate(250, 20)" opacity="0.1">
+              <path d="M 0 8 L 8 8 L 8 0 L 16 0 L 16 8 L 24 8 L 24 16 L 16 16 L 16 24 L 8 24 L 8 16 L 0 16 Z" fill="#ef4444" />
+            </g>
+          </svg>
+        </div>
         
-        {/* Legend */}
-        <div className="flex flex-wrap gap-2 text-xs">
-          <div className="flex items-center gap-1">
-            <div className="w-3 h-3 bg-gray-300 rounded"></div>
-            <span>0</span>
+        {/* Enhanced Legend with better styling */}
+        <div className="bg-white p-4 rounded-xl border-2 border-gray-100 shadow-sm">
+          <h4 className="text-sm font-semibold text-gray-700 mb-3 text-center">Intensidad de Tratamientos</h4>
+          <div className="flex flex-wrap justify-center gap-3 text-xs">
+            <div className="flex items-center gap-2 bg-gray-50 px-3 py-2 rounded-lg">
+              <div className="w-4 h-4 bg-gray-200 rounded border"></div>
+              <span className="font-medium">0 casos</span>
+            </div>
+            <div className="flex items-center gap-2 bg-yellow-50 px-3 py-2 rounded-lg">
+              <div className="w-4 h-4 bg-yellow-200 rounded border"></div>
+              <span className="font-medium">1-2 casos</span>
+            </div>
+            <div className="flex items-center gap-2 bg-orange-50 px-3 py-2 rounded-lg">
+              <div className="w-4 h-4 bg-orange-300 rounded border"></div>
+              <span className="font-medium">3-5 casos</span>
+            </div>
+            <div className="flex items-center gap-2 bg-red-50 px-3 py-2 rounded-lg">
+              <div className="w-4 h-4 bg-red-300 rounded border"></div>
+              <span className="font-medium">6-10 casos</span>
+            </div>
+            <div className="flex items-center gap-2 bg-red-100 px-3 py-2 rounded-lg">
+              <div className="w-4 h-4 bg-red-600 rounded border"></div>
+              <span className="font-medium">10+ casos</span>
+            </div>
           </div>
-          <div className="flex items-center gap-1">
-            <div className="w-3 h-3 bg-yellow-200 rounded"></div>
-            <span>1-2</span>
-          </div>
-          <div className="flex items-center gap-1">
-            <div className="w-3 h-3 bg-orange-300 rounded"></div>
-            <span>3-5</span>
-          </div>
-          <div className="flex items-center gap-1">
-            <div className="w-3 h-3 bg-red-300 rounded"></div>
-            <span>6-10</span>
-          </div>
-          <div className="flex items-center gap-1">
-            <div className="w-3 h-3 bg-red-500 rounded"></div>
-            <span>10+</span>
-          </div>
+        </div>
+        
+        {/* Body zone quick stats */}
+        <div className="grid grid-cols-2 gap-2 text-xs w-full max-w-xs">
+          {bodyZoneData.slice(0, 4).map((zone, index) => (
+            <div key={zone.zone} className="flex items-center justify-between bg-white px-3 py-2 rounded-lg border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
+              <span className="font-medium text-gray-700">{zone.label}</span>
+              <div className="flex items-center gap-1">
+                <div 
+                  className="w-3 h-3 rounded-full border"
+                  style={{ 
+                    backgroundColor: getZoneColor(zone.count),
+                    opacity: getZoneOpacity(zone.count)
+                  }}
+                ></div>
+                <span className="font-bold text-gray-800">{zone.count}</span>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     );
@@ -560,41 +735,92 @@ export const TreatmentAnalytics = () => {
           </CardContent>
         </Card>
 
-        {/* Body Zones */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Mapa Corporal de Tratamientos</CardTitle>
-            <CardDescription>
-              Zonas del cuerpo más tratadas (intensidad por color)
+        {/* Body Zones - Enhanced Card */}
+        <Card className="border-2 border-blue-100 shadow-lg hover:shadow-xl transition-all duration-300">
+          <CardHeader className="bg-gradient-to-r from-blue-50 to-indigo-50 border-b border-blue-100">
+            <CardTitle className="flex items-center gap-2 text-blue-900">
+              <div className="p-2 bg-blue-100 rounded-full">
+                <MapPin className="w-5 h-5 text-blue-600" />
+              </div>
+              Mapa Corporal de Tratamientos
+            </CardTitle>
+            <CardDescription className="text-blue-700">
+              Diagrama anatómico con zonas del cuerpo más tratadas (intensidad por color y opacidad)
             </CardDescription>
           </CardHeader>
-          <CardContent>
+          <CardContent className="p-6 bg-gradient-to-b from-white to-blue-50">
             <HumanBodyDiagram bodyZoneData={bodyZoneData} />
           </CardContent>
         </Card>
       </div>
 
       {/* Detailed Body Zone Statistics */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Estadísticas Detalladas por Zona</CardTitle>
-          <CardDescription>
-            Frecuencia de tratamientos por zona del cuerpo
+      <Card className="border-2 border-slate-100 shadow-lg">
+        <CardHeader className="bg-gradient-to-r from-slate-50 to-gray-50 border-b border-slate-100">
+          <CardTitle className="flex items-center gap-2 text-slate-800">
+            <div className="p-2 bg-slate-100 rounded-full">
+              <Activity className="w-5 h-5 text-slate-600" />
+            </div>
+            Estadísticas Detalladas por Zona
+          </CardTitle>
+          <CardDescription className="text-slate-600">
+            Frecuencia de tratamientos por zona del cuerpo con análisis visual
           </CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="p-6">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {bodyZoneData.map((zone, index) => (
-              <div key={zone.zone} className="flex items-center justify-between p-3 border rounded-lg">
-                <div>
-                  <h4 className="font-medium">{zone.label}</h4>
-                  <p className="text-sm text-muted-foreground">{zone.percentage}% del total</p>
+              <div 
+                key={zone.zone} 
+                className="group flex items-center justify-between p-4 bg-gradient-to-r from-white to-gray-50 border-2 border-gray-100 rounded-xl hover:border-blue-200 hover:shadow-md transition-all duration-300 hover:scale-105"
+              >
+                <div className="flex items-center gap-3">
+                  <div 
+                    className="w-4 h-4 rounded-full border-2 border-gray-300 shadow-sm"
+                    style={{ 
+                      backgroundColor: zone.count === 0 ? '#f8fafc' : 
+                                     zone.count <= 2 ? '#fef3c7' : 
+                                     zone.count <= 5 ? '#fed7aa' : 
+                                     zone.count <= 10 ? '#fca5a5' : '#dc2626',
+                      opacity: zone.count === 0 ? 0.3 :
+                               zone.count <= 2 ? 0.6 :
+                               zone.count <= 5 ? 0.75 :
+                               zone.count <= 10 ? 0.85 : 1
+                    }}
+                  ></div>
+                  <div>
+                    <h4 className="font-semibold text-gray-800 group-hover:text-blue-700 transition-colors">
+                      {zone.label}
+                    </h4>
+                    <p className="text-sm text-gray-500">
+                      {zone.percentage}% del total
+                    </p>
+                  </div>
                 </div>
-                <Badge variant="secondary" className="ml-2">
-                  {zone.count}
-                </Badge>
+                <div className="flex flex-col items-end">
+                  <Badge 
+                    variant="secondary" 
+                    className="bg-blue-100 text-blue-800 border border-blue-200 font-bold group-hover:bg-blue-200 transition-colors"
+                  >
+                    {zone.count}
+                  </Badge>
+                  <span className="text-xs text-gray-400 mt-1">casos</span>
+                </div>
               </div>
             ))}
+          </div>
+          
+          {/* Summary bar */}
+          <div className="mt-6 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl border-2 border-blue-100">
+            <div className="flex items-center justify-between">
+              <div>
+                <h4 className="font-semibold text-blue-900">Resumen Total</h4>
+                <p className="text-sm text-blue-700">Tratamientos registrados por zona</p>
+              </div>
+              <div className="text-2xl font-bold text-blue-800">
+                {bodyZoneData.reduce((sum, zone) => sum + zone.count, 0)} casos
+              </div>
+            </div>
           </div>
         </CardContent>
       </Card>
