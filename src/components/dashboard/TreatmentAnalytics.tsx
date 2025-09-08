@@ -740,7 +740,7 @@ export const TreatmentAnalytics = () => {
               {/* Scrollable content area for treatment breakdown */}
               <div className="flex-1 overflow-y-auto">
                 {/* Resumen compacto con porcentajes */}
-                <div className="grid grid-cols-2 gap-4 mb-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mb-4">
                   {treatmentTypeData
                     .filter(item => item.value > 0)
                     .slice(0, 6)
@@ -748,19 +748,19 @@ export const TreatmentAnalytics = () => {
                       const total = treatmentTypeData.reduce((sum, data) => sum + data.value, 0);
                       const percentage = total > 0 ? ((item.value / total) * 100).toFixed(1) : 0;
                       return (
-                         <div key={item.treatment} className="flex items-center justify-between bg-white/70 p-2 sm:p-3 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 border border-gray-100">
-                           <div className="flex items-center gap-2 sm:gap-3">
+                         <div key={item.treatment} className="flex items-center justify-between bg-white/70 p-2 sm:p-3 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 border border-gray-100 min-w-0">
+                           <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
                              <div 
-                               className="w-3 h-3 sm:w-4 sm:h-4 rounded-full shadow-lg border-2 border-white"
+                               className="w-3 h-3 sm:w-4 sm:h-4 rounded-full shadow-lg border-2 border-white flex-shrink-0"
                                style={{ backgroundColor: item.fill }}
                              />
-                             <div>
-                               <span className="font-semibold text-gray-800 text-xs sm:text-sm">{item.treatment}</span>
+                             <div className="min-w-0 flex-1">
+                               <span className="font-semibold text-gray-800 text-xs sm:text-sm block truncate">{item.treatment}</span>
                                <div className="text-xs text-gray-600">{item.value} casos</div>
                              </div>
                            </div>
-                           <div className="text-right">
-                             <div className="text-sm sm:text-lg font-bold" style={{ color: item.fill }}>
+                           <div className="text-right flex-shrink-0 ml-2">
+                             <div className="text-xs sm:text-base font-bold whitespace-nowrap" style={{ color: item.fill }}>
                                {percentage}%
                              </div>
                            </div>
