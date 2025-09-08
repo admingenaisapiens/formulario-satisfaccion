@@ -122,11 +122,11 @@ export const TreatmentAnalytics = () => {
     return Object.entries(counts).map(([name, value]) => ({
       name,
       value,
-      fill: name === 'Presencial' ? 'hsl(var(--chart-1))' : 'hsl(var(--chart-2))'
+      fill: name === 'Presencial' ? '#10b981' : '#3b82f6' // Verde para presencial, azul para telemática
     }));
   }, [surveys]);
 
-  // Process treatment types
+  // Process treatment types for pie chart
   const treatmentTypeData = useMemo(() => {
     // Define all possible treatment types to ensure they all appear
     const allTreatmentTypes = [
@@ -151,8 +151,25 @@ export const TreatmentAnalytics = () => {
       counts[treatment] = (counts[treatment] || 0) + 1;
     });
 
+    // Define colors for each treatment type
+    const colors = [
+      '#8b5cf6', // violet
+      '#06b6d4', // cyan
+      '#f59e0b', // amber
+      '#ef4444', // red
+      '#10b981', // emerald
+      '#f97316', // orange
+      '#6b7280'  // gray
+    ];
+
     return Object.entries(counts)
-      .map(([treatment, count]) => ({ treatment, count }))
+      .map(([treatment, count], index) => ({ 
+        treatment, 
+        count,
+        name: treatment,
+        value: count,
+        fill: colors[index % colors.length]
+      }))
       .sort((a, b) => b.count - a.count);
   }, [surveys]);
 
@@ -608,43 +625,46 @@ export const TreatmentAnalytics = () => {
             </CardTitle>
           </CardHeader>
           <CardContent className="p-6 bg-gradient-to-b from-white to-violet-50">
-            <div className="mb-6">
+            <div className="flex items-center justify-center mb-6">
               <ChartContainer
                 config={{
-                  count: { label: "Cantidad", color: "hsl(var(--chart-3))" }
+                  fisioterapia: { label: "Fisioterapia", color: "#8b5cf6" },
+                  osteopatia: { label: "Osteopatía", color: "#06b6d4" },
+                  readaptacion: { label: "Readaptación", color: "#f59e0b" },
+                  puncion_seca: { label: "Punción Seca", color: "#ef4444" },
+                  electrolisis: { label: "Electrólisis", color: "#10b981" },
+                  terapia_manual: { label: "Terapia Manual", color: "#f97316" },
+                  otro: { label: "Otro", color: "#6b7280" }
                 }}
-                 className="h-64 w-full"
+                className="h-48 w-full"
               >
                 <ResponsiveContainer width="100%" height="100%">
-                  <BarChart 
-                     data={treatmentTypeData} 
-                     margin={{ top: 20, right: 20, left: 20, bottom: 80 }}
-                     barCategoryGap="15%"
-                  >
-                    <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" opacity={0.6} />
-                    <XAxis 
-                      dataKey="treatment" 
-                      angle={-45}
-                      textAnchor="end"
-                       height={100}
-                       fontSize={9}
-                      interval={0}
-                      stroke="#64748b"
-                    />
-                     <YAxis 
-                       stroke="#64748b" 
-                       fontSize={10}
-                       allowDecimals={false}
-                       tickCount={6}
-                     />
+                  <PieChart>
+                    <Pie
+                      data={treatmentTypeData}
+                      cx="50%"
+                      cy="50%"
+                      labelLine={false}
+                      outerRadius={70}
+                      fill="#8884d8"
+                      dataKey="value"
+                      stroke="#fff"
+                      strokeWidth={3}
+                    >
+                      {treatmentTypeData.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={entry.fill} />
+                      ))}
+                    </Pie>
                     <ChartTooltip 
-                      content={({ active, payload, label }) => {
+                      content={({ active, payload }) => {
                         if (active && payload && payload.length) {
+                          const data = payload[0];
+                          const total = treatmentTypeData.reduce((sum, item) => sum + item.value, 0);
                           return (
                             <div className="bg-white p-3 rounded-lg shadow-lg border">
-                              <p className="font-semibold text-gray-800">{label}</p>
+                              <p className="font-semibold text-gray-800">{data.name}</p>
                               <p className="text-sm text-gray-600">
-                                {payload[0].value} tratamientos
+                                {data.value} tratamientos ({total > 0 ? (((data.payload?.value || 0) / total) * 100).toFixed(1) : 0}%)
                               </p>
                             </div>
                           );
@@ -652,14 +672,7 @@ export const TreatmentAnalytics = () => {
                         return null;
                       }}
                     />
-                    <Bar 
-                      dataKey="count" 
-                      fill="hsl(var(--chart-3))" 
-                      radius={[4, 4, 0, 0]}
-                      stroke="#fff"
-                      strokeWidth={1}
-                    />
-                  </BarChart>
+                  </PieChart>
                 </ResponsiveContainer>
               </ChartContainer>
             </div>
@@ -670,15 +683,10 @@ export const TreatmentAnalytics = () => {
                 {treatmentTypeData.map((item, index) => (
                   <div key={item.treatment} className="flex items-center justify-between py-2 px-3 bg-white rounded-lg border border-violet-100 shadow-sm hover:shadow-md transition-shadow">
                     <div className="flex items-center gap-2">
-                      <div className={`w-2 h-6 rounded ${
-                        index === 0 ? 'bg-violet-600' : 
-                        index === 1 ? 'bg-violet-500' : 
-                        index === 2 ? 'bg-violet-400' : 
-                        index === 3 ? 'bg-violet-300' : 
-                        index === 4 ? 'bg-violet-200' : 
-                        index === 5 ? 'bg-violet-100' : 
-                        'bg-gray-200'
-                      }`} />
+                       <div 
+                         className="w-3 h-3 rounded-full border"
+                         style={{ backgroundColor: item.fill }}
+                       />
                       <span className="font-medium text-gray-700 text-sm">{item.treatment}</span>
                     </div>
                     <Badge variant="secondary" className="bg-violet-100 text-violet-800 border border-violet-200 font-bold">
