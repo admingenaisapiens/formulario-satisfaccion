@@ -429,7 +429,7 @@ export const SurveyForm = () => {
                   name="doctor_listening"
                   render={({ field }) => (
                     <FormItem className="space-y-3">
-                      <FormLabel className="text-base font-medium">¿Sentiste que el doctor/profesional te escuchó atentamente y prestó interés en tus preocupaciones?</FormLabel>
+                      <FormLabel className="text-base font-medium">¿La comunicación con el doctor/profesional fue fluida y te sentiste escuchado/a?</FormLabel>
                       <FormControl>
                         <RadioGroup
                           onValueChange={(value) => field.onChange(parseInt(value))}
@@ -437,11 +437,11 @@ export const SurveyForm = () => {
                           className="flex flex-wrap gap-4"
                         >
                           {[
-                            { value: 1, label: 'Nada bien' },
-                            { value: 2, label: 'No muy bien' },
+                            { value: 1, label: 'No, nada fluida ni escuchado/a' },
+                            { value: 2, label: 'No muy fluida' },
                             { value: 3, label: 'Normal' },
-                            { value: 4, label: 'Bien' },
-                            { value: 5, label: 'Muy bien' }
+                            { value: 4, label: 'Sí, fluida' },
+                            { value: 5, label: 'Sí, muy fluida y escuchado/a' }
                           ].map((option) => (
                             <div key={option.value} className="flex items-center space-x-2">
                               <RadioGroupItem value={option.value.toString()} id={`listening-${option.value}`} />
