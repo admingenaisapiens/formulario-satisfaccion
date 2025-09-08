@@ -496,100 +496,187 @@ export const TreatmentAnalytics = () => {
         </Card>
       </div>
 
-      {/* Charts Grid */}
-      <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
-        {/* Appointment Types */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Tipos de Cita</CardTitle>
-            <CardDescription>
-              Distribución entre citas presenciales y telemáticas
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <ChartContainer
-              config={{
-                presencial: { label: "Presencial", color: "hsl(var(--chart-1))" },
-                telematica: { label: "Telemática", color: "hsl(var(--chart-2))" }
-              }}
-              className="h-64"
-            >
-              <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-                  <Pie
-                    data={appointmentTypeData}
-                    cx="50%"
-                    cy="50%"
-                    labelLine={false}
-                    label={({ name, value, percent }) => `${name}: ${value} (${(percent * 100).toFixed(0)}%)`}
-                    outerRadius={80}
-                    fill="#8884d8"
-                    dataKey="value"
-                  >
-                    {appointmentTypeData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={entry.fill} />
-                    ))}
-                  </Pie>
-                  <ChartTooltip content={<ChartTooltipContent />} />
-                </PieChart>
-              </ResponsiveContainer>
-            </ChartContainer>
-          </CardContent>
-        </Card>
-
-        {/* Treatment Types */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Tipos de Tratamiento</CardTitle>
-            <CardDescription>
-              Tratamientos más realizados
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <ChartContainer
-              config={{
-                count: { label: "Cantidad", color: "hsl(var(--primary))" }
-              }}
-              className="h-64"
-            >
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={treatmentTypeData} margin={{ top: 20, right: 20, left: 20, bottom: 60 }}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis 
-                    dataKey="treatment" 
-                    angle={-45}
-                    textAnchor="end"
-                    height={80}
-                    fontSize={10}
-                    interval={0}
-                  />
-                  <YAxis />
-                  <ChartTooltip content={<ChartTooltipContent />} />
-                  <Bar dataKey="count" fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} />
-                </BarChart>
-              </ResponsiveContainer>
-            </ChartContainer>
-          </CardContent>
-        </Card>
-
-        {/* Body Zones - Enhanced Card */}
-        <Card className="border-2 border-blue-100 shadow-lg hover:shadow-xl transition-all duration-300">
-          <CardHeader className="bg-gradient-to-r from-blue-50 to-indigo-50 border-b border-blue-100">
-            <CardTitle className="flex items-center gap-2 text-blue-900">
-              <div className="p-2 bg-blue-100 rounded-full">
-                <MapPin className="w-5 h-5 text-blue-600" />
+      {/* Analytics Cards - Improved Layout */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+        {/* Appointment Types - Enhanced */}
+        <Card className="border-2 border-emerald-100 shadow-lg hover:shadow-xl transition-all duration-300">
+          <CardHeader className="bg-gradient-to-r from-emerald-50 to-teal-50 border-b border-emerald-100">
+            <CardTitle className="flex items-center gap-3 text-emerald-900">
+              <div className="p-2 bg-emerald-100 rounded-full">
+                <Users className="w-5 h-5 text-emerald-600" />
               </div>
-              Mapa Corporal de Tratamientos
+              <div>
+                <span className="text-lg font-bold">Tipos de Cita</span>
+                <p className="text-sm font-normal text-emerald-700 mt-1">Modalidad de consulta médica</p>
+              </div>
             </CardTitle>
-            <CardDescription className="text-blue-700">
-              Diagrama anatómico con zonas del cuerpo más tratadas (intensidad por color y opacidad)
-            </CardDescription>
           </CardHeader>
-          <CardContent className="p-6 bg-gradient-to-b from-white to-blue-50">
-            <HumanBodyDiagram bodyZoneData={bodyZoneData} />
+          <CardContent className="p-6 bg-gradient-to-b from-white to-emerald-50">
+            <div className="flex items-center justify-center mb-6">
+              <ChartContainer
+                config={{
+                  presencial: { label: "Presencial", color: "hsl(var(--chart-1))" },
+                  telematica: { label: "Telemática", color: "hsl(var(--chart-2))" }
+                }}
+                className="h-48 w-full"
+              >
+                <ResponsiveContainer width="100%" height="100%">
+                  <PieChart>
+                    <Pie
+                      data={appointmentTypeData}
+                      cx="50%"
+                      cy="50%"
+                      labelLine={false}
+                      outerRadius={70}
+                      fill="#8884d8"
+                      dataKey="value"
+                      stroke="#fff"
+                      strokeWidth={3}
+                    >
+                      {appointmentTypeData.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={entry.fill} />
+                      ))}
+                    </Pie>
+                    <ChartTooltip 
+                      content={({ active, payload }) => {
+                        if (active && payload && payload.length) {
+                          const data = payload[0];
+                          return (
+                            <div className="bg-white p-3 rounded-lg shadow-lg border">
+                              <p className="font-semibold text-gray-800">{data.name}</p>
+                               <p className="text-sm text-gray-600">
+                                 {data.value} citas ({(((data.payload?.value || 0) / appointmentTypeData.reduce((sum, item) => sum + item.value, 0)) * 100).toFixed(1)}%)
+                               </p>
+                            </div>
+                          );
+                        }
+                        return null;
+                      }}
+                    />
+                  </PieChart>
+                </ResponsiveContainer>
+              </ChartContainer>
+            </div>
+            {/* Quick stats for appointment types */}
+            <div className="grid grid-cols-2 gap-3">
+              {appointmentTypeData.map((item, index) => (
+                <div key={item.name} className="flex items-center justify-between bg-white p-3 rounded-lg border border-emerald-100 shadow-sm">
+                  <div className="flex items-center gap-2">
+                    <div 
+                      className="w-3 h-3 rounded-full"
+                      style={{ backgroundColor: item.fill }}
+                    />
+                    <span className="font-medium text-gray-700 text-sm">{item.name}</span>
+                  </div>
+                  <Badge variant="secondary" className="bg-emerald-100 text-emerald-800 border border-emerald-200">
+                    {item.value}
+                  </Badge>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Treatment Types - Enhanced */}
+        <Card className="border-2 border-violet-100 shadow-lg hover:shadow-xl transition-all duration-300">
+          <CardHeader className="bg-gradient-to-r from-violet-50 to-purple-50 border-b border-violet-100">
+            <CardTitle className="flex items-center gap-3 text-violet-900">
+              <div className="p-2 bg-violet-100 rounded-full">
+                <Stethoscope className="w-5 h-5 text-violet-600" />
+              </div>
+              <div>
+                <span className="text-lg font-bold">Tipos de Tratamiento</span>
+                <p className="text-sm font-normal text-violet-700 mt-1">Terapias más utilizadas</p>
+              </div>
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="p-6 bg-gradient-to-b from-white to-violet-50">
+            <div className="mb-6">
+              <ChartContainer
+                config={{
+                  count: { label: "Cantidad", color: "hsl(var(--chart-3))" }
+                }}
+                className="h-48 w-full"
+              >
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart 
+                    data={treatmentTypeData.slice(0, 6)} 
+                    margin={{ top: 20, right: 20, left: 20, bottom: 60 }}
+                    barCategoryGap="20%"
+                  >
+                    <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" opacity={0.6} />
+                    <XAxis 
+                      dataKey="treatment" 
+                      angle={-45}
+                      textAnchor="end"
+                      height={80}
+                      fontSize={10}
+                      interval={0}
+                      stroke="#64748b"
+                    />
+                    <YAxis stroke="#64748b" fontSize={10} />
+                    <ChartTooltip 
+                      content={({ active, payload, label }) => {
+                        if (active && payload && payload.length) {
+                          return (
+                            <div className="bg-white p-3 rounded-lg shadow-lg border">
+                              <p className="font-semibold text-gray-800">{label}</p>
+                              <p className="text-sm text-gray-600">
+                                {payload[0].value} tratamientos
+                              </p>
+                            </div>
+                          );
+                        }
+                        return null;
+                      }}
+                    />
+                    <Bar 
+                      dataKey="count" 
+                      fill="hsl(var(--chart-3))" 
+                      radius={[4, 4, 0, 0]}
+                      stroke="#fff"
+                      strokeWidth={1}
+                    />
+                  </BarChart>
+                </ResponsiveContainer>
+              </ChartContainer>
+            </div>
+            {/* Top treatments summary */}
+            <div className="space-y-2">
+              <h4 className="text-sm font-semibold text-violet-800 mb-3">Tratamientos Principales</h4>
+              {treatmentTypeData.slice(0, 3).map((item, index) => (
+                <div key={item.treatment} className="flex items-center justify-between py-2 px-3 bg-white rounded-lg border border-violet-100 shadow-sm">
+                  <div className="flex items-center gap-2">
+                    <div className={`w-2 h-6 rounded ${index === 0 ? 'bg-violet-500' : index === 1 ? 'bg-violet-400' : 'bg-violet-300'}`} />
+                    <span className="font-medium text-gray-700 text-sm">{item.treatment}</span>
+                  </div>
+                  <Badge variant="secondary" className="bg-violet-100 text-violet-800 border border-violet-200">
+                    {item.count}
+                  </Badge>
+                </div>
+              ))}
+            </div>
           </CardContent>
         </Card>
       </div>
+
+      {/* Body Zones - Full Width Card */}
+      <Card className="border-2 border-blue-100 shadow-lg hover:shadow-xl transition-all duration-300 mb-6">
+        <CardHeader className="bg-gradient-to-r from-blue-50 to-indigo-50 border-b border-blue-100">
+          <CardTitle className="flex items-center gap-2 text-blue-900">
+            <div className="p-2 bg-blue-100 rounded-full">
+              <MapPin className="w-5 h-5 text-blue-600" />
+            </div>
+            Mapa Corporal de Tratamientos
+          </CardTitle>
+          <CardDescription className="text-blue-700">
+            Diagrama anatómico con zonas del cuerpo más tratadas (intensidad por color y opacidad)
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="p-6 bg-gradient-to-b from-white to-blue-50">
+          <HumanBodyDiagram bodyZoneData={bodyZoneData} />
+        </CardContent>
+      </Card>
 
       {/* Detailed Body Zone Statistics */}
       <Card className="border-2 border-slate-100 shadow-lg">
