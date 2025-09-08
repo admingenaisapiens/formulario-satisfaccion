@@ -732,7 +732,7 @@ export const TreatmentAnalytics = () => {
                     <div className="text-2xl font-bold text-gray-800">
                       {treatmentTypeData.reduce((sum, item) => sum + item.value, 0)}
                     </div>
-                    <div className="text-sm text-gray-600 font-medium">Tratamientos</div>
+                    <div className="text-xs text-gray-600 font-medium">Tratamientos</div>
                   </div>
                 </div>
               </div>
