@@ -429,7 +429,7 @@ export const SurveyForm = () => {
                   name="doctor_listening"
                   render={({ field }) => (
                     <FormItem className="space-y-3">
-                      <FormLabel className="text-base font-medium">¿Qué tan bien te escuchó el doctor/profesional durante la consulta?</FormLabel>
+                      <FormLabel className="text-base font-medium">¿Sentiste que el doctor/profesional te escuchó atentamente y prestó interés en tus preocupaciones?</FormLabel>
                       <FormControl>
                         <RadioGroup
                           onValueChange={(value) => field.onChange(parseInt(value))}
