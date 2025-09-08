@@ -15,16 +15,28 @@ import { useToast } from '@/hooks/use-toast';
 import { Heart, ClipboardCheck } from 'lucide-react';
 
 const surveySchema = z.object({
-  booking_ease: z.number().min(1).max(5),
-  wait_time_satisfaction: z.number().min(1).max(5),
+  // Sección 1: Experiencia General y Reserva
+  website_design_rating: z.number().min(1).max(5),
   communication_clarity: z.number().min(1).max(5),
+  
+  // Sección 2: Tipo de Cita y Tratamiento  
+  appointment_type: z.enum(['presencial', 'telematica']),
+  treatment_type: z.string().min(1),
+  other_treatment: z.string().optional(),
+  body_area: z.string().min(1),
+  other_body_area: z.string().optional(),
+  
+  // Sección 3: Experiencia en la Consulta
   reception_friendliness: z.number().min(1).max(5),
   waiting_time: z.enum(['less_than_5', '5_to_15', '15_to_30', 'more_than_30']),
   clinic_environment: z.number().min(1).max(5),
+  
+  // Sección 4: Experiencia con el Doctor/Profesional
   doctor_listening: z.number().min(1).max(5),
   explanation_clarity: z.number().min(1).max(5),
   consultation_time: z.number().min(1).max(5),
-  treatment_trust: z.number().min(1).max(5),
+  
+  // Sección 5: Valoración Global
   nps_score: z.number().min(0).max(10),
   additional_comments: z.string().optional(),
 });
@@ -39,16 +51,19 @@ export const SurveyForm = () => {
   const form = useForm<SurveyFormData>({
     resolver: zodResolver(surveySchema),
     defaultValues: {
-      booking_ease: 3,
-      wait_time_satisfaction: 3,
+      website_design_rating: 3,
       communication_clarity: 3,
+      appointment_type: 'presencial',
+      treatment_type: '',
+      other_treatment: '',
+      body_area: '',
+      other_body_area: '',
       reception_friendliness: 3,
       waiting_time: 'less_than_5',
       clinic_environment: 3,
       doctor_listening: 3,
       explanation_clarity: 3,
       consultation_time: 3,
-      treatment_trust: 3,
       nps_score: 5,
       additional_comments: '',
     },
@@ -60,18 +75,25 @@ export const SurveyForm = () => {
       const { error } = await supabase
         .from('survey_responses')
         .insert([{
-          booking_ease: data.booking_ease,
-          wait_time_satisfaction: data.wait_time_satisfaction,
+          website_design_rating: data.website_design_rating,
           communication_clarity: data.communication_clarity,
+          appointment_type: data.appointment_type,
+          treatment_type: data.treatment_type,
+          other_treatment: data.other_treatment || null,
+          body_area: data.body_area,
+          other_body_area: data.other_body_area || null,
           reception_friendliness: data.reception_friendliness,
           waiting_time: data.waiting_time,
           clinic_environment: data.clinic_environment,
           doctor_listening: data.doctor_listening,
           explanation_clarity: data.explanation_clarity,
           consultation_time: data.consultation_time,
-          treatment_trust: data.treatment_trust,
           nps_score: data.nps_score,
           additional_comments: data.additional_comments || null,
+          // Keep compatibility with old fields by setting default values
+          booking_ease: 3,
+          wait_time_satisfaction: 3,
+          treatment_trust: 3,
         }]);
 
       if (error) throw error;
@@ -105,13 +127,19 @@ export const SurveyForm = () => {
             <RadioGroup
               onValueChange={(value) => field.onChange(parseInt(value))}
               value={field.value?.toString()}
-              className="flex space-x-4"
+              className="flex flex-wrap gap-4"
             >
-              {[1, 2, 3, 4, 5].map((rating) => (
-                <div key={rating} className="flex items-center space-x-2">
-                  <RadioGroupItem value={rating.toString()} id={`${name}-${rating}`} />
-                  <label htmlFor={`${name}-${rating}`} className="text-sm font-medium cursor-pointer">
-                    {rating}
+              {[
+                { value: 1, label: 'No, en absoluto' },
+                { value: 2, label: 'No mucho' },
+                { value: 3, label: 'Normal' },
+                { value: 4, label: 'Sí' },
+                { value: 5, label: 'Sí, mucho' }
+              ].map((option) => (
+                <div key={option.value} className="flex items-center space-x-2">
+                  <RadioGroupItem value={option.value.toString()} id={`${name}-${option.value}`} />
+                  <label htmlFor={`${name}-${option.value}`} className="text-sm font-medium cursor-pointer">
+                    {option.label}
                   </label>
                 </div>
               ))}
@@ -156,38 +184,179 @@ export const SurveyForm = () => {
 
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+            {/* Sección 1: Experiencia General y Reserva */}
             <Card>
               <CardHeader>
-                <CardTitle className="text-xl text-primary">Experiencia General y Reserva</CardTitle>
+                <CardTitle className="text-xl text-primary">Sección 1: Experiencia General y Reserva</CardTitle>
               </CardHeader>
               <CardContent className="space-y-6">
                 <RatingField
-                  name="booking_ease"
-                  label="¿Qué tan fácil fue reservar tu cita?"
-                  description="1 = Muy Difícil, 5 = Muy Fácil"
-                />
-                <RatingField
-                  name="wait_time_satisfaction"
-                  label="¿Estás satisfecho/a con el tiempo de espera para obtener una cita?"
-                  description="1 = Muy Insatisfecho/a, 5 = Totalmente Satisfecho/a"
+                  name="website_design_rating"
+                  label="¿Te gustó el diseño y la facilidad de uso de nuestra página web para reservar tu cita?"
                 />
                 <RatingField
                   name="communication_clarity"
-                  label="¿Fue clara y útil la comunicación previa a tu cita?"
-                  description="1 = No, nada clara, 5 = Sí, muy clara y útil"
+                  label="¿Fue clara y útil la comunicación previa a tu cita (correos, recordatorios, instrucciones)?"
                 />
               </CardContent>
             </Card>
 
+            {/* Sección 2: Tipo de Cita y Tratamiento */}
             <Card>
               <CardHeader>
-                <CardTitle className="text-xl text-primary">Experiencia en la Consulta</CardTitle>
+                <CardTitle className="text-xl text-primary">Sección 2: Tipo de Cita y Tratamiento</CardTitle>
               </CardHeader>
               <CardContent className="space-y-6">
-                <RatingField
+                <FormField
+                  control={form.control}
+                  name="appointment_type"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-base font-medium">¿Qué tipo de cita tuviste?</FormLabel>
+                      <FormControl>
+                        <RadioGroup onValueChange={field.onChange} value={field.value} className="flex gap-6">
+                          <div className="flex items-center space-x-2">
+                            <RadioGroupItem value="presencial" id="presencial" />
+                            <label htmlFor="presencial" className="text-sm font-medium cursor-pointer">Presencial</label>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <RadioGroupItem value="telematica" id="telematica" />
+                            <label htmlFor="telematica" className="text-sm font-medium cursor-pointer">Telemática</label>
+                          </div>
+                        </RadioGroup>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="treatment_type"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-base font-medium">¿Qué tratamiento te realizaste en esta cita?</FormLabel>
+                      <Select onValueChange={field.onChange} value={field.value}>
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Selecciona el tratamiento" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value="fisioterapia">Fisioterapia</SelectItem>
+                          <SelectItem value="osteopatia">Osteopatía</SelectItem>
+                          <SelectItem value="readaptacion">Readaptación</SelectItem>
+                          <SelectItem value="puncion_seca">Punción Seca</SelectItem>
+                          <SelectItem value="electrolisis">Electrólisis</SelectItem>
+                          <SelectItem value="terapia_manual">Terapia Manual</SelectItem>
+                          <SelectItem value="otro">Otro</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                {form.watch('treatment_type') === 'otro' && (
+                  <FormField
+                    control={form.control}
+                    name="other_treatment"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-base font-medium">Especifica el tratamiento:</FormLabel>
+                        <FormControl>
+                          <Input placeholder="Escribe el tratamiento..." {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                )}
+
+                <FormField
+                  control={form.control}
+                  name="body_area"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-base font-medium">¿Qué patología o zona del cuerpo principal fuiste a tratar?</FormLabel>
+                      <Select onValueChange={field.onChange} value={field.value}>
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Selecciona la zona del cuerpo" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value="rodilla">Rodilla</SelectItem>
+                          <SelectItem value="hombro">Hombro</SelectItem>
+                          <SelectItem value="pie">Pie</SelectItem>
+                          <SelectItem value="mano">Mano</SelectItem>
+                          <SelectItem value="codo">Codo</SelectItem>
+                          <SelectItem value="columna_cervical">Columna Cervical</SelectItem>
+                          <SelectItem value="columna_dorsal">Columna Dorsal</SelectItem>
+                          <SelectItem value="columna_lumbar">Columna Lumbar</SelectItem>
+                          <SelectItem value="otra">Otra</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                {form.watch('body_area') === 'otra' && (
+                  <FormField
+                    control={form.control}
+                    name="other_body_area"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-base font-medium">Especifica la zona del cuerpo:</FormLabel>
+                        <FormControl>
+                          <Input placeholder="Escribe la zona del cuerpo..." {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                )}
+              </CardContent>
+            </Card>
+
+            {/* Sección 3: Experiencia en la Consulta */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-xl text-primary">Sección 3: Experiencia en la Consulta (Recepción y Ambiente)</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <FormField
+                  control={form.control}
                   name="reception_friendliness"
-                  label="¿Cómo calificarías la amabilidad y profesionalidad del personal de recepción?"
-                  description="1 = Malo, 5 = Excelente"
+                  render={({ field }) => (
+                    <FormItem className="space-y-3">
+                      <FormLabel className="text-base font-medium">¿Cómo calificarías la amabilidad y profesionalidad del personal de recepción?</FormLabel>
+                      <FormControl>
+                        <RadioGroup
+                          onValueChange={(value) => field.onChange(parseInt(value))}
+                          value={field.value?.toString()}
+                          className="flex flex-wrap gap-4"
+                        >
+                          {[
+                            { value: 1, label: 'Malo' },
+                            { value: 2, label: 'Regular' },
+                            { value: 3, label: 'Bueno' },
+                            { value: 4, label: 'Muy bueno' },
+                            { value: 5, label: 'Excelente' }
+                          ].map((option) => (
+                            <div key={option.value} className="flex items-center space-x-2">
+                              <RadioGroupItem value={option.value.toString()} id={`reception-${option.value}`} />
+                              <label htmlFor={`reception-${option.value}`} className="text-sm font-medium cursor-pointer">
+                                {option.label}
+                              </label>
+                            </div>
+                          ))}
+                        </RadioGroup>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
                 />
                 
                 <FormField
@@ -195,9 +364,7 @@ export const SurveyForm = () => {
                   name="waiting_time"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-base font-medium">
-                        ¿Cuál fue tu tiempo de espera en la consulta el día de tu cita?
-                      </FormLabel>
+                      <FormLabel className="text-base font-medium">¿Cuál fue tu tiempo de espera en la consulta el día de tu cita?</FormLabel>
                       <Select onValueChange={field.onChange} value={field.value}>
                         <FormControl>
                           <SelectTrigger>
@@ -206,8 +373,8 @@ export const SurveyForm = () => {
                         </FormControl>
                         <SelectContent>
                           <SelectItem value="less_than_5">Menos de 5 minutos</SelectItem>
-                          <SelectItem value="5_to_15">5-15 minutos</SelectItem>
-                          <SelectItem value="15_to_30">15-30 minutos</SelectItem>
+                          <SelectItem value="5_to_15">Entre 5 y 15 minutos</SelectItem>
+                          <SelectItem value="15_to_30">Entre 15 y 30 minutos</SelectItem>
                           <SelectItem value="more_than_30">Más de 30 minutos</SelectItem>
                         </SelectContent>
                       </Select>
@@ -216,45 +383,152 @@ export const SurveyForm = () => {
                   )}
                 />
 
-                <RatingField
+                <FormField
+                  control={form.control}
                   name="clinic_environment"
-                  label="¿Consideras que el ambiente de la consulta fue agradable?"
-                  description="1 = Desagradable, 5 = Sí, muy agradable"
+                  render={({ field }) => (
+                    <FormItem className="space-y-3">
+                      <FormLabel className="text-base font-medium">¿Consideras que el ambiente de la consulta (limpieza, comodidad) fue agradable?</FormLabel>
+                      <FormControl>
+                        <RadioGroup
+                          onValueChange={(value) => field.onChange(parseInt(value))}
+                          value={field.value?.toString()}
+                          className="flex flex-wrap gap-4"
+                        >
+                          {[
+                            { value: 1, label: 'Desagradable' },
+                            { value: 2, label: 'No muy agradable' },
+                            { value: 3, label: 'Normal' },
+                            { value: 4, label: 'Agradable' },
+                            { value: 5, label: 'Sí, muy agradable' }
+                          ].map((option) => (
+                            <div key={option.value} className="flex items-center space-x-2">
+                              <RadioGroupItem value={option.value.toString()} id={`environment-${option.value}`} />
+                              <label htmlFor={`environment-${option.value}`} className="text-sm font-medium cursor-pointer">
+                                {option.label}
+                              </label>
+                            </div>
+                          ))}
+                        </RadioGroup>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
                 />
               </CardContent>
             </Card>
 
+            {/* Sección 4: Experiencia con el Doctor/Profesional */}
             <Card>
               <CardHeader>
-                <CardTitle className="text-xl text-primary">Experiencia con el Doctor/Profesional</CardTitle>
+                <CardTitle className="text-xl text-primary">Sección 4: Experiencia con el Doctor/Profesional</CardTitle>
               </CardHeader>
               <CardContent className="space-y-6">
-                <RatingField
+                <FormField
+                  control={form.control}
                   name="doctor_listening"
-                  label="¿Qué tan bien te escuchó el doctor/profesional durante la consulta?"
-                  description="1 = Nada bien, 5 = Muy bien"
+                  render={({ field }) => (
+                    <FormItem className="space-y-3">
+                      <FormLabel className="text-base font-medium">¿Qué tan bien te escuchó el doctor/profesional durante la consulta?</FormLabel>
+                      <FormControl>
+                        <RadioGroup
+                          onValueChange={(value) => field.onChange(parseInt(value))}
+                          value={field.value?.toString()}
+                          className="flex flex-wrap gap-4"
+                        >
+                          {[
+                            { value: 1, label: 'Nada bien' },
+                            { value: 2, label: 'No muy bien' },
+                            { value: 3, label: 'Normal' },
+                            { value: 4, label: 'Bien' },
+                            { value: 5, label: 'Muy bien' }
+                          ].map((option) => (
+                            <div key={option.value} className="flex items-center space-x-2">
+                              <RadioGroupItem value={option.value.toString()} id={`listening-${option.value}`} />
+                              <label htmlFor={`listening-${option.value}`} className="text-sm font-medium cursor-pointer">
+                                {option.label}
+                              </label>
+                            </div>
+                          ))}
+                        </RadioGroup>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
                 />
-                <RatingField
+                
+                <FormField
+                  control={form.control}
                   name="explanation_clarity"
-                  label="¿Recibiste explicaciones claras sobre tu estado de salud/tratamiento?"
-                  description="1 = No, nada claras, 5 = Sí, muy claras"
+                  render={({ field }) => (
+                    <FormItem className="space-y-3">
+                      <FormLabel className="text-base font-medium">¿Recibiste explicaciones claras y comprensibles sobre tu estado de salud/tratamiento?</FormLabel>
+                      <FormControl>
+                        <RadioGroup
+                          onValueChange={(value) => field.onChange(parseInt(value))}
+                          value={field.value?.toString()}
+                          className="flex flex-wrap gap-4"
+                        >
+                          {[
+                            { value: 1, label: 'No, nada claras' },
+                            { value: 2, label: 'No muy claras' },
+                            { value: 3, label: 'Normal' },
+                            { value: 4, label: 'Sí, claras' },
+                            { value: 5, label: 'Sí, muy claras' }
+                          ].map((option) => (
+                            <div key={option.value} className="flex items-center space-x-2">
+                              <RadioGroupItem value={option.value.toString()} id={`clarity-${option.value}`} />
+                              <label htmlFor={`clarity-${option.value}`} className="text-sm font-medium cursor-pointer">
+                                {option.label}
+                              </label>
+                            </div>
+                          ))}
+                        </RadioGroup>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
                 />
-                <RatingField
+                
+                <FormField
+                  control={form.control}
                   name="consultation_time"
-                  label="¿Sentiste que el doctor dedicó tiempo suficiente a tu consulta?"
-                  description="1 = No, en absoluto, 5 = Sí, totalmente"
-                />
-                <RatingField
-                  name="treatment_trust"
-                  label="¿Confías en las recomendaciones del doctor/profesional?"
-                  description="1 = Nada, 5 = Totalmente"
+                  render={({ field }) => (
+                    <FormItem className="space-y-3">
+                      <FormLabel className="text-base font-medium">¿Sentiste que el doctor/profesional dedicó el tiempo suficiente a tu consulta?</FormLabel>
+                      <FormControl>
+                        <RadioGroup
+                          onValueChange={(value) => field.onChange(parseInt(value))}
+                          value={field.value?.toString()}
+                          className="flex flex-wrap gap-4"
+                        >
+                          {[
+                            { value: 1, label: 'No, en absoluto' },
+                            { value: 2, label: 'No' },
+                            { value: 3, label: 'Normal' },
+                            { value: 4, label: 'Sí' },
+                            { value: 5, label: 'Sí, totalmente' }
+                          ].map((option) => (
+                            <div key={option.value} className="flex items-center space-x-2">
+                              <RadioGroupItem value={option.value.toString()} id={`time-${option.value}`} />
+                              <label htmlFor={`time-${option.value}`} className="text-sm font-medium cursor-pointer">
+                                {option.label}
+                              </label>
+                            </div>
+                          ))}
+                        </RadioGroup>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
                 />
               </CardContent>
             </Card>
 
+            {/* Sección 5: Valoración Global y Comentarios */}
             <Card>
               <CardHeader>
-                <CardTitle className="text-xl text-primary">Valoración Global</CardTitle>
+                <CardTitle className="text-xl text-primary">Sección 5: Valoración Global y Comentarios</CardTitle>
               </CardHeader>
               <CardContent className="space-y-6">
                 <FormField
@@ -263,7 +537,7 @@ export const SurveyForm = () => {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className="text-base font-medium">
-                        ¿Qué probabilidad hay de que recomiendes nuestra consulta? (0-10)
+                        En una escala del 0 al 10, ¿qué probabilidad hay de que recomiendes nuestra consulta a un amigo o familiar?
                       </FormLabel>
                       <div className="px-3">
                         <FormControl>
@@ -293,11 +567,11 @@ export const SurveyForm = () => {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className="text-base font-medium">
-                        Comentarios adicionales (opcional)
+                        ¿Hay algo más que te gustaría compartir sobre tu experiencia o alguna sugerencia para mejorar?
                       </FormLabel>
                       <FormControl>
                         <Textarea
-                          placeholder="¿Hay algo más que te gustaría compartir sobre tu experiencia o alguna sugerencia para mejorar?"
+                          placeholder="Comparte tus comentarios aquí..."
                           className="min-h-[100px]"
                           {...field}
                         />

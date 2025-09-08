@@ -44,6 +44,8 @@ export type Database = {
       survey_responses: {
         Row: {
           additional_comments: string | null
+          appointment_type: string | null
+          body_area: string | null
           booking_ease: number
           clinic_environment: number
           communication_clarity: number
@@ -53,14 +55,20 @@ export type Database = {
           explanation_clarity: number
           id: string
           nps_score: number
+          other_body_area: string | null
+          other_treatment: string | null
           reception_friendliness: number
           treatment_trust: number
+          treatment_type: string | null
           updated_at: string
           wait_time_satisfaction: number
           waiting_time: string
+          website_design_rating: number | null
         }
         Insert: {
           additional_comments?: string | null
+          appointment_type?: string | null
+          body_area?: string | null
           booking_ease: number
           clinic_environment: number
           communication_clarity: number
@@ -70,14 +78,20 @@ export type Database = {
           explanation_clarity: number
           id?: string
           nps_score: number
+          other_body_area?: string | null
+          other_treatment?: string | null
           reception_friendliness: number
           treatment_trust: number
+          treatment_type?: string | null
           updated_at?: string
           wait_time_satisfaction: number
           waiting_time: string
+          website_design_rating?: number | null
         }
         Update: {
           additional_comments?: string | null
+          appointment_type?: string | null
+          body_area?: string | null
           booking_ease?: number
           clinic_environment?: number
           communication_clarity?: number
@@ -87,11 +101,15 @@ export type Database = {
           explanation_clarity?: number
           id?: string
           nps_score?: number
+          other_body_area?: string | null
+          other_treatment?: string | null
           reception_friendliness?: number
           treatment_trust?: number
+          treatment_type?: string | null
           updated_at?: string
           wait_time_satisfaction?: number
           waiting_time?: string
+          website_design_rating?: number | null
         }
         Relationships: []
       }
