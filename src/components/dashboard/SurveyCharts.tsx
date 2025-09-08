@@ -382,14 +382,17 @@ export const SurveyCharts = () => {
       {/* Charts */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Bar Chart - Average Ratings */}
-        <Card>
+        <Card className="col-span-1">
           <CardHeader>
-            <CardTitle>Puntuaciones Promedio por Categoría</CardTitle>
+            <CardTitle className="flex items-center gap-2">
+              <Star className="w-5 h-5 text-primary" />
+              Puntuaciones Promedio por Categoría
+            </CardTitle>
             <CardDescription>
-              Evaluación promedio de cada aspecto de la experiencia del paciente
+              Evaluación promedio de cada aspecto de la experiencia del paciente (escala 1-5)
             </CardDescription>
           </CardHeader>
-          <CardContent>
+          <CardContent className="pb-4">
             <ChartContainer
               config={{
                 promedio: { label: "Promedio", color: "hsl(var(--primary))" },
@@ -401,31 +404,60 @@ export const SurveyCharts = () => {
                 explanation: { label: "Explicación", color: "hsl(var(--accent))" },
                 time: { label: "Tiempo Consulta", color: "hsl(var(--chart-1))" }
               }}
-              className="h-72"
+              className="h-80 w-full"
             >
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={barChartData} margin={{ top: 20, right: 15, left: 15, bottom: 45 }}>
-                  <CartesianGrid strokeDasharray="3 3" />
+                <BarChart 
+                  data={barChartData} 
+                  margin={{ top: 25, right: 25, left: 25, bottom: 60 }}
+                  barCategoryGap="15%"
+                >
+                  <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" opacity={0.3} />
                   <XAxis 
                     dataKey="category" 
-                    tick={{ fontSize: 11 }}
+                    tick={{ fontSize: 12, fill: "hsl(var(--foreground))" }}
                     angle={-45}
                     textAnchor="end"
-                    height={60}
+                    height={70}
                     interval={0}
+                    axisLine={{ stroke: "hsl(var(--border))" }}
+                    tickLine={{ stroke: "hsl(var(--border))" }}
                   />
-                  <YAxis domain={[0, 5]} />
+                  <YAxis 
+                    domain={[0, 5]} 
+                    tick={{ fontSize: 12, fill: "hsl(var(--foreground))" }}
+                    axisLine={{ stroke: "hsl(var(--border))" }}
+                    tickLine={{ stroke: "hsl(var(--border))" }}
+                    label={{ value: 'Puntuación', angle: -90, position: 'insideLeft', style: { textAnchor: 'middle' } }}
+                  />
                   <ChartTooltip 
                     content={<ChartTooltipContent />}
                     formatter={(value, name, props) => [
-                      value,
+                      `${Number(value).toFixed(1)}/5`,
                       props.payload?.fullName || name
                     ]}
+                    cursor={{ fill: 'hsl(var(--muted))', opacity: 0.2 }}
                   />
-                  <Bar dataKey="promedio" fill="hsl(var(--primary))" radius={4} />
+                  <Bar 
+                    dataKey="promedio" 
+                    fill="hsl(var(--primary))" 
+                    radius={[4, 4, 0, 0]}
+                    stroke="hsl(var(--primary))"
+                    strokeWidth={1}
+                  />
                 </BarChart>
               </ResponsiveContainer>
             </ChartContainer>
+            
+            {/* Legend/Summary */}
+            <div className="mt-4 pt-4 border-t">
+              <div className="flex items-center justify-between text-sm text-muted-foreground">
+                <span>Promedio general:</span>
+                <span className="font-medium text-foreground">
+                  {(Object.values(averages).reduce((sum, avg) => sum + (avg || 0), 0) / Object.keys(averages).length).toFixed(1)}/5
+                </span>
+              </div>
+            </div>
           </CardContent>
         </Card>
 
