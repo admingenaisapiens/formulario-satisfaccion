@@ -192,7 +192,7 @@ export const SurveyForm = () => {
               <CardContent className="space-y-6">
                 <RatingField
                   name="website_design_rating"
-                  label="¿Te gustó el diseño y la facilidad de uso de nuestra página web para reservar tu cita?"
+                  label="¿Te resultó fácil usar nuestra página web?"
                 />
                 <RatingField
                   name="communication_clarity"
