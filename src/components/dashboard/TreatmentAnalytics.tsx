@@ -128,11 +128,28 @@ export const TreatmentAnalytics = () => {
 
   // Process treatment types
   const treatmentTypeData = useMemo(() => {
-    const counts = surveys.reduce((acc, survey) => {
-      const treatment = getTreatmentLabel(survey.treatment_type);
-      acc[treatment] = (acc[treatment] || 0) + 1;
+    // Define all possible treatment types to ensure they all appear
+    const allTreatmentTypes = [
+      'fisioterapia',
+      'osteopatia', 
+      'readaptacion',
+      'puncion_seca',
+      'electrolisis',
+      'terapia_manual',
+      'otro'
+    ];
+
+    // Initialize counts with 0 for all treatment types
+    const counts = allTreatmentTypes.reduce((acc, type) => {
+      acc[getTreatmentLabel(type)] = 0;
       return acc;
     }, {} as Record<string, number>);
+
+    // Count actual occurrences
+    surveys.forEach(survey => {
+      const treatment = getTreatmentLabel(survey.treatment_type);
+      counts[treatment] = (counts[treatment] || 0) + 1;
+    });
 
     return Object.entries(counts)
       .map(([treatment, count]) => ({ treatment, count }))
@@ -596,25 +613,30 @@ export const TreatmentAnalytics = () => {
                 config={{
                   count: { label: "Cantidad", color: "hsl(var(--chart-3))" }
                 }}
-                className="h-48 w-full"
+                 className="h-64 w-full"
               >
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart 
-                    data={treatmentTypeData.slice(0, 6)} 
-                    margin={{ top: 20, right: 20, left: 20, bottom: 60 }}
-                    barCategoryGap="20%"
+                     data={treatmentTypeData} 
+                     margin={{ top: 20, right: 20, left: 20, bottom: 80 }}
+                     barCategoryGap="15%"
                   >
                     <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" opacity={0.6} />
                     <XAxis 
                       dataKey="treatment" 
                       angle={-45}
                       textAnchor="end"
-                      height={80}
-                      fontSize={10}
+                       height={100}
+                       fontSize={9}
                       interval={0}
                       stroke="#64748b"
                     />
-                    <YAxis stroke="#64748b" fontSize={10} />
+                     <YAxis 
+                       stroke="#64748b" 
+                       fontSize={10}
+                       allowDecimals={false}
+                       tickCount={6}
+                     />
                     <ChartTooltip 
                       content={({ active, payload, label }) => {
                         if (active && payload && payload.length) {
@@ -641,20 +663,30 @@ export const TreatmentAnalytics = () => {
                 </ResponsiveContainer>
               </ChartContainer>
             </div>
-            {/* Top treatments summary */}
+            {/* All treatments summary */}
             <div className="space-y-2">
-              <h4 className="text-sm font-semibold text-violet-800 mb-3">Tratamientos Principales</h4>
-              {treatmentTypeData.slice(0, 3).map((item, index) => (
-                <div key={item.treatment} className="flex items-center justify-between py-2 px-3 bg-white rounded-lg border border-violet-100 shadow-sm">
-                  <div className="flex items-center gap-2">
-                    <div className={`w-2 h-6 rounded ${index === 0 ? 'bg-violet-500' : index === 1 ? 'bg-violet-400' : 'bg-violet-300'}`} />
-                    <span className="font-medium text-gray-700 text-sm">{item.treatment}</span>
+              <h4 className="text-sm font-semibold text-violet-800 mb-3">Todos los Tratamientos</h4>
+              <div className="grid grid-cols-1 gap-2 max-h-48 overflow-y-auto">
+                {treatmentTypeData.map((item, index) => (
+                  <div key={item.treatment} className="flex items-center justify-between py-2 px-3 bg-white rounded-lg border border-violet-100 shadow-sm hover:shadow-md transition-shadow">
+                    <div className="flex items-center gap-2">
+                      <div className={`w-2 h-6 rounded ${
+                        index === 0 ? 'bg-violet-600' : 
+                        index === 1 ? 'bg-violet-500' : 
+                        index === 2 ? 'bg-violet-400' : 
+                        index === 3 ? 'bg-violet-300' : 
+                        index === 4 ? 'bg-violet-200' : 
+                        index === 5 ? 'bg-violet-100' : 
+                        'bg-gray-200'
+                      }`} />
+                      <span className="font-medium text-gray-700 text-sm">{item.treatment}</span>
+                    </div>
+                    <Badge variant="secondary" className="bg-violet-100 text-violet-800 border border-violet-200 font-bold">
+                      {item.count}
+                    </Badge>
                   </div>
-                  <Badge variant="secondary" className="bg-violet-100 text-violet-800 border border-violet-200">
-                    {item.count}
-                  </Badge>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
           </CardContent>
         </Card>
