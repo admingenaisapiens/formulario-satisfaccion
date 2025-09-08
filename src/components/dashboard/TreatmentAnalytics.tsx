@@ -545,14 +545,14 @@ export const TreatmentAnalytics = () => {
               </div>
             </CardTitle>
           </CardHeader>
-          <CardContent className="p-6 bg-gradient-to-b from-white to-emerald-50">
-            <div className="flex items-center justify-center mb-6">
+          <CardContent className="p-6 bg-gradient-to-b from-white to-emerald-50 flex flex-col h-full">
+            <div className="flex items-center justify-center mb-4 flex-1">
               <ChartContainer
                 config={{
                   presencial: { label: "Presencial", color: "hsl(var(--chart-1))" },
                   telematica: { label: "Telemática", color: "hsl(var(--chart-2))" }
                 }}
-                className="h-48 w-full"
+                className="h-40 w-full"
               >
                 <ResponsiveContainer width="100%" height="100%">
                   <PieChart>
@@ -561,7 +561,7 @@ export const TreatmentAnalytics = () => {
                       cx="50%"
                       cy="50%"
                       labelLine={false}
-                      outerRadius={70}
+                      outerRadius={60}
                       fill="#8884d8"
                       dataKey="value"
                       stroke="#fff"
@@ -592,7 +592,7 @@ export const TreatmentAnalytics = () => {
               </ChartContainer>
             </div>
             {/* Quick stats for appointment types */}
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-2 gap-3 mt-auto">
               {appointmentTypeData.map((item, index) => (
                 <div key={item.name} className="flex items-center justify-between bg-white p-3 rounded-lg border border-emerald-100 shadow-sm">
                   <div className="flex items-center gap-2">
