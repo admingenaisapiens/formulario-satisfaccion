@@ -1,30 +1,33 @@
 import React, { useState, useEffect } from 'react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Badge } from '@/components/ui/badge';
-import { Card, CardContent } from '@/components/ui/card';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Calendar } from '@/components/ui/calendar';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { supabase } from '@/integrations/supabase/client';
-import { useToast } from '@/hooks/use-toast';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
-import { CalendarIcon, Download, Search, Filter } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Badge } from '@/components/ui/badge';
+import { Calendar } from '@/components/ui/calendar';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { supabase } from '@/integrations/supabase/client';
+import { useToast } from '@/hooks/use-toast';
+import { Download, CalendarIcon, Search } from 'lucide-react';
 
 interface SurveyResponse {
   id: string;
-  booking_ease: number;
-  wait_time_satisfaction: number;
+  website_design_rating: number;
   communication_clarity: number;
+  appointment_type: string;
+  treatment_type: string;
+  other_treatment: string | null;
+  body_area: string;
+  other_body_area: string | null;
   reception_friendliness: number;
   waiting_time: string;
   clinic_environment: number;
   doctor_listening: number;
   explanation_clarity: number;
   consultation_time: number;
-  treatment_trust: number;
   nps_score: number;
   additional_comments: string | null;
   created_at: string;
@@ -125,95 +128,173 @@ export const SurveyTable = () => {
     setCurrentPage(1);
   };
 
-  const exportToCSV = () => {
-    const headers = [
-      'ID', 'Fecha', 'Facilidad Reserva', 'Satisfacción Espera', 'Claridad Comunicación',
-      'Amabilidad Recepción', 'Tiempo Espera', 'Ambiente Clínica', 'Escucha Doctor',
-      'Claridad Explicaciones', 'Tiempo Consulta', 'Confianza Tratamiento',
-      'NPS Score', 'Comentarios'
-    ];
-
-    const csvContent = [
-      headers.join(','),
-      ...filteredSurveys.map(survey => [
-        survey.id,
-        format(new Date(survey.created_at), 'dd/MM/yyyy HH:mm'),
-        survey.booking_ease,
-        survey.wait_time_satisfaction,
-        survey.communication_clarity,
-        survey.reception_friendliness,
-        getWaitingTimeLabel(survey.waiting_time),
-        survey.clinic_environment,
-        survey.doctor_listening,
-        survey.explanation_clarity,
-        survey.consultation_time,
-        survey.treatment_trust,
-        survey.nps_score,
-        `"${survey.additional_comments || ''}"`
-      ].join(','))
-    ].join('\n');
-
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    const link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
-    link.download = `encuestas_satisfaccion_${format(new Date(), 'yyyy_MM_dd')}.csv`;
-    link.click();
-
-    toast({
-      title: "Exportación exitosa",
-      description: "Los datos se han exportado correctamente",
-    });
+  const getWaitingTimeLabel = (waitingTime: string) => {
+    switch (waitingTime) {
+      case 'less_than_5': return 'Menos de 5 minutos';
+      case '5_to_15': return 'Entre 5 y 15 minutos';
+      case '15_to_30': return 'Entre 15 y 30 minutos';
+      case 'more_than_30': return 'Más de 30 minutos';
+      default: return waitingTime;
+    }
   };
 
-  const getWaitingTimeLabel = (value: string) => {
-    const labels: { [key: string]: string } = {
-      'less_than_5': '< 5 min',
-      '5_to_15': '5-15 min',
-      '15_to_30': '15-30 min',
-      'more_than_30': '> 30 min'
-    };
-    return labels[value] || value;
+  const getTreatmentLabel = (treatmentType: string) => {
+    switch (treatmentType) {
+      case 'fisioterapia': return 'Fisioterapia';
+      case 'osteopatia': return 'Osteopatía';
+      case 'readaptacion': return 'Readaptación';
+      case 'puncion_seca': return 'Punción Seca';
+      case 'electrolisis': return 'Electrólisis';
+      case 'terapia_manual': return 'Terapia Manual';
+      case 'otro': return 'Otro';
+      default: return treatmentType;
+    }
+  };
+
+  const getBodyAreaLabel = (bodyArea: string) => {
+    switch (bodyArea) {
+      case 'rodilla': return 'Rodilla';
+      case 'hombro': return 'Hombro';
+      case 'pie': return 'Pie';
+      case 'mano': return 'Mano';
+      case 'codo': return 'Codo';
+      case 'columna_cervical': return 'Columna Cervical';
+      case 'columna_dorsal': return 'Columna Dorsal';
+      case 'columna_lumbar': return 'Columna Lumbar';
+      case 'otra': return 'Otra';
+      default: return bodyArea;
+    }
+  };
+
+  const getAppointmentTypeLabel = (appointmentType: string) => {
+    switch (appointmentType) {
+      case 'presencial': return 'Presencial';
+      case 'telematica': return 'Telemática';
+      default: return appointmentType;
+    }
+  };
+
+  const getRatingLabel = (rating: number, fieldType: string) => {
+    switch (fieldType) {
+      case 'website_design_rating':
+      case 'communication_clarity':
+        const generalLabels = ['', 'No, en absoluto', 'No mucho', 'Normal', 'Sí', 'Sí, mucho'];
+        return generalLabels[rating] || rating.toString();
+      case 'reception_friendliness':
+        const receptionLabels = ['', 'Malo', 'Regular', 'Bueno', 'Muy bueno', 'Excelente'];
+        return receptionLabels[rating] || rating.toString();
+      case 'clinic_environment':
+        const environmentLabels = ['', 'Desagradable', 'No muy agradable', 'Normal', 'Agradable', 'Sí, muy agradable'];
+        return environmentLabels[rating] || rating.toString();
+      case 'doctor_listening':
+        const listeningLabels = ['', 'No, nada fluida ni escuchado/a', 'No muy fluida', 'Normal', 'Sí, fluida', 'Sí, muy fluida y escuchado/a'];
+        return listeningLabels[rating] || rating.toString();
+      case 'explanation_clarity':
+        const clarityLabels = ['', 'No, nada claras', 'No muy claras', 'Normal', 'Sí, claras', 'Sí, muy claras'];
+        return clarityLabels[rating] || rating.toString();
+      case 'consultation_time':
+        const timeLabels = ['', 'No, en absoluto', 'No', 'Normal', 'Sí', 'Sí, totalmente'];
+        return timeLabels[rating] || rating.toString();
+      default:
+        return rating.toString();
+    }
   };
 
   const getNPSBadge = (score: number) => {
-    if (score >= 9) return <Badge className="bg-green-100 text-green-800">Promotor</Badge>;
-    if (score >= 7) return <Badge variant="secondary">Pasivo</Badge>;
-    return <Badge variant="destructive">Detractor</Badge>;
+    if (score >= 9) {
+      return <Badge className="bg-accent/20 text-accent border-accent">Promotor</Badge>;
+    } else if (score >= 7) {
+      return <Badge variant="secondary">Pasivo</Badge>;
+    } else {
+      return <Badge variant="destructive">Detractor</Badge>;
+    }
   };
 
+  const exportToCSV = () => {
+    const headers = [
+      'ID', 'Fecha', 'Tipo Cita', 'Tratamiento', 'Zona Cuerpo', 'Facilidad Web', 
+      'Comunicación Previa', 'Recepción', 'Tiempo Espera', 'Ambiente', 
+      'Comunicación Doctor', 'Explicación', 'Tiempo Consulta', 'NPS', 'Comentarios'
+    ];
+
+    const csvData = filteredSurveys.map(survey => [
+      survey.id,
+      format(new Date(survey.created_at), 'dd/MM/yyyy HH:mm'),
+      getAppointmentTypeLabel(survey.appointment_type || ''),
+      getTreatmentLabel(survey.treatment_type || ''),
+      getBodyAreaLabel(survey.body_area || ''),
+      getRatingLabel(survey.website_design_rating || 0, 'website_design_rating'),
+      getRatingLabel(survey.communication_clarity || 0, 'communication_clarity'),
+      getRatingLabel(survey.reception_friendliness || 0, 'reception_friendliness'),
+      getWaitingTimeLabel(survey.waiting_time),
+      getRatingLabel(survey.clinic_environment || 0, 'clinic_environment'),
+      getRatingLabel(survey.doctor_listening || 0, 'doctor_listening'),
+      getRatingLabel(survey.explanation_clarity || 0, 'explanation_clarity'),
+      getRatingLabel(survey.consultation_time || 0, 'consultation_time'),
+      survey.nps_score,
+      survey.additional_comments || ''
+    ]);
+
+    const csvContent = [headers, ...csvData].map(row => 
+      row.map(cell => `"${cell}"`).join(',')
+    ).join('\n');
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', `encuestas_satisfaccion_${format(new Date(), 'yyyy-MM-dd')}.csv`);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    toast({
+      title: "CSV exportado",
+      description: "El archivo se ha descargado correctamente.",
+    });
+  };
+
+  // Pagination
   const totalPages = Math.ceil(filteredSurveys.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const paginatedSurveys = filteredSurveys.slice(startIndex, startIndex + itemsPerPage);
 
   if (isLoading) {
     return (
-      <div className="text-center py-8">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
-        <p className="text-muted-foreground">Cargando encuestas...</p>
+      <div className="flex items-center justify-center p-8">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-muted-foreground">Cargando encuestas...</p>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
       {/* Filters */}
       <Card>
-        <CardContent className="p-4">
-          <div className="flex flex-col lg:flex-row gap-4">
-            <div className="flex-1">
-              <div className="relative">
-                <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                <Input
-                  placeholder="Buscar por ID o comentarios..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10"
-                />
-              </div>
+        <CardHeader>
+          <CardTitle>Filtros de Búsqueda</CardTitle>
+          <CardDescription>
+            Filtra las encuestas por términos de búsqueda, puntuación NPS o rango de fechas
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4">
+            <div className="relative lg:col-span-2">
+              <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+              <Input
+                placeholder="Buscar por ID o comentarios..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="pl-8"
+              />
             </div>
-            
+
             <Select value={npsFilter} onValueChange={setNpsFilter}>
-              <SelectTrigger className="w-full lg:w-48">
+              <SelectTrigger>
                 <SelectValue placeholder="Filtrar por NPS" />
               </SelectTrigger>
               <SelectContent>
@@ -224,37 +305,39 @@ export const SurveyTable = () => {
               </SelectContent>
             </Select>
 
-            <div className="flex gap-2">
+            <div>
               <Popover>
                 <PopoverTrigger asChild>
-                  <Button variant="outline" className="w-full lg:w-auto">
+                  <Button variant="outline" className="w-full justify-start text-left font-normal">
                     <CalendarIcon className="mr-2 h-4 w-4" />
                     {dateFrom ? format(dateFrom, 'dd/MM/yyyy') : 'Desde'}
                   </Button>
                 </PopoverTrigger>
-                <PopoverContent className="w-auto p-0">
+                <PopoverContent className="w-auto p-0" align="start">
                   <Calendar
                     mode="single"
                     selected={dateFrom}
                     onSelect={setDateFrom}
-                    locale={es}
+                    initialFocus
                   />
                 </PopoverContent>
               </Popover>
+            </div>
 
+            <div>
               <Popover>
                 <PopoverTrigger asChild>
-                  <Button variant="outline" className="w-full lg:w-auto">
+                  <Button variant="outline" className="w-full justify-start text-left font-normal">
                     <CalendarIcon className="mr-2 h-4 w-4" />
                     {dateTo ? format(dateTo, 'dd/MM/yyyy') : 'Hasta'}
                   </Button>
                 </PopoverTrigger>
-                <PopoverContent className="w-auto p-0">
+                <PopoverContent className="w-auto p-0" align="start">
                   <Calendar
                     mode="single"
                     selected={dateTo}
                     onSelect={setDateTo}
-                    locale={es}
+                    initialFocus
                   />
                 </PopoverContent>
               </Popover>
@@ -276,22 +359,24 @@ export const SurveyTable = () => {
       </div>
 
       {/* Table */}
-      <div className="border rounded-lg overflow-hidden">
+      <div className="border rounded-lg overflow-auto">
         <Table>
           <TableHeader>
             <TableRow>
               <TableHead>Fecha</TableHead>
-              <TableHead>Reserva</TableHead>
-              <TableHead>Espera Cita</TableHead>
+              <TableHead>Tipo Cita</TableHead>
+              <TableHead>Tratamiento</TableHead>
+              <TableHead>Zona Cuerpo</TableHead>
+              <TableHead>Facilidad Web</TableHead>
               <TableHead>Comunicación</TableHead>
               <TableHead>Recepción</TableHead>
               <TableHead>T. Espera</TableHead>
               <TableHead>Ambiente</TableHead>
-              <TableHead>Escucha</TableHead>
+              <TableHead>Doctor</TableHead>
               <TableHead>Explicación</TableHead>
               <TableHead>T. Consulta</TableHead>
-              <TableHead>Confianza</TableHead>
               <TableHead>NPS</TableHead>
+              <TableHead>Comentarios</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -300,20 +385,30 @@ export const SurveyTable = () => {
                 <TableCell className="font-medium">
                   {format(new Date(survey.created_at), 'dd/MM/yyyy HH:mm')}
                 </TableCell>
-                <TableCell>{survey.booking_ease}/5</TableCell>
-                <TableCell>{survey.wait_time_satisfaction}/5</TableCell>
-                <TableCell>{survey.communication_clarity}/5</TableCell>
-                <TableCell>{survey.reception_friendliness}/5</TableCell>
+                <TableCell>{getAppointmentTypeLabel(survey.appointment_type || '')}</TableCell>
+                <TableCell>{getTreatmentLabel(survey.treatment_type || '')}</TableCell>
+                <TableCell>{getBodyAreaLabel(survey.body_area || '')}</TableCell>
+                <TableCell>{getRatingLabel(survey.website_design_rating || 0, 'website_design_rating')}</TableCell>
+                <TableCell>{getRatingLabel(survey.communication_clarity || 0, 'communication_clarity')}</TableCell>
+                <TableCell>{getRatingLabel(survey.reception_friendliness || 0, 'reception_friendliness')}</TableCell>
                 <TableCell>{getWaitingTimeLabel(survey.waiting_time)}</TableCell>
-                <TableCell>{survey.clinic_environment}/5</TableCell>
-                <TableCell>{survey.doctor_listening}/5</TableCell>
-                <TableCell>{survey.explanation_clarity}/5</TableCell>
-                <TableCell>{survey.consultation_time}/5</TableCell>
-                <TableCell>{survey.treatment_trust}/5</TableCell>
+                <TableCell>{getRatingLabel(survey.clinic_environment || 0, 'clinic_environment')}</TableCell>
+                <TableCell className="max-w-32">
+                  <div className="truncate" title={getRatingLabel(survey.doctor_listening || 0, 'doctor_listening')}>
+                    {getRatingLabel(survey.doctor_listening || 0, 'doctor_listening')}
+                  </div>
+                </TableCell>
+                <TableCell>{getRatingLabel(survey.explanation_clarity || 0, 'explanation_clarity')}</TableCell>
+                <TableCell>{getRatingLabel(survey.consultation_time || 0, 'consultation_time')}</TableCell>
                 <TableCell>
                   <div className="flex items-center gap-2">
                     <span className="font-medium">{survey.nps_score}/10</span>
                     {getNPSBadge(survey.nps_score)}
+                  </div>
+                </TableCell>
+                <TableCell className="max-w-xs">
+                  <div className="truncate" title={survey.additional_comments || 'Sin comentarios'}>
+                    {survey.additional_comments || 'Sin comentarios'}
                   </div>
                 </TableCell>
               </TableRow>
@@ -346,6 +441,12 @@ export const SurveyTable = () => {
           >
             Siguiente
           </Button>
+        </div>
+      )}
+
+      {filteredSurveys.length === 0 && !isLoading && (
+        <div className="text-center py-8">
+          <p className="text-muted-foreground">No se encontraron encuestas que coincidan con los filtros aplicados.</p>
         </div>
       )}
     </div>
