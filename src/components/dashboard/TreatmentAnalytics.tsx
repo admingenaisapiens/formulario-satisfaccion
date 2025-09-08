@@ -569,13 +569,13 @@ export const TreatmentAnalytics = () => {
               </CardHeader>
             </div>
             <CardContent className="p-8 bg-gradient-to-b from-white to-emerald-50/50">
-              <div className="flex items-center justify-center mb-6">
+              <div className="relative flex items-center justify-center">
                 <ChartContainer
                   config={{
-                    presencial: { label: "Presencial", color: "hsl(var(--chart-1))" },
-                    telematica: { label: "Telemática", color: "hsl(var(--chart-2))" }
+                    presencial: { label: "Presencial", color: "#10b981" },
+                    telematica: { label: "Telemática", color: "#3b82f6" }
                   }}
-                  className="h-48 w-full"
+                  className="h-80 w-full"
                 >
                   <ResponsiveContainer width="100%" height="100%">
                     <PieChart>
@@ -584,11 +584,13 @@ export const TreatmentAnalytics = () => {
                         cx="50%"
                         cy="50%"
                         labelLine={false}
-                        outerRadius={80}
+                        label={({ name, value, percent }) => `${name}\n${(percent * 100).toFixed(0)}%`}
+                        outerRadius={120}
+                        innerRadius={40}
                         fill="#8884d8"
                         dataKey="value"
                         stroke="#fff"
-                        strokeWidth={4}
+                        strokeWidth={3}
                       >
                         {appointmentTypeData.map((entry, index) => (
                           <Cell key={`cell-${index}`} fill={entry.fill} />
@@ -598,11 +600,12 @@ export const TreatmentAnalytics = () => {
                         content={({ active, payload }) => {
                           if (active && payload && payload.length) {
                             const data = payload[0];
+                            const total = appointmentTypeData.reduce((sum, item) => sum + item.value, 0);
                             return (
                               <div className="bg-white p-4 rounded-xl shadow-lg border-0 ring-1 ring-gray-200">
                                 <p className="font-semibold text-gray-800">{data.name}</p>
                                  <p className="text-sm text-gray-600">
-                                   {data.value} citas ({(((data.payload?.value || 0) / appointmentTypeData.reduce((sum, item) => sum + item.value, 0)) * 100).toFixed(1)}%)
+                                   {data.value} citas ({total > 0 ? (((data.payload?.value || 0) / total) * 100).toFixed(1) : 0}%)
                                  </p>
                               </div>
                             );
@@ -613,22 +616,43 @@ export const TreatmentAnalytics = () => {
                     </PieChart>
                   </ResponsiveContainer>
                 </ChartContainer>
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                {appointmentTypeData.map((item, index) => (
-                  <div key={item.name} className="group flex items-center justify-between bg-white p-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 border-l-4" style={{borderLeftColor: item.fill}}>
-                    <div className="flex items-center gap-3">
-                      <div 
-                        className="w-4 h-4 rounded-full shadow-sm"
-                        style={{ backgroundColor: item.fill }}
-                      />
-                      <span className="font-semibold text-gray-700">{item.name}</span>
+                
+                {/* Estadísticas centrales */}
+                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                  <div className="text-center">
+                    <div className="text-2xl font-bold text-gray-800">
+                      {appointmentTypeData.reduce((sum, item) => sum + item.value, 0)}
                     </div>
-                    <Badge className="bg-gradient-to-r from-emerald-500 to-teal-600 text-white border-0 px-3 py-1 font-bold shadow-lg">
-                      {item.value}
-                    </Badge>
+                    <div className="text-sm text-gray-600 font-medium">Total Citas</div>
                   </div>
-                ))}
+                </div>
+              </div>
+              
+              {/* Resumen visual mejorado */}
+              <div className="mt-6 space-y-3">
+                {appointmentTypeData.map((item, index) => {
+                  const total = appointmentTypeData.reduce((sum, data) => sum + data.value, 0);
+                  const percentage = total > 0 ? ((item.value / total) * 100).toFixed(1) : 0;
+                  return (
+                    <div key={item.name} className="flex items-center justify-between bg-white/70 p-4 rounded-2xl shadow-md hover:shadow-lg transition-all duration-300 border border-gray-100">
+                      <div className="flex items-center gap-4">
+                        <div 
+                          className="w-6 h-6 rounded-full shadow-lg border-2 border-white"
+                          style={{ backgroundColor: item.fill }}
+                        />
+                        <div>
+                          <span className="font-bold text-gray-800 text-lg">{item.name}</span>
+                          <div className="text-sm text-gray-600">{item.value} consultas</div>
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <div className="text-2xl font-bold" style={{ color: item.fill }}>
+                          {percentage}%
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
             </CardContent>
           </Card>
