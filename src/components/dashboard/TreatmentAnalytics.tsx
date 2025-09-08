@@ -38,6 +38,35 @@ export const TreatmentAnalytics = () => {
   const [isLoading, setIsLoading] = useState(true);
   const { toast } = useToast();
 
+  // Helper functions - defined before useMemo hooks
+  const getTreatmentLabel = (treatmentType: string) => {
+    switch (treatmentType) {
+      case 'fisioterapia': return 'Fisioterapia';
+      case 'osteopatia': return 'Osteopatía';
+      case 'readaptacion': return 'Readaptación';
+      case 'puncion_seca': return 'Punción Seca';
+      case 'electrolisis': return 'Electrólisis';
+      case 'terapia_manual': return 'Terapia Manual';
+      case 'otro': return 'Otro';
+      default: return treatmentType;
+    }
+  };
+
+  const getBodyAreaLabel = (bodyArea: string) => {
+    switch (bodyArea) {
+      case 'rodilla': return 'Rodilla';
+      case 'hombro': return 'Hombro';
+      case 'pie': return 'Pie';
+      case 'mano': return 'Mano';
+      case 'codo': return 'Codo';
+      case 'columna_cervical': return 'Columna Cervical';
+      case 'columna_dorsal': return 'Columna Dorsal';
+      case 'columna_lumbar': return 'Columna Lumbar';
+      case 'otra': return 'Otra zona';
+      default: return bodyArea;
+    }
+  };
+
   useEffect(() => {
     fetchSurveys();
     
@@ -130,34 +159,6 @@ export const TreatmentAnalytics = () => {
       percentage: Math.round((count / total) * 100)
     })).sort((a, b) => b.count - a.count);
   }, [surveys]);
-
-  const getTreatmentLabel = (treatmentType: string) => {
-    switch (treatmentType) {
-      case 'fisioterapia': return 'Fisioterapia';
-      case 'osteopatia': return 'Osteopatía';
-      case 'readaptacion': return 'Readaptación';
-      case 'puncion_seca': return 'Punción Seca';
-      case 'electrolisis': return 'Electrólisis';
-      case 'terapia_manual': return 'Terapia Manual';
-      case 'otro': return 'Otro';
-      default: return treatmentType;
-    }
-  };
-
-  const getBodyAreaLabel = (bodyArea: string) => {
-    switch (bodyArea) {
-      case 'rodilla': return 'Rodilla';
-      case 'hombro': return 'Hombro';
-      case 'pie': return 'Pie';
-      case 'mano': return 'Mano';
-      case 'codo': return 'Codo';
-      case 'columna_cervical': return 'Columna Cervical';
-      case 'columna_dorsal': return 'Columna Dorsal';
-      case 'columna_lumbar': return 'Columna Lumbar';
-      case 'otra': return 'Otra zona';
-      default: return bodyArea;
-    }
-  };
 
   const HumanBodyDiagram = ({ bodyZoneData }: { bodyZoneData: BodyZoneData[] }) => {
     const getZoneCount = (zone: string) => {
