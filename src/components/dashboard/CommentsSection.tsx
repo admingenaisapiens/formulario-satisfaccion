@@ -40,6 +40,27 @@ export const CommentsSection = () => {
 
   useEffect(() => {
     fetchSurveys();
+    
+    // Set up real-time subscription
+    const channel = supabase
+      .channel('survey_responses_changes_comments')
+      .on(
+        'postgres_changes',
+        {
+          event: 'INSERT',
+          schema: 'public',
+          table: 'survey_responses'
+        },
+        () => {
+          // Refetch surveys when new survey is inserted
+          fetchSurveys();
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, []);
 
   useEffect(() => {
