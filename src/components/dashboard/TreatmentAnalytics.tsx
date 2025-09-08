@@ -676,26 +676,6 @@ export const TreatmentAnalytics = () => {
                 </ResponsiveContainer>
               </ChartContainer>
             </div>
-            {/* All treatments summary */}
-            <div className="space-y-2">
-              <h4 className="text-sm font-semibold text-violet-800 mb-3">Todos los Tratamientos</h4>
-              <div className="grid grid-cols-1 gap-2 max-h-48 overflow-y-auto">
-                {treatmentTypeData.map((item, index) => (
-                  <div key={item.treatment} className="flex items-center justify-between py-2 px-3 bg-white rounded-lg border border-violet-100 shadow-sm hover:shadow-md transition-shadow">
-                    <div className="flex items-center gap-2">
-                       <div 
-                         className="w-3 h-3 rounded-full border"
-                         style={{ backgroundColor: item.fill }}
-                       />
-                      <span className="font-medium text-gray-700 text-sm">{item.treatment}</span>
-                    </div>
-                    <Badge variant="secondary" className="bg-violet-100 text-violet-800 border border-violet-200 font-bold">
-                      {item.count}
-                    </Badge>
-                  </div>
-                ))}
-              </div>
-            </div>
           </CardContent>
         </Card>
       </div>
