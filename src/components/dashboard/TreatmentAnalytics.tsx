@@ -406,28 +406,28 @@ export const TreatmentAnalytics = () => {
         </div>
         
         {/* Enhanced Legend with better styling */}
-        <div className="bg-white p-4 rounded-xl border-2 border-gray-100 shadow-sm">
-          <h4 className="text-sm font-semibold text-gray-700 mb-3 text-center">Intensidad de Tratamientos</h4>
-          <div className="flex flex-wrap justify-center gap-3 text-xs">
-            <div className="flex items-center gap-2 bg-gray-50 px-3 py-2 rounded-lg">
-              <div className="w-4 h-4 bg-gray-200 rounded border"></div>
-              <span className="font-medium">0 casos</span>
+        <div className="bg-white p-3 sm:p-4 rounded-xl border-2 border-gray-100 shadow-sm">
+          <h4 className="text-xs sm:text-sm font-semibold text-gray-700 mb-2 sm:mb-3 text-center">Intensidad de Tratamientos</h4>
+          <div className="flex flex-wrap justify-center gap-2 sm:gap-3 text-xs">
+            <div className="flex items-center gap-1 sm:gap-2 bg-gray-50 px-2 sm:px-3 py-1 sm:py-2 rounded-lg">
+              <div className="w-3 h-3 sm:w-4 sm:h-4 bg-gray-200 rounded border"></div>
+              <span className="font-medium text-xs">0 casos</span>
             </div>
-            <div className="flex items-center gap-2 bg-yellow-50 px-3 py-2 rounded-lg">
-              <div className="w-4 h-4 bg-yellow-200 rounded border"></div>
-              <span className="font-medium">1-2 casos</span>
+            <div className="flex items-center gap-1 sm:gap-2 bg-yellow-50 px-2 sm:px-3 py-1 sm:py-2 rounded-lg">
+              <div className="w-3 h-3 sm:w-4 sm:h-4 bg-yellow-200 rounded border"></div>
+              <span className="font-medium text-xs">1-2</span>
             </div>
-            <div className="flex items-center gap-2 bg-orange-50 px-3 py-2 rounded-lg">
-              <div className="w-4 h-4 bg-orange-300 rounded border"></div>
-              <span className="font-medium">3-5 casos</span>
+            <div className="flex items-center gap-1 sm:gap-2 bg-orange-50 px-2 sm:px-3 py-1 sm:py-2 rounded-lg">
+              <div className="w-3 h-3 sm:w-4 sm:h-4 bg-orange-300 rounded border"></div>
+              <span className="font-medium text-xs">3-5</span>
             </div>
-            <div className="flex items-center gap-2 bg-red-50 px-3 py-2 rounded-lg">
-              <div className="w-4 h-4 bg-red-300 rounded border"></div>
-              <span className="font-medium">6-10 casos</span>
+            <div className="flex items-center gap-1 sm:gap-2 bg-red-50 px-2 sm:px-3 py-1 sm:py-2 rounded-lg">
+              <div className="w-3 h-3 sm:w-4 sm:h-4 bg-red-300 rounded border"></div>
+              <span className="font-medium text-xs">6-10</span>
             </div>
-            <div className="flex items-center gap-2 bg-red-100 px-3 py-2 rounded-lg">
-              <div className="w-4 h-4 bg-red-600 rounded border"></div>
-              <span className="font-medium">10+ casos</span>
+            <div className="flex items-center gap-1 sm:gap-2 bg-red-100 px-2 sm:px-3 py-1 sm:py-2 rounded-lg">
+              <div className="w-3 h-3 sm:w-4 sm:h-4 bg-red-600 rounded border"></div>
+              <span className="font-medium text-xs">10+</span>
             </div>
           </div>
         </div>
@@ -570,7 +570,14 @@ export const TreatmentAnalytics = () => {
                         cx="50%"
                         cy="50%"
                         labelLine={false}
-                        label={({ name, value, percent }) => `${name}\n${(percent * 100).toFixed(0)}%`}
+                        label={({ name, value, percent }) => {
+                          const percentage = (percent * 100).toFixed(0);
+                          // Only show labels for larger segments and adjust text size for mobile
+                          if (percent > 0.1) {
+                            return window.innerWidth < 640 ? `${percentage}%` : `${name}\n${percentage}%`;
+                          }
+                          return '';
+                        }}
                         outerRadius={120}
                         innerRadius={40}
                         fill="#8884d8"
@@ -606,10 +613,10 @@ export const TreatmentAnalytics = () => {
                 {/* Estadísticas centrales */}
                 <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                   <div className="text-center">
-                    <div className="text-2xl font-bold text-gray-800">
+                    <div className="text-xl sm:text-2xl font-bold text-gray-800">
                       {appointmentTypeData.reduce((sum, item) => sum + item.value, 0)}
                     </div>
-                    <div className="text-sm text-gray-600 font-medium">Total Citas</div>
+                    <div className="text-xs font-medium text-gray-600">Total Citas</div>
                   </div>
                 </div>
               </div>
@@ -620,23 +627,23 @@ export const TreatmentAnalytics = () => {
                   const total = appointmentTypeData.reduce((sum, data) => sum + data.value, 0);
                   const percentage = total > 0 ? ((item.value / total) * 100).toFixed(1) : 0;
                   return (
-                    <div key={item.name} className="flex items-center justify-between bg-white/70 p-4 rounded-2xl shadow-md hover:shadow-lg transition-all duration-300 border border-gray-100">
-                      <div className="flex items-center gap-4">
-                        <div 
-                          className="w-6 h-6 rounded-full shadow-lg border-2 border-white"
-                          style={{ backgroundColor: item.fill }}
-                        />
-                        <div>
-                          <span className="font-bold text-gray-800 text-lg">{item.name}</span>
-                          <div className="text-sm text-gray-600">{item.value} consultas</div>
-                        </div>
-                      </div>
-                      <div className="text-right">
-                        <div className="text-2xl font-bold" style={{ color: item.fill }}>
-                          {percentage}%
-                        </div>
-                      </div>
-                    </div>
+                     <div key={item.name} className="flex items-center justify-between bg-white/70 p-3 sm:p-4 rounded-2xl shadow-md hover:shadow-lg transition-all duration-300 border border-gray-100">
+                       <div className="flex items-center gap-3 sm:gap-4">
+                         <div 
+                           className="w-5 h-5 sm:w-6 sm:h-6 rounded-full shadow-lg border-2 border-white"
+                           style={{ backgroundColor: item.fill }}
+                         />
+                         <div>
+                           <span className="font-bold text-gray-800 text-base sm:text-lg">{item.name}</span>
+                           <div className="text-xs sm:text-sm text-gray-600">{item.value} consultas</div>
+                         </div>
+                       </div>
+                       <div className="text-right">
+                         <div className="text-xl sm:text-2xl font-bold" style={{ color: item.fill }}>
+                           {percentage}%
+                         </div>
+                       </div>
+                     </div>
                   );
                 })}
               </div>
@@ -679,7 +686,14 @@ export const TreatmentAnalytics = () => {
                         cx="50%"
                         cy="50%"
                         labelLine={false}
-                        label={({ name, percent }) => percent > 0.05 ? `${name}\n${(percent * 100).toFixed(0)}%` : ""}
+                        label={({ name, percent }) => {
+                          const percentage = (percent * 100).toFixed(0);
+                          // Only show labels for segments > 5% and adjust for mobile
+                          if (percent > 0.05) {
+                            return window.innerWidth < 640 ? `${percentage}%` : `${name}\n${percentage}%`;
+                          }
+                          return '';
+                        }}
                         outerRadius={120}
                         innerRadius={40}
                         fill="#8884d8"
@@ -715,10 +729,10 @@ export const TreatmentAnalytics = () => {
                 {/* Estadísticas centrales */}
                 <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                   <div className="text-center">
-                    <div className="text-2xl font-bold text-gray-800">
+                    <div className="text-xl sm:text-2xl font-bold text-gray-800">
                       {treatmentTypeData.reduce((sum, item) => sum + item.value, 0)}
                     </div>
-                    <div className="text-xs text-gray-600 font-medium">Tratamientos</div>
+                    <div className="text-xs font-medium text-gray-600">Tratamientos</div>
                   </div>
                 </div>
               </div>
@@ -734,38 +748,38 @@ export const TreatmentAnalytics = () => {
                       const total = treatmentTypeData.reduce((sum, data) => sum + data.value, 0);
                       const percentage = total > 0 ? ((item.value / total) * 100).toFixed(1) : 0;
                       return (
-                        <div key={item.treatment} className="flex items-center justify-between bg-white/70 p-3 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 border border-gray-100">
-                          <div className="flex items-center gap-3">
-                            <div 
-                              className="w-4 h-4 rounded-full shadow-lg border-2 border-white"
-                              style={{ backgroundColor: item.fill }}
-                            />
-                            <div>
-                              <span className="font-semibold text-gray-800 text-sm">{item.treatment}</span>
-                              <div className="text-xs text-gray-600">{item.value} casos</div>
-                            </div>
-                          </div>
-                          <div className="text-right">
-                            <div className="text-lg font-bold" style={{ color: item.fill }}>
-                              {percentage}%
-                            </div>
-                          </div>
-                        </div>
+                         <div key={item.treatment} className="flex items-center justify-between bg-white/70 p-2 sm:p-3 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 border border-gray-100">
+                           <div className="flex items-center gap-2 sm:gap-3">
+                             <div 
+                               className="w-3 h-3 sm:w-4 sm:h-4 rounded-full shadow-lg border-2 border-white"
+                               style={{ backgroundColor: item.fill }}
+                             />
+                             <div>
+                               <span className="font-semibold text-gray-800 text-xs sm:text-sm">{item.treatment}</span>
+                               <div className="text-xs text-gray-600">{item.value} casos</div>
+                             </div>
+                           </div>
+                           <div className="text-right">
+                             <div className="text-sm sm:text-lg font-bold" style={{ color: item.fill }}>
+                               {percentage}%
+                             </div>
+                           </div>
+                         </div>
                       );
                     })}
                 </div>
                 
                 {/* Leyenda compacta para tratamientos con 0 casos */}
                 {treatmentTypeData.some(item => item.value === 0) && (
-                  <div className="p-4 bg-gray-50 rounded-xl">
-                    <h5 className="text-sm font-semibold text-gray-600 mb-2">Sin casos registrados:</h5>
-                    <div className="flex flex-wrap gap-2">
+                  <div className="p-3 sm:p-4 bg-gray-50 rounded-xl">
+                    <h5 className="text-xs sm:text-sm font-semibold text-gray-600 mb-2">Sin casos registrados:</h5>
+                    <div className="flex flex-wrap gap-1 sm:gap-2">
                       {treatmentTypeData
                         .filter(item => item.value === 0)
                         .map((item) => (
-                          <div key={item.treatment} className="flex items-center gap-2 bg-white px-3 py-1 rounded-lg shadow-sm">
+                          <div key={item.treatment} className="flex items-center gap-1 sm:gap-2 bg-white px-2 sm:px-3 py-1 rounded-lg shadow-sm">
                             <div 
-                              className="w-3 h-3 rounded-full opacity-50"
+                              className="w-2 h-2 sm:w-3 sm:h-3 rounded-full opacity-50"
                               style={{ backgroundColor: item.fill }}
                             />
                             <span className="text-xs text-gray-500">{item.treatment}</span>
@@ -784,12 +798,12 @@ export const TreatmentAnalytics = () => {
           <div className="bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 p-1">
             <CardHeader className="bg-white m-1 rounded-lg">
               <CardTitle className="flex items-center gap-3 text-gray-800">
-                <div className="p-3 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl shadow-lg">
-                  <MapPin className="w-6 h-6 text-white" />
+                <div className="p-2 sm:p-3 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl shadow-lg">
+                  <MapPin className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
                 </div>
                 <div>
-                  <span className="text-2xl font-bold">Mapa Corporal de Tratamientos</span>
-                  <p className="text-gray-600 mt-1">Diagrama anatómico con zonas del cuerpo más tratadas</p>
+                  <span className="text-xl sm:text-2xl font-bold">Mapa Corporal de Tratamientos</span>
+                  <p className="text-gray-600 mt-1 text-xs sm:text-sm">Diagrama anatómico con zonas del cuerpo más tratadas</p>
                 </div>
               </CardTitle>
             </CardHeader>

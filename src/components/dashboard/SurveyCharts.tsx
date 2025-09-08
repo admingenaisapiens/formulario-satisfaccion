@@ -452,20 +452,20 @@ export const SurveyCharts = () => {
                   <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" opacity={0.2} />
                   <XAxis 
                     dataKey="category" 
-                    tick={{ fontSize: 12, fill: "hsl(var(--foreground))", fontWeight: 500 }}
-                    angle={-45}
+                    tick={{ fontSize: window.innerWidth < 640 ? 10 : 12, fill: "hsl(var(--foreground))", fontWeight: 500 }}
+                    angle={window.innerWidth < 640 ? -90 : -45}
                     textAnchor="end"
-                    height={80}
+                    height={window.innerWidth < 640 ? 100 : 80}
                     interval={0}
                     axisLine={{ stroke: "hsl(var(--border))" }}
                     tickLine={{ stroke: "hsl(var(--border))" }}
                   />
                   <YAxis 
                     domain={[0, 5]} 
-                    tick={{ fontSize: 12, fill: "hsl(var(--foreground))", fontWeight: 500 }}
+                    tick={{ fontSize: window.innerWidth < 640 ? 10 : 12, fill: "hsl(var(--foreground))", fontWeight: 500 }}
                     axisLine={{ stroke: "hsl(var(--border))" }}
                     tickLine={{ stroke: "hsl(var(--border))" }}
-                    label={{ value: "Puntuación", angle: -90, position: "insideLeft", style: { textAnchor: "middle", fontWeight: 600 } }}
+                    label={window.innerWidth >= 640 ? { value: "Puntuación", angle: -90, position: "insideLeft", style: { textAnchor: "middle", fontWeight: 600 } } : undefined}
                   />
                   <ChartTooltip 
                     content={<ChartTooltipContent />}
@@ -491,10 +491,10 @@ export const SurveyCharts = () => {
             </ChartContainer>
             
             {/* Enhanced Summary */}
-            <div className="mt-6 p-4 bg-gradient-to-r from-blue-50/70 to-indigo-50/70 rounded-2xl border border-blue-100/50">
+            <div className="mt-4 sm:mt-6 p-3 sm:p-4 bg-gradient-to-r from-blue-50/70 to-indigo-50/70 rounded-2xl border border-blue-100/50">
               <div className="flex items-center justify-between">
-                <span className="text-sm font-semibold text-gray-700">Promedio General:</span>
-                <span className="text-lg font-bold text-blue-600">
+                <span className="text-xs sm:text-sm font-semibold text-gray-700">Promedio General:</span>
+                <span className="text-base sm:text-lg font-bold text-blue-600">
                   {(Object.values(averages).reduce((sum, avg) => sum + (avg || 0), 0) / Object.keys(averages).length).toFixed(1)}/5
                 </span>
               </div>
@@ -511,8 +511,8 @@ export const SurveyCharts = () => {
                   <TrendingUp className="w-6 h-6 text-white" />
                 </div>
                 <div>
-                  <span className="text-2xl font-bold">Distribución NPS</span>
-                  <p className="text-sm font-normal text-gray-600 mt-1">Clasificación según probabilidad de recomendación</p>
+                  <span className="text-xl sm:text-2xl font-bold">Distribución NPS</span>
+                  <p className="text-xs sm:text-sm font-normal text-gray-600 mt-1">Clasificación según probabilidad de recomendación</p>
                 </div>
               </CardTitle>
             </CardHeader>
@@ -534,9 +534,13 @@ export const SurveyCharts = () => {
                       cx="50%"
                       cy="50%"
                       labelLine={false}
-                      label={({ name, value, percent }) => 
-                        value > 0 ? `${name}\n${value} (${(percent * 100).toFixed(0)}%)` : ""
-                      }
+                      label={({ name, value, percent }) => {
+                        if (value > 0) {
+                          const percentage = (percent * 100).toFixed(0);
+                          return window.innerWidth < 640 ? `${percentage}%` : `${name}\n${value} (${percentage}%)`;
+                        }
+                        return "";
+                      }}
                       outerRadius={130}
                       innerRadius={45}
                       fill="#8884d8"
