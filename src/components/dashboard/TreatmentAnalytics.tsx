@@ -465,350 +465,388 @@ export const TreatmentAnalytics = () => {
   }
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <Card>
-        <CardHeader>
-          <div className="flex items-center gap-2">
-            <Activity className="w-6 h-6 text-primary" />
-            <div>
-              <CardTitle className="text-2xl">Análisis de Tratamientos</CardTitle>
-              <CardDescription>
-                Información detallada sobre tipos de cita, tratamientos y zonas del cuerpo más tratadas
-              </CardDescription>
-            </div>
-          </div>
-        </CardHeader>
-      </Card>
-
-      {/* Summary Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Tratamientos</CardTitle>
-            <Stethoscope className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{surveys.length}</div>
-            <p className="text-xs text-muted-foreground">
-              Consultas registradas
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Cita Más Frecuente</CardTitle>
-            <Users className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">
-              {appointmentTypeData.length > 0 ? 
-                appointmentTypeData.reduce((prev, current) => (prev.value > current.value) ? prev : current).name 
-                : 'N/A'
-              }
-            </div>
-            <p className="text-xs text-muted-foreground">
-              Tipo de consulta predominante
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Zona Más Tratada</CardTitle>
-            <MapPin className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">
-              {bodyZoneData.length > 0 ? bodyZoneData[0].label : 'N/A'}
-            </div>
-            <p className="text-xs text-muted-foreground">
-              {bodyZoneData.length > 0 ? `${bodyZoneData[0].count} casos (${bodyZoneData[0].percentage}%)` : 'Sin datos'}
-            </p>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Analytics Cards - Improved Layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-        {/* Appointment Types - Enhanced */}
-        <Card className="border-2 border-emerald-100 shadow-lg hover:shadow-xl transition-all duration-300">
-          <CardHeader className="bg-gradient-to-r from-emerald-50 to-teal-50 border-b border-emerald-100">
-            <CardTitle className="flex items-center gap-3 text-emerald-900">
-              <div className="p-2 bg-emerald-100 rounded-full">
-                <Users className="w-5 h-5 text-emerald-600" />
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 p-6">
+      <div className="max-w-7xl mx-auto space-y-8">
+        {/* Hero Header */}
+        <div className="relative overflow-hidden bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 rounded-3xl shadow-2xl">
+          <div className="absolute inset-0 bg-black/10"></div>
+          <div className="relative p-8 text-white">
+            <div className="flex items-center gap-4 mb-4">
+              <div className="p-3 bg-white/20 rounded-2xl backdrop-blur-sm">
+                <Activity className="w-8 h-8" />
               </div>
               <div>
-                <span className="text-lg font-bold">Tipos de Cita</span>
-                <p className="text-sm font-normal text-emerald-700 mt-1">Modalidad de consulta médica</p>
+                <h1 className="text-4xl font-bold mb-2">Análisis de Tratamientos</h1>
+                <p className="text-blue-100 text-lg">
+                  Dashboard completo de métricas y estadísticas médicas
+                </p>
               </div>
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="p-6 bg-gradient-to-b from-white to-emerald-50 flex flex-col h-full">
-            <div className="flex items-center justify-center mb-4 flex-1">
-              <ChartContainer
-                config={{
-                  presencial: { label: "Presencial", color: "hsl(var(--chart-1))" },
-                  telematica: { label: "Telemática", color: "hsl(var(--chart-2))" }
-                }}
-                className="h-40 w-full"
-              >
-                <ResponsiveContainer width="100%" height="100%">
-                  <PieChart>
-                    <Pie
-                      data={appointmentTypeData}
-                      cx="50%"
-                      cy="50%"
-                      labelLine={false}
-                      outerRadius={60}
-                      fill="#8884d8"
-                      dataKey="value"
-                      stroke="#fff"
-                      strokeWidth={3}
-                    >
-                      {appointmentTypeData.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={entry.fill} />
-                      ))}
-                    </Pie>
-                    <ChartTooltip 
-                      content={({ active, payload }) => {
-                        if (active && payload && payload.length) {
-                          const data = payload[0];
-                          return (
-                            <div className="bg-white p-3 rounded-lg shadow-lg border">
-                              <p className="font-semibold text-gray-800">{data.name}</p>
-                               <p className="text-sm text-gray-600">
-                                 {data.value} citas ({(((data.payload?.value || 0) / appointmentTypeData.reduce((sum, item) => sum + item.value, 0)) * 100).toFixed(1)}%)
-                               </p>
-                            </div>
-                          );
-                        }
-                        return null;
-                      }}
-                    />
-                  </PieChart>
-                </ResponsiveContainer>
-              </ChartContainer>
             </div>
-            {/* Quick stats for appointment types */}
-            <div className="grid grid-cols-2 gap-3 mt-auto">
-              {appointmentTypeData.map((item, index) => (
-                <div key={item.name} className="flex items-center justify-between bg-white p-3 rounded-lg border border-emerald-100 shadow-sm">
-                  <div className="flex items-center gap-2">
-                    <div 
-                      className="w-3 h-3 rounded-full"
-                      style={{ backgroundColor: item.fill }}
-                    />
-                    <span className="font-medium text-gray-700 text-sm">{item.name}</span>
+            <div className="absolute -right-20 -top-20 w-40 h-40 bg-white/10 rounded-full blur-3xl"></div>
+            <div className="absolute -left-10 -bottom-10 w-32 h-32 bg-purple-300/20 rounded-full blur-2xl"></div>
+          </div>
+        </div>
+
+        {/* Enhanced Summary Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <Card className="group relative overflow-hidden border-0 shadow-xl bg-gradient-to-br from-emerald-500 to-teal-600 text-white hover:scale-105 transition-all duration-300">
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -skew-x-12 translate-x-full group-hover:translate-x-[-200%] transition-transform duration-1000"></div>
+            <CardHeader className="relative pb-2">
+              <div className="flex items-center justify-between">
+                <CardTitle className="text-sm font-medium text-emerald-100">Total Tratamientos</CardTitle>
+                <div className="p-2 bg-white/20 rounded-xl backdrop-blur-sm">
+                  <Stethoscope className="h-5 w-5" />
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent className="relative">
+              <div className="text-3xl font-bold mb-1">{surveys.length}</div>
+              <p className="text-emerald-100 text-sm">
+                Consultas registradas
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card className="group relative overflow-hidden border-0 shadow-xl bg-gradient-to-br from-violet-500 to-purple-600 text-white hover:scale-105 transition-all duration-300">
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -skew-x-12 translate-x-full group-hover:translate-x-[-200%] transition-transform duration-1000"></div>
+            <CardHeader className="relative pb-2">
+              <div className="flex items-center justify-between">
+                <CardTitle className="text-sm font-medium text-violet-100">Cita Más Frecuente</CardTitle>
+                <div className="p-2 bg-white/20 rounded-xl backdrop-blur-sm">
+                  <Users className="h-5 w-5" />
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent className="relative">
+              <div className="text-3xl font-bold mb-1">
+                {appointmentTypeData.length > 0 ? 
+                  appointmentTypeData.reduce((prev, current) => (prev.value > current.value) ? prev : current).name 
+                  : 'N/A'
+                }
+              </div>
+              <p className="text-violet-100 text-sm">
+                Tipo de consulta predominante
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card className="group relative overflow-hidden border-0 shadow-xl bg-gradient-to-br from-orange-500 to-red-600 text-white hover:scale-105 transition-all duration-300">
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -skew-x-12 translate-x-full group-hover:translate-x-[-200%] transition-transform duration-1000"></div>
+            <CardHeader className="relative pb-2">
+              <div className="flex items-center justify-between">
+                <CardTitle className="text-sm font-medium text-orange-100">Zona Más Tratada</CardTitle>
+                <div className="p-2 bg-white/20 rounded-xl backdrop-blur-sm">
+                  <MapPin className="h-5 w-5" />
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent className="relative">
+              <div className="text-3xl font-bold mb-1">
+                {bodyZoneData.length > 0 ? bodyZoneData[0].label : 'N/A'}
+              </div>
+              <p className="text-orange-100 text-sm">
+                {bodyZoneData.length > 0 ? `${bodyZoneData[0].count} casos (${bodyZoneData[0].percentage}%)` : 'Sin datos'}
+              </p>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Modern Analytics Cards */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          {/* Appointment Types - Redesigned */}
+          <Card className="border-0 shadow-2xl bg-white/80 backdrop-blur-sm hover:shadow-3xl transition-all duration-500 overflow-hidden">
+            <div className="bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 p-1">
+              <CardHeader className="bg-white m-1 rounded-lg">
+                <CardTitle className="flex items-center gap-3 text-gray-800">
+                  <div className="p-3 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-xl shadow-lg">
+                    <Users className="w-6 h-6 text-white" />
                   </div>
-                  <Badge variant="secondary" className="bg-emerald-100 text-emerald-800 border border-emerald-200">
-                    {item.value}
-                  </Badge>
+                  <div>
+                    <span className="text-xl font-bold">Tipos de Cita</span>
+                    <p className="text-sm font-normal text-gray-600 mt-1">Modalidad de consulta médica</p>
+                  </div>
+                </CardTitle>
+              </CardHeader>
+            </div>
+            <CardContent className="p-8 bg-gradient-to-b from-white to-emerald-50/50">
+              <div className="flex items-center justify-center mb-6">
+                <ChartContainer
+                  config={{
+                    presencial: { label: "Presencial", color: "hsl(var(--chart-1))" },
+                    telematica: { label: "Telemática", color: "hsl(var(--chart-2))" }
+                  }}
+                  className="h-48 w-full"
+                >
+                  <ResponsiveContainer width="100%" height="100%">
+                    <PieChart>
+                      <Pie
+                        data={appointmentTypeData}
+                        cx="50%"
+                        cy="50%"
+                        labelLine={false}
+                        outerRadius={80}
+                        fill="#8884d8"
+                        dataKey="value"
+                        stroke="#fff"
+                        strokeWidth={4}
+                      >
+                        {appointmentTypeData.map((entry, index) => (
+                          <Cell key={`cell-${index}`} fill={entry.fill} />
+                        ))}
+                      </Pie>
+                      <ChartTooltip 
+                        content={({ active, payload }) => {
+                          if (active && payload && payload.length) {
+                            const data = payload[0];
+                            return (
+                              <div className="bg-white p-4 rounded-xl shadow-lg border-0 ring-1 ring-gray-200">
+                                <p className="font-semibold text-gray-800">{data.name}</p>
+                                 <p className="text-sm text-gray-600">
+                                   {data.value} citas ({(((data.payload?.value || 0) / appointmentTypeData.reduce((sum, item) => sum + item.value, 0)) * 100).toFixed(1)}%)
+                                 </p>
+                              </div>
+                            );
+                          }
+                          return null;
+                        }}
+                      />
+                    </PieChart>
+                  </ResponsiveContainer>
+                </ChartContainer>
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                {appointmentTypeData.map((item, index) => (
+                  <div key={item.name} className="group flex items-center justify-between bg-white p-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 border-l-4" style={{borderLeftColor: item.fill}}>
+                    <div className="flex items-center gap-3">
+                      <div 
+                        className="w-4 h-4 rounded-full shadow-sm"
+                        style={{ backgroundColor: item.fill }}
+                      />
+                      <span className="font-semibold text-gray-700">{item.name}</span>
+                    </div>
+                    <Badge className="bg-gradient-to-r from-emerald-500 to-teal-600 text-white border-0 px-3 py-1 font-bold shadow-lg">
+                      {item.value}
+                    </Badge>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Treatment Types - Redesigned */}
+          <Card className="border-0 shadow-2xl bg-white/80 backdrop-blur-sm hover:shadow-3xl transition-all duration-500 overflow-hidden">
+            <div className="bg-gradient-to-r from-violet-500 via-purple-500 to-indigo-500 p-1">
+              <CardHeader className="bg-white m-1 rounded-lg">
+                <CardTitle className="flex items-center gap-3 text-gray-800">
+                  <div className="p-3 bg-gradient-to-br from-violet-500 to-purple-600 rounded-xl shadow-lg">
+                    <Stethoscope className="w-6 h-6 text-white" />
+                  </div>
+                  <div>
+                    <span className="text-xl font-bold">Tipos de Tratamiento</span>
+                    <p className="text-sm font-normal text-gray-600 mt-1">Terapias más utilizadas</p>
+                  </div>
+                </CardTitle>
+              </CardHeader>
+            </div>
+            <CardContent className="p-8 bg-gradient-to-b from-white to-violet-50/50">
+              <div className="flex items-center justify-center mb-6">
+                <ChartContainer
+                  config={{
+                    fisioterapia: { label: "Fisioterapia", color: "#8b5cf6" },
+                    osteopatia: { label: "Osteopatía", color: "#06b6d4" },
+                    readaptacion: { label: "Readaptación", color: "#f59e0b" },
+                    puncion_seca: { label: "Punción Seca", color: "#ef4444" },
+                    electrolisis: { label: "Electrólisis", color: "#10b981" },
+                    terapia_manual: { label: "Terapia Manual", color: "#f97316" },
+                    otro: { label: "Otro", color: "#6b7280" }
+                  }}
+                  className="h-64 w-full"
+                >
+                  <ResponsiveContainer width="100%" height="100%">
+                    <PieChart>
+                      <Pie
+                        data={treatmentTypeData}
+                        cx="50%"
+                        cy="50%"
+                        labelLine={false}
+                        outerRadius={90}
+                        fill="#8884d8"
+                        dataKey="value"
+                        stroke="#fff"
+                        strokeWidth={4}
+                      >
+                        {treatmentTypeData.map((entry, index) => (
+                          <Cell key={`cell-${index}`} fill={entry.fill} />
+                        ))}
+                      </Pie>
+                      <ChartTooltip 
+                        content={({ active, payload }) => {
+                          if (active && payload && payload.length) {
+                            const data = payload[0];
+                            const total = treatmentTypeData.reduce((sum, item) => sum + item.value, 0);
+                            return (
+                              <div className="bg-white p-4 rounded-xl shadow-lg border-0 ring-1 ring-gray-200">
+                                <p className="font-semibold text-gray-800">{data.name}</p>
+                                <p className="text-sm text-gray-600">
+                                  {data.value} tratamientos ({total > 0 ? (((data.payload?.value || 0) / total) * 100).toFixed(1) : 0}%)
+                                </p>
+                              </div>
+                            );
+                          }
+                          return null;
+                        }}
+                      />
+                    </PieChart>
+                  </ResponsiveContainer>
+                </ChartContainer>
+              </div>
+              
+              {/* Enhanced Treatment Legend */}
+              <div className="bg-gradient-to-r from-white to-violet-50 p-6 rounded-2xl shadow-lg ring-1 ring-violet-100">
+                <h4 className="text-lg font-bold text-violet-800 mb-4 text-center">Leyenda de Tratamientos</h4>
+                <div className="grid grid-cols-2 gap-3">
+                  {[
+                    { name: 'Fisioterapia', color: '#8b5cf6' },
+                    { name: 'Osteopatía', color: '#06b6d4' },
+                    { name: 'Readaptación', color: '#f59e0b' },
+                    { name: 'Punción Seca', color: '#ef4444' },
+                    { name: 'Electrólisis', color: '#10b981' },
+                    { name: 'Terapia Manual', color: '#f97316' },
+                  ].map((treatment, index) => (
+                    <div key={treatment.name} className="flex items-center gap-3 px-3 py-2 rounded-lg bg-white/70 hover:bg-white shadow-sm hover:shadow-md transition-all duration-200">
+                      <div className="w-4 h-4 rounded-full shadow-lg" style={{ backgroundColor: treatment.color }}></div>
+                      <span className="font-medium text-gray-700 text-sm">{treatment.name}</span>
+                    </div>
+                  ))}
+                  <div className="flex items-center gap-3 px-3 py-2 rounded-lg bg-white/70 hover:bg-white shadow-sm hover:shadow-md transition-all duration-200 col-span-2">
+                    <div className="w-4 h-4 rounded-full shadow-lg" style={{ backgroundColor: '#6b7280' }}></div>
+                    <span className="font-medium text-gray-700 text-sm">Otro</span>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Body Zones - Ultra Modern Design */}
+        <Card className="border-0 shadow-2xl bg-white/80 backdrop-blur-sm overflow-hidden">
+          <div className="bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 p-1">
+            <CardHeader className="bg-white m-1 rounded-lg">
+              <CardTitle className="flex items-center gap-3 text-gray-800">
+                <div className="p-3 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl shadow-lg">
+                  <MapPin className="w-6 h-6 text-white" />
+                </div>
+                <div>
+                  <span className="text-2xl font-bold">Mapa Corporal de Tratamientos</span>
+                  <p className="text-gray-600 mt-1">Diagrama anatómico con zonas del cuerpo más tratadas</p>
+                </div>
+              </CardTitle>
+            </CardHeader>
+          </div>
+          <CardContent className="p-8 bg-gradient-to-b from-white via-blue-50/30 to-indigo-50/50">
+            <HumanBodyDiagram bodyZoneData={bodyZoneData} />
+          </CardContent>
+        </Card>
+
+        {/* Enhanced Statistics */}
+        <Card className="border-0 shadow-2xl bg-white/90 backdrop-blur-sm overflow-hidden">
+          <div className="bg-gradient-to-r from-slate-600 via-gray-600 to-zinc-600 p-1">
+            <CardHeader className="bg-white m-1 rounded-lg">
+              <CardTitle className="flex items-center gap-3 text-gray-800">
+                <div className="p-3 bg-gradient-to-br from-slate-600 to-gray-700 rounded-xl shadow-lg">
+                  <Activity className="w-6 h-6 text-white" />
+                </div>
+                <div>
+                  <span className="text-2xl font-bold">Estadísticas Detalladas por Zona</span>
+                  <p className="text-gray-600 mt-1">Análisis completo de frecuencia de tratamientos</p>
+                </div>
+              </CardTitle>
+            </CardHeader>
+          </div>
+          <CardContent className="p-8 bg-gradient-to-b from-white to-slate-50/50">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {bodyZoneData.map((zone, index) => (
+                <div 
+                  key={zone.zone} 
+                  className="group relative overflow-hidden bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 border-0 hover:scale-105"
+                >
+                  <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 via-purple-500/10 to-indigo-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                  <div className="relative p-6">
+                    <div className="flex items-center justify-between mb-4">
+                      <div className="flex items-center gap-4">
+                        <div 
+                          className="w-6 h-6 rounded-full shadow-lg ring-2 ring-white"
+                          style={{ 
+                            backgroundColor: zone.count === 0 ? '#f8fafc' : 
+                                           zone.count <= 2 ? '#fef3c7' : 
+                                           zone.count <= 5 ? '#fed7aa' : 
+                                           zone.count <= 10 ? '#fca5a5' : '#dc2626'
+                          }}
+                        ></div>
+                        <div>
+                          <h4 className="font-bold text-gray-800 group-hover:text-blue-700 transition-colors text-lg">
+                            {zone.label}
+                          </h4>
+                          <p className="text-sm text-gray-500">
+                            {zone.percentage}% del total
+                          </p>
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <Badge className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white border-0 px-4 py-2 text-lg font-bold shadow-lg">
+                          {zone.count}
+                        </Badge>
+                        <p className="text-xs text-gray-400 mt-1">casos</p>
+                      </div>
+                    </div>
+                    
+                    {/* Progress bar */}
+                    <div className="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
+                      <div 
+                        className="h-full bg-gradient-to-r from-blue-500 to-indigo-600 rounded-full transition-all duration-500 shadow-sm"
+                        style={{ width: `${zone.percentage}%` }}
+                      ></div>
+                    </div>
+                  </div>
                 </div>
               ))}
             </div>
-          </CardContent>
-        </Card>
-
-        {/* Treatment Types - Enhanced */}
-        <Card className="border-2 border-violet-100 shadow-lg hover:shadow-xl transition-all duration-300">
-          <CardHeader className="bg-gradient-to-r from-violet-50 to-purple-50 border-b border-violet-100">
-            <CardTitle className="flex items-center gap-3 text-violet-900">
-              <div className="p-2 bg-violet-100 rounded-full">
-                <Stethoscope className="w-5 h-5 text-violet-600" />
-              </div>
-              <div>
-                <span className="text-lg font-bold">Tipos de Tratamiento</span>
-                <p className="text-sm font-normal text-violet-700 mt-1">Terapias más utilizadas</p>
-              </div>
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="p-6 bg-gradient-to-b from-white to-violet-50">
-            <div className="flex items-center justify-center mb-6">
-              <ChartContainer
-                config={{
-                  fisioterapia: { label: "Fisioterapia", color: "#8b5cf6" },
-                  osteopatia: { label: "Osteopatía", color: "#06b6d4" },
-                  readaptacion: { label: "Readaptación", color: "#f59e0b" },
-                  puncion_seca: { label: "Punción Seca", color: "#ef4444" },
-                  electrolisis: { label: "Electrólisis", color: "#10b981" },
-                  terapia_manual: { label: "Terapia Manual", color: "#f97316" },
-                  otro: { label: "Otro", color: "#6b7280" }
-                }}
-                className="h-48 w-full"
-              >
-                <ResponsiveContainer width="100%" height="100%">
-                  <PieChart>
-                    <Pie
-                      data={treatmentTypeData}
-                      cx="50%"
-                      cy="50%"
-                      labelLine={false}
-                      outerRadius={70}
-                      fill="#8884d8"
-                      dataKey="value"
-                      stroke="#fff"
-                      strokeWidth={3}
-                    >
-                      {treatmentTypeData.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={entry.fill} />
-                      ))}
-                    </Pie>
-                    <ChartTooltip 
-                      content={({ active, payload }) => {
-                        if (active && payload && payload.length) {
-                          const data = payload[0];
-                          const total = treatmentTypeData.reduce((sum, item) => sum + item.value, 0);
-                          return (
-                            <div className="bg-white p-3 rounded-lg shadow-lg border">
-                              <p className="font-semibold text-gray-800">{data.name}</p>
-                              <p className="text-sm text-gray-600">
-                                {data.value} tratamientos ({total > 0 ? (((data.payload?.value || 0) / total) * 100).toFixed(1) : 0}%)
-                              </p>
-                            </div>
-                          );
-                        }
-                        return null;
-                      }}
-                    />
-                  </PieChart>
-                </ResponsiveContainer>
-              </ChartContainer>
-            </div>
             
-            {/* Leyenda de Tratamientos */}
-            <div className="bg-white p-4 rounded-xl border border-violet-100 shadow-sm">
-              <h4 className="text-sm font-semibold text-violet-800 mb-3 text-center">Leyenda de Tratamientos</h4>
-              <div className="grid grid-cols-2 gap-3 text-xs">
-                <div className="flex items-center gap-2 px-2 py-1 rounded-lg bg-violet-50">
-                  <div className="w-3 h-3 rounded-full border" style={{ backgroundColor: '#8b5cf6' }}></div>
-                  <span className="font-medium text-gray-700">Fisioterapia</span>
-                </div>
-                <div className="flex items-center gap-2 px-2 py-1 rounded-lg bg-cyan-50">
-                  <div className="w-3 h-3 rounded-full border" style={{ backgroundColor: '#06b6d4' }}></div>
-                  <span className="font-medium text-gray-700">Osteopatía</span>
-                </div>
-                <div className="flex items-center gap-2 px-2 py-1 rounded-lg bg-amber-50">
-                  <div className="w-3 h-3 rounded-full border" style={{ backgroundColor: '#f59e0b' }}></div>
-                  <span className="font-medium text-gray-700">Readaptación</span>
-                </div>
-                <div className="flex items-center gap-2 px-2 py-1 rounded-lg bg-red-50">
-                  <div className="w-3 h-3 rounded-full border" style={{ backgroundColor: '#ef4444' }}></div>
-                  <span className="font-medium text-gray-700">Punción Seca</span>
-                </div>
-                <div className="flex items-center gap-2 px-2 py-1 rounded-lg bg-emerald-50">
-                  <div className="w-3 h-3 rounded-full border" style={{ backgroundColor: '#10b981' }}></div>
-                  <span className="font-medium text-gray-700">Electrólisis</span>
-                </div>
-                <div className="flex items-center gap-2 px-2 py-1 rounded-lg bg-orange-50">
-                  <div className="w-3 h-3 rounded-full border" style={{ backgroundColor: '#f97316' }}></div>
-                  <span className="font-medium text-gray-700">Terapia Manual</span>
-                </div>
-                <div className="flex items-center gap-2 px-2 py-1 rounded-lg bg-gray-50 col-span-2">
-                  <div className="w-3 h-3 rounded-full border" style={{ backgroundColor: '#6b7280' }}></div>
-                  <span className="font-medium text-gray-700">Otro</span>
-                </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Body Zones - Full Width Card */}
-      <Card className="border-2 border-blue-100 shadow-lg hover:shadow-xl transition-all duration-300 mb-6">
-        <CardHeader className="bg-gradient-to-r from-blue-50 to-indigo-50 border-b border-blue-100">
-          <CardTitle className="flex items-center gap-2 text-blue-900">
-            <div className="p-2 bg-blue-100 rounded-full">
-              <MapPin className="w-5 h-5 text-blue-600" />
-            </div>
-            Mapa Corporal de Tratamientos
-          </CardTitle>
-          <CardDescription className="text-blue-700">
-            Diagrama anatómico con zonas del cuerpo más tratadas (intensidad por color y opacidad)
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="p-6 bg-gradient-to-b from-white to-blue-50">
-          <HumanBodyDiagram bodyZoneData={bodyZoneData} />
-        </CardContent>
-      </Card>
-
-      {/* Detailed Body Zone Statistics */}
-      <Card className="border-2 border-slate-100 shadow-lg">
-        <CardHeader className="bg-gradient-to-r from-slate-50 to-gray-50 border-b border-slate-100">
-          <CardTitle className="flex items-center gap-2 text-slate-800">
-            <div className="p-2 bg-slate-100 rounded-full">
-              <Activity className="w-5 h-5 text-slate-600" />
-            </div>
-            Estadísticas Detalladas por Zona
-          </CardTitle>
-          <CardDescription className="text-slate-600">
-            Frecuencia de tratamientos por zona del cuerpo con análisis visual
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="p-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {bodyZoneData.map((zone, index) => (
-              <div 
-                key={zone.zone} 
-                className="group flex items-center justify-between p-4 bg-gradient-to-r from-white to-gray-50 border-2 border-gray-100 rounded-xl hover:border-blue-200 hover:shadow-md transition-all duration-300 hover:scale-105"
-              >
-                <div className="flex items-center gap-3">
-                  <div 
-                    className="w-4 h-4 rounded-full border-2 border-gray-300 shadow-sm"
-                    style={{ 
-                      backgroundColor: zone.count === 0 ? '#f8fafc' : 
-                                     zone.count <= 2 ? '#fef3c7' : 
-                                     zone.count <= 5 ? '#fed7aa' : 
-                                     zone.count <= 10 ? '#fca5a5' : '#dc2626',
-                      opacity: zone.count === 0 ? 0.3 :
-                               zone.count <= 2 ? 0.6 :
-                               zone.count <= 5 ? 0.75 :
-                               zone.count <= 10 ? 0.85 : 1
-                    }}
-                  ></div>
+            {/* Ultra Modern Summary */}
+            <div className="mt-10 relative overflow-hidden bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 rounded-3xl shadow-2xl">
+              <div className="absolute inset-0 bg-black/10"></div>
+              <div className="relative p-8 text-white">
+                <div className="flex items-center justify-between">
                   <div>
-                    <h4 className="font-semibold text-gray-800 group-hover:text-blue-700 transition-colors">
-                      {zone.label}
-                    </h4>
-                    <p className="text-sm text-gray-500">
-                      {zone.percentage}% del total
-                    </p>
+                    <h4 className="text-2xl font-bold mb-2">Resumen Total</h4>
+                    <p className="text-blue-100">Casos registrados en el sistema</p>
+                  </div>
+                  <div className="text-right">
+                    <div className="text-5xl font-bold mb-2">
+                      {bodyZoneData.reduce((sum, zone) => sum + zone.count, 0)}
+                    </div>
+                    <p className="text-blue-100">casos totales</p>
                   </div>
                 </div>
-                <div className="flex flex-col items-end">
-                  <Badge 
-                    variant="secondary" 
-                    className="bg-blue-100 text-blue-800 border border-blue-200 font-bold group-hover:bg-blue-200 transition-colors"
-                  >
-                    {zone.count}
-                  </Badge>
-                  <span className="text-xs text-gray-400 mt-1">casos</span>
-                </div>
               </div>
-            ))}
-          </div>
-          
-          {/* Summary bar */}
-          <div className="mt-6 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl border-2 border-blue-100">
-            <div className="flex items-center justify-between">
-              <div>
-                <h4 className="font-semibold text-blue-900">Resumen Total</h4>
-                <p className="text-sm text-blue-700">Tratamientos registrados por zona</p>
-              </div>
-              <div className="text-2xl font-bold text-blue-800">
-                {bodyZoneData.reduce((sum, zone) => sum + zone.count, 0)} casos
-              </div>
+              <div className="absolute -right-20 -top-20 w-40 h-40 bg-white/10 rounded-full blur-3xl"></div>
+              <div className="absolute -left-10 -bottom-10 w-32 h-32 bg-purple-300/20 rounded-full blur-2xl"></div>
             </div>
-          </div>
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
 
-      {surveys.length === 0 && (
-        <div className="text-center py-8">
-          <p className="text-muted-foreground">No hay datos de tratamiento disponibles.</p>
-        </div>
-      )}
+        {surveys.length === 0 && (
+          <Card className="border-0 shadow-xl bg-gradient-to-r from-amber-50 to-orange-50">
+            <CardContent className="p-12 text-center">
+              <div className="w-20 h-20 bg-gradient-to-r from-amber-500 to-orange-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
+                <Activity className="w-10 h-10 text-white" />
+              </div>
+              <h3 className="text-2xl font-bold text-gray-800 mb-2">No hay datos disponibles</h3>
+              <p className="text-gray-600">Comienza agregando tratamientos para ver las estadísticas aquí.</p>
+            </CardContent>
+          </Card>
+        )}
+      </div>
     </div>
   );
 };
