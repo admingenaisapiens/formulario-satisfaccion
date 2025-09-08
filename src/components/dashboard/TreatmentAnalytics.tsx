@@ -551,10 +551,10 @@ export const TreatmentAnalytics = () => {
           </Card>
         </div>
 
-        {/* Modern Analytics Cards */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* Appointment Types - Redesigned */}
-          <Card className="border-0 shadow-2xl bg-white/80 backdrop-blur-sm hover:shadow-3xl transition-all duration-500 overflow-hidden">
+        {/* Fixed Layout Analytics Cards */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+          {/* Appointment Types - Fixed Height */}
+          <Card className="border-0 shadow-2xl bg-white/80 backdrop-blur-sm hover:shadow-3xl transition-all duration-500 overflow-hidden h-[740px] flex flex-col">
             <div className="bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 p-1">
               <CardHeader className="bg-white m-1 rounded-lg">
                 <CardTitle className="flex items-center gap-3 text-gray-800">
@@ -568,8 +568,8 @@ export const TreatmentAnalytics = () => {
                 </CardTitle>
               </CardHeader>
             </div>
-            <CardContent className="p-8 bg-gradient-to-b from-white to-emerald-50/50">
-              <div className="relative flex items-center justify-center">
+            <CardContent className="p-8 bg-gradient-to-b from-white to-emerald-50/50 flex-1 flex flex-col">
+              <div className="relative flex items-center justify-center flex-shrink-0">
                 <ChartContainer
                   config={{
                     presencial: { label: "Presencial", color: "#10b981" },
@@ -629,7 +629,7 @@ export const TreatmentAnalytics = () => {
               </div>
               
               {/* Resumen visual mejorado */}
-              <div className="mt-6 space-y-3">
+              <div className="mt-6 space-y-3 flex-1">
                 {appointmentTypeData.map((item, index) => {
                   const total = appointmentTypeData.reduce((sum, data) => sum + data.value, 0);
                   const percentage = total > 0 ? ((item.value / total) * 100).toFixed(1) : 0;
@@ -657,8 +657,8 @@ export const TreatmentAnalytics = () => {
             </CardContent>
           </Card>
 
-          {/* Treatment Types - Redesigned */}
-          <Card className="border-0 shadow-2xl bg-white/80 backdrop-blur-sm hover:shadow-3xl transition-all duration-500 overflow-hidden">
+          {/* Treatment Types - Fixed Height */}
+          <Card className="border-0 shadow-2xl bg-white/80 backdrop-blur-sm hover:shadow-3xl transition-all duration-500 overflow-hidden h-[740px] flex flex-col">
             <div className="bg-gradient-to-r from-violet-500 via-purple-500 to-indigo-500 p-1">
               <CardHeader className="bg-white m-1 rounded-lg">
                 <CardTitle className="flex items-center gap-3 text-gray-800">
@@ -672,8 +672,8 @@ export const TreatmentAnalytics = () => {
                 </CardTitle>
               </CardHeader>
             </div>
-            <CardContent className="p-8 bg-gradient-to-b from-white to-violet-50/50">
-              <div className="relative flex items-center justify-center mb-6">
+            <CardContent className="p-8 bg-gradient-to-b from-white to-violet-50/50 flex-1 flex flex-col">
+              <div className="relative flex items-center justify-center mb-6 flex-shrink-0">
                 <ChartContainer
                   config={{
                     fisioterapia: { label: "Fisioterapia", color: "#8b5cf6" },
@@ -684,7 +684,7 @@ export const TreatmentAnalytics = () => {
                     terapia_manual: { label: "Terapia Manual", color: "#f97316" },
                     otro: { label: "Otro", color: "#6b7280" }
                   }}
-                  className="h-96 w-full"
+                  className="h-80 w-full"
                 >
                   <ResponsiveContainer width="100%" height="100%">
                     <PieChart>
@@ -694,8 +694,8 @@ export const TreatmentAnalytics = () => {
                         cy="50%"
                         labelLine={false}
                         label={({ name, percent }) => percent > 0.05 ? `${name}\n${(percent * 100).toFixed(0)}%` : ""}
-                        outerRadius={140}
-                        innerRadius={50}
+                        outerRadius={120}
+                        innerRadius={40}
                         fill="#8884d8"
                         dataKey="value"
                         stroke="#fff"
@@ -729,7 +729,7 @@ export const TreatmentAnalytics = () => {
                 {/* Estadísticas centrales */}
                 <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                   <div className="text-center">
-                    <div className="text-3xl font-bold text-gray-800">
+                    <div className="text-2xl font-bold text-gray-800">
                       {treatmentTypeData.reduce((sum, item) => sum + item.value, 0)}
                     </div>
                     <div className="text-sm text-gray-600 font-medium">Tratamientos</div>
@@ -737,55 +737,58 @@ export const TreatmentAnalytics = () => {
                 </div>
               </div>
               
-              {/* Resumen compacto con porcentajes */}
-              <div className="grid grid-cols-2 gap-4">
-                {treatmentTypeData
-                  .filter(item => item.value > 0)
-                  .slice(0, 6)
-                  .map((item, index) => {
-                    const total = treatmentTypeData.reduce((sum, data) => sum + data.value, 0);
-                    const percentage = total > 0 ? ((item.value / total) * 100).toFixed(1) : 0;
-                    return (
-                      <div key={item.treatment} className="flex items-center justify-between bg-white/70 p-3 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 border border-gray-100">
-                        <div className="flex items-center gap-3">
-                          <div 
-                            className="w-4 h-4 rounded-full shadow-lg border-2 border-white"
-                            style={{ backgroundColor: item.fill }}
-                          />
-                          <div>
-                            <span className="font-semibold text-gray-800 text-sm">{item.treatment}</span>
-                            <div className="text-xs text-gray-600">{item.value} casos</div>
+              {/* Scrollable content area for treatment breakdown */}
+              <div className="flex-1 overflow-y-auto">
+                {/* Resumen compacto con porcentajes */}
+                <div className="grid grid-cols-2 gap-4 mb-4">
+                  {treatmentTypeData
+                    .filter(item => item.value > 0)
+                    .slice(0, 6)
+                    .map((item, index) => {
+                      const total = treatmentTypeData.reduce((sum, data) => sum + data.value, 0);
+                      const percentage = total > 0 ? ((item.value / total) * 100).toFixed(1) : 0;
+                      return (
+                        <div key={item.treatment} className="flex items-center justify-between bg-white/70 p-3 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 border border-gray-100">
+                          <div className="flex items-center gap-3">
+                            <div 
+                              className="w-4 h-4 rounded-full shadow-lg border-2 border-white"
+                              style={{ backgroundColor: item.fill }}
+                            />
+                            <div>
+                              <span className="font-semibold text-gray-800 text-sm">{item.treatment}</span>
+                              <div className="text-xs text-gray-600">{item.value} casos</div>
+                            </div>
+                          </div>
+                          <div className="text-right">
+                            <div className="text-lg font-bold" style={{ color: item.fill }}>
+                              {percentage}%
+                            </div>
                           </div>
                         </div>
-                        <div className="text-right">
-                          <div className="text-lg font-bold" style={{ color: item.fill }}>
-                            {percentage}%
-                          </div>
-                        </div>
-                      </div>
-                    );
-                  })}
-              </div>
-              
-              {/* Leyenda compacta para tratamientos con 0 casos */}
-              {treatmentTypeData.some(item => item.value === 0) && (
-                <div className="mt-4 p-4 bg-gray-50 rounded-xl">
-                  <h5 className="text-sm font-semibold text-gray-600 mb-2">Sin casos registrados:</h5>
-                  <div className="flex flex-wrap gap-2">
-                    {treatmentTypeData
-                      .filter(item => item.value === 0)
-                      .map((item) => (
-                        <div key={item.treatment} className="flex items-center gap-2 bg-white px-3 py-1 rounded-lg shadow-sm">
-                          <div 
-                            className="w-3 h-3 rounded-full opacity-50"
-                            style={{ backgroundColor: item.fill }}
-                          />
-                          <span className="text-xs text-gray-500">{item.treatment}</span>
-                        </div>
-                      ))}
-                  </div>
+                      );
+                    })}
                 </div>
-              )}
+                
+                {/* Leyenda compacta para tratamientos con 0 casos */}
+                {treatmentTypeData.some(item => item.value === 0) && (
+                  <div className="p-4 bg-gray-50 rounded-xl">
+                    <h5 className="text-sm font-semibold text-gray-600 mb-2">Sin casos registrados:</h5>
+                    <div className="flex flex-wrap gap-2">
+                      {treatmentTypeData
+                        .filter(item => item.value === 0)
+                        .map((item) => (
+                          <div key={item.treatment} className="flex items-center gap-2 bg-white px-3 py-1 rounded-lg shadow-sm">
+                            <div 
+                              className="w-3 h-3 rounded-full opacity-50"
+                              style={{ backgroundColor: item.fill }}
+                            />
+                            <span className="text-xs text-gray-500">{item.treatment}</span>
+                          </div>
+                        ))}
+                    </div>
+                  </div>
+                )}
+              </div>
             </CardContent>
           </Card>
         </div>
