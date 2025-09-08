@@ -90,10 +90,6 @@ export const SurveyForm = () => {
           consultation_time: data.consultation_time,
           nps_score: data.nps_score,
           additional_comments: data.additional_comments || null,
-          // Keep compatibility with old fields by setting default values
-          booking_ease: 3,
-          wait_time_satisfaction: 3,
-          treatment_trust: 3,
         }]);
 
       if (error) throw error;

@@ -44,9 +44,8 @@ export type Database = {
       survey_responses: {
         Row: {
           additional_comments: string | null
-          appointment_type: string | null
-          body_area: string | null
-          booking_ease: number
+          appointment_type: string
+          body_area: string
           clinic_environment: number
           communication_clarity: number
           consultation_time: number
@@ -58,18 +57,15 @@ export type Database = {
           other_body_area: string | null
           other_treatment: string | null
           reception_friendliness: number
-          treatment_trust: number
-          treatment_type: string | null
+          treatment_type: string
           updated_at: string
-          wait_time_satisfaction: number
           waiting_time: string
-          website_design_rating: number | null
+          website_design_rating: number
         }
         Insert: {
           additional_comments?: string | null
-          appointment_type?: string | null
-          body_area?: string | null
-          booking_ease: number
+          appointment_type: string
+          body_area: string
           clinic_environment: number
           communication_clarity: number
           consultation_time: number
@@ -81,18 +77,15 @@ export type Database = {
           other_body_area?: string | null
           other_treatment?: string | null
           reception_friendliness: number
-          treatment_trust: number
-          treatment_type?: string | null
+          treatment_type: string
           updated_at?: string
-          wait_time_satisfaction: number
           waiting_time: string
-          website_design_rating?: number | null
+          website_design_rating: number
         }
         Update: {
           additional_comments?: string | null
-          appointment_type?: string | null
-          body_area?: string | null
-          booking_ease?: number
+          appointment_type?: string
+          body_area?: string
           clinic_environment?: number
           communication_clarity?: number
           consultation_time?: number
@@ -104,12 +97,10 @@ export type Database = {
           other_body_area?: string | null
           other_treatment?: string | null
           reception_friendliness?: number
-          treatment_trust?: number
-          treatment_type?: string | null
+          treatment_type?: string
           updated_at?: string
-          wait_time_satisfaction?: number
           waiting_time?: string
-          website_design_rating?: number | null
+          website_design_rating?: number
         }
         Relationships: []
       }
