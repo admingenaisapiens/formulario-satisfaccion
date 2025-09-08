@@ -209,6 +209,43 @@ export const TreatmentAnalytics = () => {
 
     return (
       <div className="flex flex-col items-center space-y-6 p-4">
+        {/* Available Body Zones Section */}
+        <div className="w-full max-w-4xl bg-white/70 backdrop-blur-sm rounded-2xl shadow-lg border border-gray-100 p-6 mb-6">
+          <h4 className="text-lg font-bold text-gray-800 mb-4 text-center flex items-center justify-center gap-2">
+            <MapPin className="w-5 h-5 text-blue-600" />
+            Zonas del Cuerpo Disponibles
+          </h4>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            {[
+              { zone: 'columna_cervical', label: 'Columna Cervical' },
+              { zone: 'hombro', label: 'Hombro' },
+              { zone: 'columna_dorsal', label: 'Columna Dorsal' },
+              { zone: 'codo', label: 'Codo' },
+              { zone: 'columna_lumbar', label: 'Columna Lumbar' },
+              { zone: 'mano', label: 'Mano' },
+              { zone: 'rodilla', label: 'Rodilla' },
+              { zone: 'pie', label: 'Pie' },
+              { zone: 'otra', label: 'Otra Zona' }
+            ].map((item) => {
+              const count = getZoneCount(item.zone);
+              return (
+                <div key={item.zone} className="flex items-center gap-3 bg-white px-4 py-3 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 border border-gray-100">
+                  <div 
+                    className="w-4 h-4 rounded-full border-2 border-white shadow-lg flex-shrink-0"
+                    style={{ 
+                      backgroundColor: getZoneColor(count, 0.9)
+                    }}
+                  />
+                  <div className="flex-1 min-w-0">
+                    <span className="font-medium text-gray-800 text-sm block truncate">{item.label}</span>
+                    <span className="text-xs text-gray-600">{count} casos</span>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+        
         <div className="relative inline-block">
           <img 
             src="/lovable-uploads/548b9017-01e8-4778-9318-9440f04bca5b.png"
