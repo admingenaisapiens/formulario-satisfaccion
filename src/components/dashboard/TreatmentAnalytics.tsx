@@ -555,7 +555,7 @@ export const TreatmentAnalytics = () => {
               </CardHeader>
             </div>
             <CardContent className="p-8 bg-gradient-to-b from-white to-emerald-50/50 flex-1 flex flex-col">
-              <div className="relative flex items-center justify-center flex-shrink-0">
+              <div className="relative flex items-center justify-center flex-shrink-0 p-4">
                 <ChartContainer
                   config={{
                     presencial: { label: "Presencial", color: "#10b981" },
@@ -564,7 +564,7 @@ export const TreatmentAnalytics = () => {
                   className="h-64 sm:h-80 w-full"
                 >
                   <ResponsiveContainer width="100%" height="100%">
-                    <PieChart>
+                    <PieChart margin={{ top: 20, right: 20, bottom: 20, left: 20 }}>
                       <Pie
                         data={appointmentTypeData}
                         cx="50%"
@@ -578,7 +578,7 @@ export const TreatmentAnalytics = () => {
                           }
                           return '';
                         }}
-                        outerRadius={120}
+                        outerRadius={window.innerWidth < 640 ? 90 : 120}
                         innerRadius={40}
                         fill="#8884d8"
                         dataKey="value"
