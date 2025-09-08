@@ -123,31 +123,31 @@ export default function Dashboard() {
         <Tabs defaultValue="charts" className="space-y-8">
           {/* Enhanced Tab Navigation */}
           <div className="flex justify-center">
-            <TabsList className="grid grid-cols-4 bg-white border border-gray-200 shadow-2xl rounded-2xl p-2 max-w-2xl ring-1 ring-black/5">
+            <TabsList className="grid grid-cols-4 bg-white border border-gray-200 shadow-2xl rounded-2xl p-3 max-w-2xl ring-1 ring-black/5 h-16 items-center">
               <TabsTrigger 
                 value="charts" 
-                className="flex items-center gap-2 rounded-xl data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-purple-600 data-[state=active]:text-white data-[state=active]:shadow-lg transition-all duration-300 hover:bg-gray-50"
+                className="flex items-center justify-center gap-2 rounded-xl h-12 data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-purple-600 data-[state=active]:text-white data-[state=active]:shadow-lg transition-all duration-300 hover:bg-gray-50"
               >
                 <BarChart3 className="w-4 h-4" />
                 Gráficos
               </TabsTrigger>
               <TabsTrigger 
                 value="treatments"
-                className="flex items-center gap-2 rounded-xl data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-purple-600 data-[state=active]:text-white data-[state=active]:shadow-lg transition-all duration-300 hover:bg-gray-50"
+                className="flex items-center justify-center gap-2 rounded-xl h-12 data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-purple-600 data-[state=active]:text-white data-[state=active]:shadow-lg transition-all duration-300 hover:bg-gray-50"
               >
                 <Activity className="w-4 h-4" />
                 Tratamientos
               </TabsTrigger>
               <TabsTrigger 
                 value="table"
-                className="flex items-center gap-2 rounded-xl data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-purple-600 data-[state=active]:text-white data-[state=active]:shadow-lg transition-all duration-300 hover:bg-gray-50"
+                className="flex items-center justify-center gap-2 rounded-xl h-12 data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-purple-600 data-[state=active]:text-white data-[state=active]:shadow-lg transition-all duration-300 hover:bg-gray-50"
               >
                 <Table className="w-4 h-4" />
                 Tabla
               </TabsTrigger>
               <TabsTrigger 
                 value="comments"
-                className="flex items-center gap-2 rounded-xl data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-purple-600 data-[state=active]:text-white data-[state=active]:shadow-lg transition-all duration-300 hover:bg-gray-50"
+                className="flex items-center justify-center gap-2 rounded-xl h-12 data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-purple-600 data-[state=active]:text-white data-[state=active]:shadow-lg transition-all duration-300 hover:bg-gray-50"
               >
                 <MessageSquare className="w-4 h-4" />
                 Comentarios
