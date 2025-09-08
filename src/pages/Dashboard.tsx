@@ -6,10 +6,11 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { supabase } from '@/integrations/supabase/client';
 import { User, Session } from '@supabase/supabase-js';
 import { useToast } from '@/hooks/use-toast';
-import { LogOut, BarChart3, Table, MessageSquare } from 'lucide-react';
+import { LogOut, BarChart3, Table, MessageSquare, Activity } from 'lucide-react';
 import { SurveyTable } from '@/components/dashboard/SurveyTable';
 import { SurveyCharts } from '@/components/dashboard/SurveyCharts';
 import { CommentsSection } from '@/components/dashboard/CommentsSection';
+import { TreatmentAnalytics } from '@/components/dashboard/TreatmentAnalytics';
 
 export default function Dashboard() {
   const [user, setUser] = useState<User | null>(null);
@@ -110,10 +111,14 @@ export default function Dashboard() {
 
       <main className="container mx-auto px-4 py-8">
         <Tabs defaultValue="charts" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-3 max-w-md">
+          <TabsList className="grid w-full grid-cols-4 max-w-2xl">
             <TabsTrigger value="charts" className="flex items-center">
               <BarChart3 className="w-4 h-4 mr-2" />
               Gráficos
+            </TabsTrigger>
+            <TabsTrigger value="treatments" className="flex items-center">
+              <Activity className="w-4 h-4 mr-2" />
+              Tratamientos
             </TabsTrigger>
             <TabsTrigger value="table" className="flex items-center">
               <Table className="w-4 h-4 mr-2" />
@@ -137,6 +142,10 @@ export default function Dashboard() {
                 <SurveyCharts />
               </CardContent>
             </Card>
+          </TabsContent>
+
+          <TabsContent value="treatments" className="space-y-6">
+            <TreatmentAnalytics />
           </TabsContent>
 
           <TabsContent value="table" className="space-y-6">
