@@ -11,7 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
-import { Download, CalendarIcon, Search } from 'lucide-react';
+import { Download, CalendarIcon, Search, Table as TableIcon } from 'lucide-react';
 
 interface SurveyResponse {
   id: string;
@@ -272,16 +272,42 @@ export const SurveyTable = () => {
   }
 
   return (
-    <div className="space-y-6">
-      {/* Filters */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Filtros de Búsqueda</CardTitle>
-          <CardDescription>
-            Filtra las encuestas por términos de búsqueda, puntuación NPS o rango de fechas
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
+    <div className="space-y-8">
+      {/* Hero Header */}
+      <div className="relative overflow-hidden bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 rounded-3xl shadow-2xl">
+        <div className="absolute inset-0 bg-black/10"></div>
+        <div className="relative p-8 text-white">
+          <div className="flex items-center gap-4 mb-4">
+            <div className="p-3 bg-white/20 rounded-2xl backdrop-blur-sm">
+              <TableIcon className="w-8 h-8" />
+            </div>
+            <div>
+              <h1 className="text-4xl font-bold mb-2">Tabla de Respuestas</h1>
+              <p className="text-blue-100 text-lg">
+                Vista detallada de todas las encuestas de satisfacción
+              </p>
+            </div>
+          </div>
+          <div className="absolute -right-20 -top-20 w-40 h-40 bg-white/10 rounded-full blur-3xl"></div>
+          <div className="absolute -left-10 -bottom-10 w-32 h-32 bg-purple-300/20 rounded-full blur-2xl"></div>
+        </div>
+      </div>
+      {/* Enhanced Filters */}
+      <Card className="border-0 shadow-2xl bg-white/80 backdrop-blur-sm hover:shadow-3xl transition-all duration-500 overflow-hidden">
+        <div className="bg-gradient-to-r from-violet-500 via-purple-500 to-indigo-500 p-1">
+          <CardHeader className="bg-white m-1 rounded-lg">
+            <CardTitle className="flex items-center gap-3 text-gray-800">
+              <div className="p-3 bg-gradient-to-br from-violet-500 to-purple-600 rounded-xl shadow-lg">
+                <Search className="w-6 h-6 text-white" />
+              </div>
+              <div>
+                <span className="text-xl font-bold">Filtros de Búsqueda</span>
+                <p className="text-sm font-normal text-gray-600 mt-1">Filtra las encuestas por términos de búsqueda, puntuación NPS o rango de fechas</p>
+              </div>
+            </CardTitle>
+          </CardHeader>
+        </div>
+        <CardContent className="p-8 bg-gradient-to-b from-white to-violet-50/50">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4">
             <div className="relative lg:col-span-2">
               <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />

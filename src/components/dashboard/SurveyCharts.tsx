@@ -9,7 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
-import { CalendarIcon, MessageSquare, Users, TrendingUp, Star } from 'lucide-react';
+import { CalendarIcon, MessageSquare, Users, TrendingUp, Star, BarChart3 } from 'lucide-react';
 import {
   BarChart,
   Bar,
@@ -257,19 +257,45 @@ export const SurveyCharts = () => {
   }
 
   return (
-    <div className="space-y-6">
-      {/* Date Filter */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Filtro de Fecha</CardTitle>
-          <CardDescription>
-            Selecciona el período de tiempo para analizar los datos
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
+    <div className="space-y-8">
+      {/* Hero Header */}
+      <div className="relative overflow-hidden bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 rounded-3xl shadow-2xl">
+        <div className="absolute inset-0 bg-black/10"></div>
+        <div className="relative p-8 text-white">
+          <div className="flex items-center gap-4 mb-4">
+            <div className="p-3 bg-white/20 rounded-2xl backdrop-blur-sm">
+              <BarChart3 className="w-8 h-8" />
+            </div>
+            <div>
+              <h1 className="text-4xl font-bold mb-2">Análisis de Resultados</h1>
+              <p className="text-blue-100 text-lg">
+                Visualización gráfica de las respuestas de satisfacción de pacientes
+              </p>
+            </div>
+          </div>
+          <div className="absolute -right-20 -top-20 w-40 h-40 bg-white/10 rounded-full blur-3xl"></div>
+          <div className="absolute -left-10 -bottom-10 w-32 h-32 bg-purple-300/20 rounded-full blur-2xl"></div>
+        </div>
+      </div>
+      {/* Date Filter - Enhanced */}
+      <Card className="border-0 shadow-2xl bg-white/80 backdrop-blur-sm hover:shadow-3xl transition-all duration-500 overflow-hidden">
+        <div className="bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 p-1">
+          <CardHeader className="bg-white m-1 rounded-lg">
+            <CardTitle className="flex items-center gap-3 text-gray-800">
+              <div className="p-3 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-xl shadow-lg">
+                <CalendarIcon className="w-6 h-6 text-white" />
+              </div>
+              <div>
+                <span className="text-xl font-bold">Filtro de Fecha</span>
+                <p className="text-sm font-normal text-gray-600 mt-1">Selecciona el período de tiempo para analizar los datos</p>
+              </div>
+            </CardTitle>
+          </CardHeader>
+        </div>
+        <CardContent className="p-8 bg-gradient-to-b from-white to-emerald-50/50">
           <div className="flex flex-col sm:flex-row gap-4">
             <Select value={dateFilter} onValueChange={setDateFilter}>
-              <SelectTrigger className="w-full sm:w-[200px]">
+              <SelectTrigger className="w-full sm:w-[200px] border-2 border-emerald-100 hover:border-emerald-300 transition-colors">
                 <SelectValue placeholder="Seleccionar período" />
               </SelectTrigger>
               <SelectContent>
@@ -285,7 +311,7 @@ export const SurveyCharts = () => {
               <div className="flex gap-2">
                 <Popover>
                   <PopoverTrigger asChild>
-                    <Button variant="outline" className="w-[150px] justify-start text-left font-normal">
+                    <Button variant="outline" className="w-[150px] justify-start text-left font-normal border-2 border-emerald-100 hover:border-emerald-300 hover:bg-emerald-50">
                       <CalendarIcon className="mr-2 h-4 w-4" />
                       {customDateFrom ? format(customDateFrom, 'dd/MM/yyyy') : 'Desde'}
                     </Button>
@@ -302,7 +328,7 @@ export const SurveyCharts = () => {
 
                 <Popover>
                   <PopoverTrigger asChild>
-                    <Button variant="outline" className="w-[150px] justify-start text-left font-normal">
+                    <Button variant="outline" className="w-[150px] justify-start text-left font-normal border-2 border-emerald-100 hover:border-emerald-300 hover:bg-emerald-50">
                       <CalendarIcon className="mr-2 h-4 w-4" />
                       {customDateTo ? format(customDateTo, 'dd/MM/yyyy') : 'Hasta'}
                     </Button>
@@ -322,76 +348,100 @@ export const SurveyCharts = () => {
         </CardContent>
       </Card>
 
-      {/* Summary Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Respuestas</CardTitle>
-            <Users className="h-4 w-4 text-muted-foreground" />
+      {/* Enhanced Summary Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <Card className="group relative overflow-hidden border-0 shadow-xl bg-gradient-to-br from-blue-500 to-indigo-600 text-white hover:scale-105 transition-all duration-300">
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -skew-x-12 translate-x-full group-hover:translate-x-[-200%] transition-transform duration-1000"></div>
+          <CardHeader className="relative pb-2">
+            <div className="flex items-center justify-between">
+              <CardTitle className="text-sm font-medium text-blue-100">Total Respuestas</CardTitle>
+              <div className="p-2 bg-white/20 rounded-xl backdrop-blur-sm">
+                <Users className="h-5 w-5" />
+              </div>
+            </div>
           </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{filteredSurveys.length}</div>
-            <p className="text-xs text-muted-foreground">
+          <CardContent className="relative">
+            <div className="text-3xl font-bold mb-1">{filteredSurveys.length}</div>
+            <p className="text-blue-100 text-sm">
               Encuestas completadas
             </p>
           </CardContent>
         </Card>
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Puntuación NPS</CardTitle>
-            <TrendingUp className="h-4 w-4 text-muted-foreground" />
+        <Card className="group relative overflow-hidden border-0 shadow-xl bg-gradient-to-br from-emerald-500 to-teal-600 text-white hover:scale-105 transition-all duration-300">
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -skew-x-12 translate-x-full group-hover:translate-x-[-200%] transition-transform duration-1000"></div>
+          <CardHeader className="relative pb-2">
+            <div className="flex items-center justify-between">
+              <CardTitle className="text-sm font-medium text-emerald-100">Puntuación NPS</CardTitle>
+              <div className="p-2 bg-white/20 rounded-xl backdrop-blur-sm">
+                <TrendingUp className="h-5 w-5" />
+              </div>
+            </div>
           </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{npsData.nps}</div>
-            <p className="text-xs text-muted-foreground">
+          <CardContent className="relative">
+            <div className="text-3xl font-bold mb-1">{npsData.nps}</div>
+            <p className="text-emerald-100 text-sm">
               Net Promoter Score
             </p>
           </CardContent>
         </Card>
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Satisfacción Promedio</CardTitle>
-            <Star className="h-4 w-4 text-muted-foreground" />
+        <Card className="group relative overflow-hidden border-0 shadow-xl bg-gradient-to-br from-violet-500 to-purple-600 text-white hover:scale-105 transition-all duration-300">
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -skew-x-12 translate-x-full group-hover:translate-x-[-200%] transition-transform duration-1000"></div>
+          <CardHeader className="relative pb-2">
+            <div className="flex items-center justify-between">
+              <CardTitle className="text-sm font-medium text-violet-100">Satisfacción Promedio</CardTitle>
+              <div className="p-2 bg-white/20 rounded-xl backdrop-blur-sm">
+                <Star className="h-5 w-5" />
+              </div>
+            </div>
           </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{Math.round(averageSatisfaction * 100) / 100}/5</div>
-            <p className="text-xs text-muted-foreground">
-              Promedio de puntuaciones (Web, Comunicación, Recepción, Ambiente, Doctor, Explicación, Tiempo)
+          <CardContent className="relative">
+            <div className="text-3xl font-bold mb-1">{Math.round(averageSatisfaction * 100) / 100}/5</div>
+            <p className="text-violet-100 text-sm">
+              Promedio general de satisfacción
             </p>
           </CardContent>
         </Card>
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Con Comentarios</CardTitle>
-            <MessageSquare className="h-4 w-4 text-muted-foreground" />
+        <Card className="group relative overflow-hidden border-0 shadow-xl bg-gradient-to-br from-orange-500 to-red-600 text-white hover:scale-105 transition-all duration-300">
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -skew-x-12 translate-x-full group-hover:translate-x-[-200%] transition-transform duration-1000"></div>
+          <CardHeader className="relative pb-2">
+            <div className="flex items-center justify-between">
+              <CardTitle className="text-sm font-medium text-orange-100">Con Comentarios</CardTitle>
+              <div className="p-2 bg-white/20 rounded-xl backdrop-blur-sm">
+                <MessageSquare className="h-5 w-5" />
+              </div>
+            </div>
           </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">
+          <CardContent className="relative">
+            <div className="text-3xl font-bold mb-1">
               {filteredSurveys.filter(s => s.additional_comments && s.additional_comments.trim() !== '').length}
             </div>
-            <p className="text-xs text-muted-foreground">
+            <p className="text-orange-100 text-sm">
               Respuestas con feedback adicional
             </p>
           </CardContent>
         </Card>
       </div>
 
-      {/* Charts */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Bar Chart - Average Ratings */}
-        <Card className="col-span-1">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Star className="w-5 h-5 text-primary" />
-              Puntuaciones Promedio por Categoría
-            </CardTitle>
-            <CardDescription>
-              Evaluación promedio de cada aspecto de la experiencia del paciente (escala 1-5)
-            </CardDescription>
-          </CardHeader>
+      {/* Modern Charts */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        {/* Bar Chart - Enhanced */}
+        <Card className="border-0 shadow-2xl bg-white/80 backdrop-blur-sm hover:shadow-3xl transition-all duration-500 overflow-hidden col-span-1">
+          <div className="bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 p-1">
+            <CardHeader className="bg-white m-1 rounded-lg">
+              <CardTitle className="flex items-center gap-3 text-gray-800">
+                <div className="p-3 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl shadow-lg">
+                  <Star className="w-6 h-6 text-white" />
+                </div>
+                <div>
+                  <span className="text-xl font-bold">Puntuaciones Promedio</span>
+                  <p className="text-sm font-normal text-gray-600 mt-1">Evaluación de cada aspecto (escala 1-5)</p>
+                </div>
+              </CardTitle>
+            </CardHeader>
+          </div>
           <CardContent className="pb-4">
             <ChartContainer
               config={{

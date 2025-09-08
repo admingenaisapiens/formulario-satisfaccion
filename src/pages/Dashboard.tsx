@@ -82,98 +82,93 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-secondary/20">
-      <header className="border-b bg-card/95 backdrop-blur supports-[backdrop-filter]:bg-card/60">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <div className="flex items-center space-x-4">
-            <div className="flex items-center justify-center w-10 h-10 bg-primary/10 rounded-full">
-              <BarChart3 className="w-5 h-5 text-primary" />
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
+      {/* Modern Header */}
+      <header className="relative overflow-hidden bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 shadow-2xl">
+        <div className="absolute inset-0 bg-black/10"></div>
+        <div className="relative container mx-auto px-6 py-6">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-4">
+              <div className="p-3 bg-white/20 rounded-2xl backdrop-blur-sm shadow-lg">
+                <BarChart3 className="w-8 h-8 text-white" />
+              </div>
+              <div className="text-white">
+                <h1 className="text-3xl font-bold mb-1">Dashboard Médico</h1>
+                <p className="text-blue-100 text-lg">
+                  Sistema de Análisis de Encuestas de Satisfacción
+                </p>
+              </div>
             </div>
-            <div>
-              <h1 className="text-xl font-bold">Dashboard Médico</h1>
-              <p className="text-sm text-muted-foreground">
-                Encuestas de Satisfacción de Pacientes
-              </p>
+            <div className="flex items-center space-x-4">
+              <div className="text-right hidden sm:block bg-white/10 backdrop-blur-sm rounded-xl px-4 py-2">
+                <p className="text-sm font-medium text-white">{user.email}</p>
+                <p className="text-xs text-blue-100">Doctor Especialista</p>
+              </div>
+              <Button 
+                variant="outline" 
+                onClick={handleLogout}
+                className="bg-white/10 border-white/20 text-white hover:bg-white/20 backdrop-blur-sm"
+              >
+                <LogOut className="w-4 h-4 mr-2" />
+                Cerrar Sesión
+              </Button>
             </div>
-          </div>
-          <div className="flex items-center space-x-4">
-            <div className="text-right hidden sm:block">
-              <p className="text-sm font-medium">{user.email}</p>
-              <p className="text-xs text-muted-foreground">Doctor</p>
-            </div>
-            <Button variant="outline" onClick={handleLogout}>
-              <LogOut className="w-4 h-4 mr-2" />
-              Cerrar Sesión
-            </Button>
           </div>
         </div>
+        <div className="absolute -right-20 -top-20 w-40 h-40 bg-white/10 rounded-full blur-3xl"></div>
+        <div className="absolute -left-10 -bottom-10 w-32 h-32 bg-purple-300/20 rounded-full blur-2xl"></div>
       </header>
 
-      <main className="container mx-auto px-4 py-8">
-        <Tabs defaultValue="charts" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4 max-w-2xl">
-            <TabsTrigger value="charts" className="flex items-center">
-              <BarChart3 className="w-4 h-4 mr-2" />
-              Gráficos
-            </TabsTrigger>
-            <TabsTrigger value="treatments" className="flex items-center">
-              <Activity className="w-4 h-4 mr-2" />
-              Tratamientos
-            </TabsTrigger>
-            <TabsTrigger value="table" className="flex items-center">
-              <Table className="w-4 h-4 mr-2" />
-              Tabla
-            </TabsTrigger>
-            <TabsTrigger value="comments" className="flex items-center">
-              <MessageSquare className="w-4 h-4 mr-2" />
-              Comentarios
-            </TabsTrigger>
-          </TabsList>
+      <main className="container mx-auto px-6 py-8">
+        <Tabs defaultValue="charts" className="space-y-8">
+          {/* Enhanced Tab Navigation */}
+          <div className="flex justify-center">
+            <TabsList className="grid grid-cols-4 bg-white/80 backdrop-blur-sm border-0 shadow-xl rounded-2xl p-2 max-w-2xl">
+              <TabsTrigger 
+                value="charts" 
+                className="flex items-center gap-2 rounded-xl data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-purple-600 data-[state=active]:text-white data-[state=active]:shadow-lg transition-all duration-300"
+              >
+                <BarChart3 className="w-4 h-4" />
+                Gráficos
+              </TabsTrigger>
+              <TabsTrigger 
+                value="treatments"
+                className="flex items-center gap-2 rounded-xl data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-purple-600 data-[state=active]:text-white data-[state=active]:shadow-lg transition-all duration-300"
+              >
+                <Activity className="w-4 h-4" />
+                Tratamientos
+              </TabsTrigger>
+              <TabsTrigger 
+                value="table"
+                className="flex items-center gap-2 rounded-xl data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-purple-600 data-[state=active]:text-white data-[state=active]:shadow-lg transition-all duration-300"
+              >
+                <Table className="w-4 h-4" />
+                Tabla
+              </TabsTrigger>
+              <TabsTrigger 
+                value="comments"
+                className="flex items-center gap-2 rounded-xl data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-purple-600 data-[state=active]:text-white data-[state=active]:shadow-lg transition-all duration-300"
+              >
+                <MessageSquare className="w-4 h-4" />
+                Comentarios
+              </TabsTrigger>
+            </TabsList>
+          </div>
 
-          <TabsContent value="charts" className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Análisis de Resultados</CardTitle>
-                <CardDescription>
-                  Visualización gráfica de las respuestas de satisfacción de pacientes
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <SurveyCharts />
-              </CardContent>
-            </Card>
+          <TabsContent value="charts">
+            <SurveyCharts />
           </TabsContent>
 
-          <TabsContent value="treatments" className="space-y-6">
+          <TabsContent value="treatments">
             <TreatmentAnalytics />
           </TabsContent>
 
-          <TabsContent value="table" className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Tabla de Respuestas</CardTitle>
-                <CardDescription>
-                  Vista detallada de todas las encuestas de satisfacción
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <SurveyTable />
-              </CardContent>
-            </Card>
+          <TabsContent value="table">
+            <SurveyTable />
           </TabsContent>
 
-          <TabsContent value="comments" className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Comentarios de Pacientes</CardTitle>
-                <CardDescription>
-                  Feedback adicional y sugerencias de los pacientes
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <CommentsSection />
-              </CardContent>
-            </Card>
+          <TabsContent value="comments">
+            <CommentsSection />
           </TabsContent>
         </Tabs>
       </main>

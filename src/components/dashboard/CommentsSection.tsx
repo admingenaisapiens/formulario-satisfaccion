@@ -217,58 +217,99 @@ export const CommentsSection = () => {
   }
 
   return (
-    <div className="space-y-6">
-      {/* Summary Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Comentarios</CardTitle>
-            <MessageSquare className="h-4 w-4 text-muted-foreground" />
+    <div className="space-y-8">
+      {/* Hero Header */}
+      <div className="relative overflow-hidden bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 rounded-3xl shadow-2xl">
+        <div className="absolute inset-0 bg-black/10"></div>
+        <div className="relative p-8 text-white">
+          <div className="flex items-center gap-4 mb-4">
+            <div className="p-3 bg-white/20 rounded-2xl backdrop-blur-sm">
+              <MessageSquare className="w-8 h-8" />
+            </div>
+            <div>
+              <h1 className="text-4xl font-bold mb-2">Comentarios de Pacientes</h1>
+              <p className="text-blue-100 text-lg">
+                Feedback adicional y sugerencias de los pacientes
+              </p>
+            </div>
+          </div>
+          <div className="absolute -right-20 -top-20 w-40 h-40 bg-white/10 rounded-full blur-3xl"></div>
+          <div className="absolute -left-10 -bottom-10 w-32 h-32 bg-purple-300/20 rounded-full blur-2xl"></div>
+        </div>
+      </div>
+      {/* Enhanced Summary Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <Card className="group relative overflow-hidden border-0 shadow-xl bg-gradient-to-br from-blue-500 to-indigo-600 text-white hover:scale-105 transition-all duration-300">
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -skew-x-12 translate-x-full group-hover:translate-x-[-200%] transition-transform duration-1000"></div>
+          <CardHeader className="relative pb-2">
+            <div className="flex items-center justify-between">
+              <CardTitle className="text-sm font-medium text-blue-100">Total Comentarios</CardTitle>
+              <div className="p-2 bg-white/20 rounded-xl backdrop-blur-sm">
+                <MessageSquare className="h-5 w-5" />
+              </div>
+            </div>
           </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{surveys.length}</div>
-            <p className="text-xs text-muted-foreground">
+          <CardContent className="relative">
+            <div className="text-3xl font-bold mb-1">{surveys.length}</div>
+            <p className="text-blue-100 text-sm">
               Respuestas con feedback adicional
             </p>
           </CardContent>
         </Card>
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Promotores</CardTitle>
-            <TrendingUp className="h-4 w-4 text-muted-foreground" />
+        <Card className="group relative overflow-hidden border-0 shadow-xl bg-gradient-to-br from-emerald-500 to-teal-600 text-white hover:scale-105 transition-all duration-300">
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -skew-x-12 translate-x-full group-hover:translate-x-[-200%] transition-transform duration-1000"></div>
+          <CardHeader className="relative pb-2">
+            <div className="flex items-center justify-between">
+              <CardTitle className="text-sm font-medium text-emerald-100">Promotores</CardTitle>
+              <div className="p-2 bg-white/20 rounded-xl backdrop-blur-sm">
+                <TrendingUp className="h-5 w-5" />
+              </div>
+            </div>
           </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{promoters}</div>
-            <p className="text-xs text-muted-foreground">
+          <CardContent className="relative">
+            <div className="text-3xl font-bold mb-1">{promoters}</div>
+            <p className="text-emerald-100 text-sm">
               Comentarios con NPS 9-10
             </p>
           </CardContent>
         </Card>
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Detractores</CardTitle>
-            <TrendingDown className="h-4 w-4 text-muted-foreground" />
+        <Card className="group relative overflow-hidden border-0 shadow-xl bg-gradient-to-br from-orange-500 to-red-600 text-white hover:scale-105 transition-all duration-300">
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -skew-x-12 translate-x-full group-hover:translate-x-[-200%] transition-transform duration-1000"></div>
+          <CardHeader className="relative pb-2">
+            <div className="flex items-center justify-between">
+              <CardTitle className="text-sm font-medium text-orange-100">Detractores</CardTitle>
+              <div className="p-2 bg-white/20 rounded-xl backdrop-blur-sm">
+                <TrendingDown className="h-5 w-5" />
+              </div>
+            </div>
           </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{detractors}</div>
-            <p className="text-xs text-muted-foreground">
+          <CardContent className="relative">
+            <div className="text-3xl font-bold mb-1">{detractors}</div>
+            <p className="text-orange-100 text-sm">
               Comentarios con NPS 0-6
             </p>
           </CardContent>
         </Card>
       </div>
 
-      {/* Filters */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Filtros de Comentarios</CardTitle>
-          <CardDescription>
-            Filtra y ordena los comentarios de los pacientes
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
+      {/* Enhanced Filters */}
+      <Card className="border-0 shadow-2xl bg-white/80 backdrop-blur-sm hover:shadow-3xl transition-all duration-500 overflow-hidden">
+        <div className="bg-gradient-to-r from-violet-500 via-purple-500 to-indigo-500 p-1">
+          <CardHeader className="bg-white m-1 rounded-lg">
+            <CardTitle className="flex items-center gap-3 text-gray-800">
+              <div className="p-3 bg-gradient-to-br from-violet-500 to-purple-600 rounded-xl shadow-lg">
+                <Search className="w-6 h-6 text-white" />
+              </div>
+              <div>
+                <span className="text-xl font-bold">Filtros de Comentarios</span>
+                <p className="text-sm font-normal text-gray-600 mt-1">Filtra y ordena los comentarios de los pacientes</p>
+              </div>
+            </CardTitle>
+          </CardHeader>
+        </div>
+        <CardContent className="p-8 bg-gradient-to-b from-white to-violet-50/50">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div className="relative">
               <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
@@ -314,52 +355,59 @@ export const CommentsSection = () => {
         </CardContent>
       </Card>
 
-      {/* Comments Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {/* Enhanced Comments Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {paginatedSurveys.map((survey) => {
           const avgSatisfaction = calculateAverageSatisfaction(survey);
           const satisfactionLevel = getSatisfactionLevel(avgSatisfaction);
 
           return (
-            <Card key={survey.id} className="h-fit">
-              <CardHeader>
+            <Card key={survey.id} className="group relative overflow-hidden border-0 shadow-xl bg-white/90 backdrop-blur-sm hover:shadow-2xl transition-all duration-500 hover:scale-105">
+              <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 via-purple-500/5 to-indigo-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+              <CardHeader className="relative">
                 <div className="flex justify-between items-start">
                   <div>
-                    <CardTitle className="text-lg">
+                    <CardTitle className="text-lg text-gray-800 group-hover:text-blue-700 transition-colors">
                       {format(new Date(survey.created_at), 'dd MMM yyyy', { locale: es })}
                     </CardTitle>
-                    <CardDescription>
+                    <CardDescription className="mt-1 text-gray-600">
                       {getTreatmentLabel(survey.treatment_type || '')} - {getBodyAreaLabel(survey.body_area || '')}
                     </CardDescription>
                   </div>
                   <div className="flex flex-col items-end gap-2">
                     {getNPSBadge(survey.nps_score)}
-                    <span className="text-sm text-muted-foreground">
+                    <span className="text-sm text-gray-500 font-medium">
                       NPS: {survey.nps_score}/10
                     </span>
                   </div>
                 </div>
               </CardHeader>
-              <CardContent>
-                <div className="space-y-3">
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm font-medium">Satisfacción General:</span>
-                    <span className={`text-sm font-medium ${satisfactionLevel.color}`}>
+              <CardContent className="relative">
+                <div className="space-y-4">
+                  <div className="flex justify-between items-center p-3 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl">
+                    <span className="text-sm font-semibold text-gray-700">Satisfacción General:</span>
+                    <span className={`text-sm font-bold ${satisfactionLevel.color}`}>
                       {satisfactionLevel.label} ({avgSatisfaction.toFixed(1)}/5)
                     </span>
                   </div>
                   
-                  <div className="border-t pt-3">
-                    <p className="text-sm text-muted-foreground mb-2">Comentario:</p>
-                    <p className="text-sm leading-relaxed">
+                  <div className="border-l-4 border-blue-500 pl-4 py-3 bg-gradient-to-r from-blue-50/50 to-transparent rounded-r-lg">
+                    <p className="text-sm font-medium text-gray-600 mb-2">Comentario del Paciente:</p>
+                    <p className="text-sm leading-relaxed text-gray-800 italic">
                       "{survey.additional_comments}"
                     </p>
                   </div>
 
-                  <div className="text-xs text-muted-foreground pt-2 border-t">
-                    <div className="grid grid-cols-2 gap-1">
-                      <span>Tipo: {survey.appointment_type === 'presencial' ? 'Presencial' : 'Telemática'}</span>
-                      <span>ID: {survey.id.slice(0, 8)}...</span>
+                  <div className="text-xs text-gray-500 pt-3 border-t border-gray-100">
+                    <div className="grid grid-cols-2 gap-2 bg-gray-50 p-3 rounded-lg">
+                      <div className="flex items-center gap-1">
+                        <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                        <span>Tipo: {survey.appointment_type === 'presencial' ? 'Presencial' : 'Telemática'}</span>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <div className="w-2 h-2 bg-gray-400 rounded-full"></div>
+                        <span>ID: {survey.id.slice(0, 8)}...</span>
+                      </div>
                     </div>
                   </div>
                 </div>
