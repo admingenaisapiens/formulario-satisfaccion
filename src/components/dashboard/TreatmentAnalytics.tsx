@@ -673,7 +673,7 @@ export const TreatmentAnalytics = () => {
               </CardHeader>
             </div>
             <CardContent className="p-8 bg-gradient-to-b from-white to-violet-50/50">
-              <div className="flex items-center justify-center mb-6">
+              <div className="relative flex items-center justify-center mb-6">
                 <ChartContainer
                   config={{
                     fisioterapia: { label: "Fisioterapia", color: "#8b5cf6" },
@@ -684,22 +684,24 @@ export const TreatmentAnalytics = () => {
                     terapia_manual: { label: "Terapia Manual", color: "#f97316" },
                     otro: { label: "Otro", color: "#6b7280" }
                   }}
-                  className="h-64 w-full"
+                  className="h-96 w-full"
                 >
                   <ResponsiveContainer width="100%" height="100%">
                     <PieChart>
                       <Pie
-                        data={treatmentTypeData}
+                        data={treatmentTypeData.filter(item => item.value > 0)}
                         cx="50%"
                         cy="50%"
                         labelLine={false}
-                        outerRadius={90}
+                        label={({ name, percent }) => percent > 0.05 ? `${name}\n${(percent * 100).toFixed(0)}%` : ""}
+                        outerRadius={140}
+                        innerRadius={50}
                         fill="#8884d8"
                         dataKey="value"
                         stroke="#fff"
-                        strokeWidth={4}
+                        strokeWidth={3}
                       >
-                        {treatmentTypeData.map((entry, index) => (
+                        {treatmentTypeData.filter(item => item.value > 0).map((entry, index) => (
                           <Cell key={`cell-${index}`} fill={entry.fill} />
                         ))}
                       </Pie>
@@ -723,31 +725,67 @@ export const TreatmentAnalytics = () => {
                     </PieChart>
                   </ResponsiveContainer>
                 </ChartContainer>
-              </div>
-              
-              {/* Enhanced Treatment Legend */}
-              <div className="bg-gradient-to-r from-white to-violet-50 p-6 rounded-2xl shadow-lg ring-1 ring-violet-100">
-                <h4 className="text-lg font-bold text-violet-800 mb-4 text-center">Leyenda de Tratamientos</h4>
-                <div className="grid grid-cols-2 gap-3">
-                  {[
-                    { name: 'Fisioterapia', color: '#8b5cf6' },
-                    { name: 'Osteopatía', color: '#06b6d4' },
-                    { name: 'Readaptación', color: '#f59e0b' },
-                    { name: 'Punción Seca', color: '#ef4444' },
-                    { name: 'Electrólisis', color: '#10b981' },
-                    { name: 'Terapia Manual', color: '#f97316' },
-                  ].map((treatment, index) => (
-                    <div key={treatment.name} className="flex items-center gap-3 px-3 py-2 rounded-lg bg-white/70 hover:bg-white shadow-sm hover:shadow-md transition-all duration-200">
-                      <div className="w-4 h-4 rounded-full shadow-lg" style={{ backgroundColor: treatment.color }}></div>
-                      <span className="font-medium text-gray-700 text-sm">{treatment.name}</span>
+                
+                {/* Estadísticas centrales */}
+                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                  <div className="text-center">
+                    <div className="text-3xl font-bold text-gray-800">
+                      {treatmentTypeData.reduce((sum, item) => sum + item.value, 0)}
                     </div>
-                  ))}
-                  <div className="flex items-center gap-3 px-3 py-2 rounded-lg bg-white/70 hover:bg-white shadow-sm hover:shadow-md transition-all duration-200 col-span-2">
-                    <div className="w-4 h-4 rounded-full shadow-lg" style={{ backgroundColor: '#6b7280' }}></div>
-                    <span className="font-medium text-gray-700 text-sm">Otro</span>
+                    <div className="text-sm text-gray-600 font-medium">Tratamientos</div>
                   </div>
                 </div>
               </div>
+              
+              {/* Resumen compacto con porcentajes */}
+              <div className="grid grid-cols-2 gap-4">
+                {treatmentTypeData
+                  .filter(item => item.value > 0)
+                  .slice(0, 6)
+                  .map((item, index) => {
+                    const total = treatmentTypeData.reduce((sum, data) => sum + data.value, 0);
+                    const percentage = total > 0 ? ((item.value / total) * 100).toFixed(1) : 0;
+                    return (
+                      <div key={item.treatment} className="flex items-center justify-between bg-white/70 p-3 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 border border-gray-100">
+                        <div className="flex items-center gap-3">
+                          <div 
+                            className="w-4 h-4 rounded-full shadow-lg border-2 border-white"
+                            style={{ backgroundColor: item.fill }}
+                          />
+                          <div>
+                            <span className="font-semibold text-gray-800 text-sm">{item.treatment}</span>
+                            <div className="text-xs text-gray-600">{item.value} casos</div>
+                          </div>
+                        </div>
+                        <div className="text-right">
+                          <div className="text-lg font-bold" style={{ color: item.fill }}>
+                            {percentage}%
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+              </div>
+              
+              {/* Leyenda compacta para tratamientos con 0 casos */}
+              {treatmentTypeData.some(item => item.value === 0) && (
+                <div className="mt-4 p-4 bg-gray-50 rounded-xl">
+                  <h5 className="text-sm font-semibold text-gray-600 mb-2">Sin casos registrados:</h5>
+                  <div className="flex flex-wrap gap-2">
+                    {treatmentTypeData
+                      .filter(item => item.value === 0)
+                      .map((item) => (
+                        <div key={item.treatment} className="flex items-center gap-2 bg-white px-3 py-1 rounded-lg shadow-sm">
+                          <div 
+                            className="w-3 h-3 rounded-full opacity-50"
+                            style={{ backgroundColor: item.fill }}
+                          />
+                          <span className="text-xs text-gray-500">{item.treatment}</span>
+                        </div>
+                      ))}
+                  </div>
+                </div>
+              )}
             </CardContent>
           </Card>
         </div>
