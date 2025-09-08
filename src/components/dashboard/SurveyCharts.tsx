@@ -167,37 +167,44 @@ export const SurveyCharts = () => {
 
   const barChartData = [
     {
-      category: 'Facilidad Web',
+      category: 'Web',
+      fullName: 'Facilidad Web',
       promedio: Math.round((averages.website_design_rating || 0) * 100) / 100,
       fill: 'var(--color-website)'
     },
     {
-      category: 'Comunicación Previa',
+      category: 'Comunicación',
+      fullName: 'Comunicación Previa',
       promedio: Math.round((averages.communication_clarity || 0) * 100) / 100,
       fill: 'var(--color-communication)'
     },
     {
       category: 'Recepción',
+      fullName: 'Recepción',
       promedio: Math.round((averages.reception_friendliness || 0) * 100) / 100,
       fill: 'var(--color-reception)'
     },
     {
-      category: 'Ambiente Clínica',
+      category: 'Ambiente',
+      fullName: 'Ambiente Clínica',
       promedio: Math.round((averages.clinic_environment || 0) * 100) / 100,
       fill: 'var(--color-environment)'
     },
     {
-      category: 'Comunicación Doctor',
+      category: 'Doctor',
+      fullName: 'Comunicación Doctor',
       promedio: Math.round((averages.doctor_listening || 0) * 100) / 100,
       fill: 'var(--color-doctor)'
     },
     {
       category: 'Explicación',
+      fullName: 'Claridad Explicación',
       promedio: Math.round((averages.explanation_clarity || 0) * 100) / 100,
       fill: 'var(--color-explanation)'
     },
     {
-      category: 'Tiempo Consulta',
+      category: 'Tiempo',
+      fullName: 'Tiempo Consulta',
       promedio: Math.round((averages.consultation_time || 0) * 100) / 100,
       fill: 'var(--color-time)'
     }
@@ -394,20 +401,27 @@ export const SurveyCharts = () => {
                 explanation: { label: "Explicación", color: "hsl(var(--accent))" },
                 time: { label: "Tiempo Consulta", color: "hsl(var(--chart-1))" }
               }}
-              className="h-64"
+              className="h-80"
             >
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={barChartData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
+                <BarChart data={barChartData} margin={{ top: 20, right: 30, left: 20, bottom: 50 }}>
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis 
                     dataKey="category" 
-                    tick={{ fontSize: 12 }}
+                    tick={{ fontSize: 11 }}
                     angle={-45}
                     textAnchor="end"
-                    height={60}
+                    height={80}
+                    interval={0}
                   />
                   <YAxis domain={[0, 5]} />
-                  <ChartTooltip content={<ChartTooltipContent />} />
+                  <ChartTooltip 
+                    content={<ChartTooltipContent />}
+                    formatter={(value, name, props) => [
+                      value,
+                      props.payload?.fullName || name
+                    ]}
+                  />
                   <Bar dataKey="promedio" fill="hsl(var(--primary))" radius={4} />
                 </BarChart>
               </ResponsiveContainer>
