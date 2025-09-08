@@ -448,8 +448,8 @@ export const TreatmentAnalytics = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 p-6">
-      <div className="max-w-7xl mx-auto space-y-8">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 p-4 sm:p-6">
+      <div className="max-w-7xl mx-auto space-y-6 sm:space-y-8">
         {/* Hero Header */}
         <div className="relative overflow-hidden bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 rounded-3xl shadow-2xl">
           <div className="absolute inset-0 bg-black/10"></div>
@@ -471,7 +471,7 @@ export const TreatmentAnalytics = () => {
         </div>
 
         {/* Enhanced Summary Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
           <Card className="group relative overflow-hidden border-0 shadow-xl bg-gradient-to-br from-emerald-500 to-teal-600 text-white hover:scale-105 transition-all duration-300">
             <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -skew-x-12 translate-x-full group-hover:translate-x-[-200%] transition-transform duration-1000"></div>
             <CardHeader className="relative pb-2">
@@ -535,9 +535,9 @@ export const TreatmentAnalytics = () => {
         </div>
 
         {/* Fixed Layout Analytics Cards */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
-          {/* Appointment Types - Fixed Height */}
-          <Card className="border-0 shadow-2xl bg-white/80 backdrop-blur-sm hover:shadow-3xl transition-all duration-500 overflow-hidden h-[740px] flex flex-col">
+        <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 lg:gap-8 items-start">
+          {/* Appointment Types - Responsive Height */}
+          <Card className="border-0 shadow-2xl bg-white/80 backdrop-blur-sm hover:shadow-3xl transition-all duration-500 overflow-hidden h-auto lg:h-[640px] xl:h-[740px] flex flex-col">
             <div className="bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 p-1">
               <CardHeader className="bg-white m-1 rounded-lg">
                 <CardTitle className="flex items-center gap-3 text-gray-800">
@@ -558,7 +558,7 @@ export const TreatmentAnalytics = () => {
                     presencial: { label: "Presencial", color: "#10b981" },
                     telematica: { label: "Telemática", color: "#3b82f6" }
                   }}
-                  className="h-80 w-full"
+                  className="h-64 sm:h-80 w-full"
                 >
                   <ResponsiveContainer width="100%" height="100%">
                     <PieChart>
@@ -640,8 +640,8 @@ export const TreatmentAnalytics = () => {
             </CardContent>
           </Card>
 
-          {/* Treatment Types - Fixed Height */}
-          <Card className="border-0 shadow-2xl bg-white/80 backdrop-blur-sm hover:shadow-3xl transition-all duration-500 overflow-hidden h-[740px] flex flex-col">
+          {/* Treatment Types - Responsive Height */}
+          <Card className="border-0 shadow-2xl bg-white/80 backdrop-blur-sm hover:shadow-3xl transition-all duration-500 overflow-hidden h-auto lg:h-[640px] xl:h-[740px] flex flex-col">
             <div className="bg-gradient-to-r from-violet-500 via-purple-500 to-indigo-500 p-1">
               <CardHeader className="bg-white m-1 rounded-lg">
                 <CardTitle className="flex items-center gap-3 text-gray-800">
@@ -667,7 +667,7 @@ export const TreatmentAnalytics = () => {
                     terapia_manual: { label: "Terapia Manual", color: "#f97316" },
                     otro: { label: "Otro", color: "#6b7280" }
                   }}
-                  className="h-80 w-full"
+                  className="h-64 sm:h-80 w-full"
                 >
                   <ResponsiveContainer width="100%" height="100%">
                     <PieChart>
@@ -812,7 +812,7 @@ export const TreatmentAnalytics = () => {
             </CardHeader>
           </div>
           <CardContent className="p-8 bg-gradient-to-b from-white to-slate-50/50">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
               {bodyZoneData.map((zone, index) => (
                 <div 
                   key={zone.zone} 

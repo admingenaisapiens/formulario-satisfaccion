@@ -349,7 +349,7 @@ export const SurveyCharts = () => {
       </Card>
 
       {/* Enhanced Summary Cards - Improved Design */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
         <Card className="group relative overflow-hidden border-0 shadow-lg bg-gradient-to-br from-blue-500/90 to-indigo-600/90 text-white hover:scale-105 transition-all duration-300 h-32">
           <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -skew-x-12 translate-x-full group-hover:translate-x-[-200%] transition-transform duration-1000"></div>
           <CardHeader className="relative pb-2 flex flex-row items-center justify-between space-y-0">
@@ -410,7 +410,7 @@ export const SurveyCharts = () => {
       </div>
 
       {/* Enhanced Modern Charts */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 lg:gap-10">
         {/* Bar Chart - Optimized */}
         <Card className="border-0 shadow-xl bg-white/95 backdrop-blur-sm hover:shadow-2xl transition-all duration-500 overflow-hidden">
           <div className="bg-gradient-to-r from-blue-500/80 via-indigo-500/80 to-purple-500/80 p-1">
