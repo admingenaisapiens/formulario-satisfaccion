@@ -676,6 +676,41 @@ export const TreatmentAnalytics = () => {
                 </ResponsiveContainer>
               </ChartContainer>
             </div>
+            
+            {/* Leyenda de Tratamientos */}
+            <div className="bg-white p-4 rounded-xl border border-violet-100 shadow-sm">
+              <h4 className="text-sm font-semibold text-violet-800 mb-3 text-center">Leyenda de Tratamientos</h4>
+              <div className="grid grid-cols-2 gap-3 text-xs">
+                <div className="flex items-center gap-2 px-2 py-1 rounded-lg bg-violet-50">
+                  <div className="w-3 h-3 rounded-full border" style={{ backgroundColor: '#8b5cf6' }}></div>
+                  <span className="font-medium text-gray-700">Fisioterapia</span>
+                </div>
+                <div className="flex items-center gap-2 px-2 py-1 rounded-lg bg-cyan-50">
+                  <div className="w-3 h-3 rounded-full border" style={{ backgroundColor: '#06b6d4' }}></div>
+                  <span className="font-medium text-gray-700">Osteopatía</span>
+                </div>
+                <div className="flex items-center gap-2 px-2 py-1 rounded-lg bg-amber-50">
+                  <div className="w-3 h-3 rounded-full border" style={{ backgroundColor: '#f59e0b' }}></div>
+                  <span className="font-medium text-gray-700">Readaptación</span>
+                </div>
+                <div className="flex items-center gap-2 px-2 py-1 rounded-lg bg-red-50">
+                  <div className="w-3 h-3 rounded-full border" style={{ backgroundColor: '#ef4444' }}></div>
+                  <span className="font-medium text-gray-700">Punción Seca</span>
+                </div>
+                <div className="flex items-center gap-2 px-2 py-1 rounded-lg bg-emerald-50">
+                  <div className="w-3 h-3 rounded-full border" style={{ backgroundColor: '#10b981' }}></div>
+                  <span className="font-medium text-gray-700">Electrólisis</span>
+                </div>
+                <div className="flex items-center gap-2 px-2 py-1 rounded-lg bg-orange-50">
+                  <div className="w-3 h-3 rounded-full border" style={{ backgroundColor: '#f97316' }}></div>
+                  <span className="font-medium text-gray-700">Terapia Manual</span>
+                </div>
+                <div className="flex items-center gap-2 px-2 py-1 rounded-lg bg-gray-50 col-span-2">
+                  <div className="w-3 h-3 rounded-full border" style={{ backgroundColor: '#6b7280' }}></div>
+                  <span className="font-medium text-gray-700">Otro</span>
+                </div>
+              </div>
+            </div>
           </CardContent>
         </Card>
       </div>
