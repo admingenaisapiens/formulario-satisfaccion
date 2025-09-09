@@ -656,8 +656,8 @@ export const SurveyCharts = () => {
             </CardHeader>
           </div>
           <CardContent className="p-8 bg-gradient-to-b from-white to-orange-50/30">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <div>
+            <div className="flex flex-col items-center space-y-8">
+              <div className="w-full max-w-lg">
                 <ChartContainer
                   config={{
                     count: { label: "Cantidad", color: "hsl(var(--primary))" }
@@ -694,7 +694,7 @@ export const SurveyCharts = () => {
                   </ResponsiveContainer>
                 </ChartContainer>
               </div>
-              <div className="flex flex-col justify-center space-y-4">
+              <div className="w-full max-w-2xl grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {referralSourceData.map((item, index) => (
                   <div key={item.name} className="flex items-center justify-between p-4 bg-white/70 rounded-xl shadow-md border border-gray-100/50">
                     <div className="flex items-center gap-3">
