@@ -142,22 +142,22 @@ export const SurveyCharts = () => {
     if (surveys.length === 0) return {};
     
     return {
-      website_design_rating: surveys.reduce((sum, s) => sum + (s.website_design_rating || 0), 0) / surveys.length,
-      communication_clarity: surveys.reduce((sum, s) => sum + (s.communication_clarity || 0), 0) / surveys.length,
-      reception_friendliness: surveys.reduce((sum, s) => sum + (s.reception_friendliness || 0), 0) / surveys.length,
-      clinic_environment: surveys.reduce((sum, s) => sum + (s.clinic_environment || 0), 0) / surveys.length,
-      doctor_listening: surveys.reduce((sum, s) => sum + (s.doctor_listening || 0), 0) / surveys.length,
-      explanation_clarity: surveys.reduce((sum, s) => sum + (s.explanation_clarity || 0), 0) / surveys.length,
-      consultation_time: surveys.reduce((sum, s) => sum + (s.consultation_time || 0), 0) / surveys.length,
+      website_design_rating: surveys.reduce((sum, survey) => sum + (survey.website_design_rating || 0), 0) / surveys.length,
+      communication_clarity: surveys.reduce((sum, survey) => sum + (survey.communication_clarity || 0), 0) / surveys.length,
+      reception_friendliness: surveys.reduce((sum, survey) => sum + (survey.reception_friendliness || 0), 0) / surveys.length,
+      clinic_environment: surveys.reduce((sum, survey) => sum + (survey.clinic_environment || 0), 0) / surveys.length,
+      doctor_listening: surveys.reduce((sum, survey) => sum + (survey.doctor_listening || 0), 0) / surveys.length,
+      explanation_clarity: surveys.reduce((sum, survey) => sum + (survey.explanation_clarity || 0), 0) / surveys.length,
+      consultation_time: surveys.reduce((sum, survey) => sum + (survey.consultation_time || 0), 0) / surveys.length,
     };
   };
 
   const calculateNPS = (surveys: SurveyResponse[]) => {
     if (surveys.length === 0) return { nps: 0, promoters: 0, passives: 0, detractors: 0 };
     
-    const promoters = surveys.filter(s => s.nps_score >= 9).length;
-    const passives = surveys.filter(s => s.nps_score >= 7 && s.nps_score <= 8).length;
-    const detractors = surveys.filter(s => s.nps_score <= 6).length;
+    const promoters = surveys.filter(survey => survey.nps_score >= 9).length;
+    const passives = surveys.filter(survey => survey.nps_score >= 7 && survey.nps_score <= 8).length;
+    const detractors = surveys.filter(survey => survey.nps_score <= 6).length;
     
     const nps = Math.round(((promoters - detractors) / surveys.length) * 100);
     
