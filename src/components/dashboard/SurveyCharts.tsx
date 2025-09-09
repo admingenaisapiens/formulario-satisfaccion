@@ -662,32 +662,45 @@ export const SurveyCharts = () => {
                   className="h-80 w-full"
                 >
                   <ResponsiveContainer width="100%" height="100%">
-                    <BarChart data={referralSourceData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
-                      <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" opacity={0.2} />
-                      <XAxis 
-                        dataKey="source" 
-                        tick={{ fontSize: 11, fill: "hsl(var(--foreground))", fontWeight: 500 }}
-                        axisLine={{ stroke: "hsl(var(--border))" }}
-                        tickLine={{ stroke: "hsl(var(--border))" }}
-                        interval={0}
-                        angle={-45}
-                        textAnchor="end"
-                        height={60}
+                    <PieChart>
+                      <Pie
+                        data={referralSourceData.map((item, index) => ({
+                          ...item,
+                          fill: `hsl(${(index * 60) % 360}, 70%, 50%)`
+                        }))}
+                        cx="50%"
+                        cy="50%"
+                        outerRadius={100}
+                        innerRadius={30}
+                        paddingAngle={5}
+                        dataKey="count"
+                        stroke="white"
+                        strokeWidth={2}
+                      >
+                        {referralSourceData.map((_, index) => (
+                          <Cell key={`cell-${index}`} fill={`hsl(${(index * 60) % 360}, 70%, 50%)`} />
+                        ))}
+                      </Pie>
+                      <ChartTooltip 
+                        content={({ active, payload }) => {
+                          if (active && payload && payload[0]) {
+                            const data = payload[0].payload;
+                            return (
+                              <div className="bg-white p-3 border border-gray-200 rounded-lg shadow-lg">
+                                <p className="font-semibold text-gray-800">{data.source}</p>
+                                <p className="text-primary font-bold">{data.count} personas ({data.percentage}%)</p>
+                              </div>
+                            );
+                          }
+                          return null;
+                        }}
                       />
-                      <YAxis 
-                        tick={{ fontSize: 12, fill: "hsl(var(--foreground))", fontWeight: 500 }}
-                        axisLine={{ stroke: "hsl(var(--border))" }}
-                        tickLine={{ stroke: "hsl(var(--border))" }}
+                      <Legend 
+                        verticalAlign="bottom" 
+                        height={36}
+                        formatter={(value) => <span className="text-sm font-medium text-gray-700">{value}</span>}
                       />
-                      <ChartTooltip content={<ChartTooltipContent />} />
-                      <Bar 
-                        dataKey="count" 
-                        fill="hsl(var(--primary))"
-                        radius={[4, 4, 0, 0]}
-                        stroke="hsl(var(--primary))"
-                        strokeWidth={1}
-                      />
-                    </BarChart>
+                    </PieChart>
                   </ResponsiveContainer>
                 </ChartContainer>
               </div>
@@ -695,7 +708,10 @@ export const SurveyCharts = () => {
                 {referralSourceData.map((item, index) => (
                   <div key={item.source} className="flex items-center justify-between p-4 bg-white/70 rounded-xl shadow-md border border-gray-100/50">
                     <div className="flex items-center gap-3">
-                      <div className="w-4 h-4 rounded-full bg-primary"></div>
+                      <div 
+                        className="w-4 h-4 rounded-full" 
+                        style={{ backgroundColor: `hsl(${(index * 60) % 360}, 70%, 50%)` }}
+                      ></div>
                       <span className="font-medium text-gray-800">{item.source}</span>
                     </div>
                     <div className="text-right">
