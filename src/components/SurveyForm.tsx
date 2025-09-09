@@ -15,33 +15,33 @@ import { useToast } from '@/hooks/use-toast';
 import { Heart, ClipboardCheck } from 'lucide-react';
 
 const surveySchema = z.object({
-  // Sección 1: Experiencia General y Reserva
+  // Sección 1: Experiencia General y Reserva (OBLIGATORIAS)
   website_design_rating: z.number().min(1).max(3),
   communication_clarity: z.number().min(1).max(3),
   
-  // Sección 2: Tipo de Cita y Tratamiento  
+  // Sección 2: Tipo de Cita y Tratamiento (OBLIGATORIAS)
   appointment_type: z.enum(['presencial', 'telematica']),
   treatment_type: z.string().min(1),
   other_treatment: z.string().optional(),
   body_area: z.string().min(1),
   other_body_area: z.string().optional(),
   
-  // Sección 3: Experiencia en la Consulta
+  // Sección 3: Experiencia en la Consulta (OBLIGATORIAS)
   reception_friendliness: z.number().min(1).max(5),
   waiting_time: z.enum(['less_than_5', '5_to_15', '15_to_30', 'more_than_30']),
   clinic_environment: z.number().min(1).max(5),
   
-  // Sección 4: Experiencia con el Doctor/Profesional
+  // Sección 4: Experiencia con el Doctor/Profesional (OBLIGATORIAS)
   doctor_listening: z.number().min(1).max(5),
   explanation_clarity: z.number().min(1).max(5),
   consultation_time: z.number().min(1).max(5),
   
-  // Sección 5: Valoración Global
+  // Sección 5: Valoración Global (primera obligatoria, segunda opcional)
   nps_score: z.number().min(0).max(10),
   additional_comments: z.string().optional(),
   
-  // Sección 6: Cómo nos conociste
-  how_did_you_know_us: z.string().min(1),
+  // Sección 6: Cómo nos conociste (TODA OPCIONAL)
+  how_did_you_know_us: z.string().optional(),
   referral_details: z.string().optional(),
 });
 
@@ -96,7 +96,7 @@ export const SurveyForm = () => {
           consultation_time: data.consultation_time,
           nps_score: data.nps_score,
           additional_comments: data.additional_comments || null,
-          how_did_you_know_us: data.how_did_you_know_us,
+          how_did_you_know_us: data.how_did_you_know_us || null,
           referral_details: data.referral_details || null,
         }]);
 
