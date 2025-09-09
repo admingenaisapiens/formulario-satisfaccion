@@ -16,8 +16,8 @@ import { Heart, ClipboardCheck } from 'lucide-react';
 
 const surveySchema = z.object({
   // Sección 1: Experiencia General y Reserva
-  website_design_rating: z.number().min(1).max(3),
-  communication_clarity: z.number().min(1).max(3),
+  website_design_rating: z.number().min(1).max(5),
+  communication_clarity: z.number().min(1).max(5),
   
   // Sección 2: Tipo de Cita y Tratamiento  
   appointment_type: z.enum(['presencial', 'telematica']),
@@ -27,22 +27,18 @@ const surveySchema = z.object({
   other_body_area: z.string().optional(),
   
   // Sección 3: Experiencia en la Consulta
-  reception_friendliness: z.number().min(1).max(3),
+  reception_friendliness: z.number().min(1).max(5),
   waiting_time: z.enum(['less_than_5', '5_to_15', '15_to_30', 'more_than_30']),
-  clinic_environment: z.number().min(1).max(3),
+  clinic_environment: z.number().min(1).max(5),
   
   // Sección 4: Experiencia con el Doctor/Profesional
-  doctor_listening: z.number().min(1).max(3),
-  explanation_clarity: z.number().min(1).max(3),
-  consultation_time: z.number().min(1).max(3),
+  doctor_listening: z.number().min(1).max(5),
+  explanation_clarity: z.number().min(1).max(5),
+  consultation_time: z.number().min(1).max(5),
   
   // Sección 5: Valoración Global
   nps_score: z.number().min(0).max(10),
   additional_comments: z.string().optional(),
-  
-  // Sección 6: Fuente de conocimiento
-  how_did_you_know_us: z.string().min(1),
-  referral_details: z.string().optional(),
 });
 
 type SurveyFormData = z.infer<typeof surveySchema>;
@@ -55,23 +51,21 @@ export const SurveyForm = () => {
   const form = useForm<SurveyFormData>({
     resolver: zodResolver(surveySchema),
     defaultValues: {
-      website_design_rating: 2,
-      communication_clarity: 2,
+      website_design_rating: 3,
+      communication_clarity: 3,
       appointment_type: 'presencial',
       treatment_type: '',
       other_treatment: '',
       body_area: '',
       other_body_area: '',
-      reception_friendliness: 2,
+      reception_friendliness: 3,
       waiting_time: 'less_than_5',
-      clinic_environment: 2,
-      doctor_listening: 2,
-      explanation_clarity: 2,
-      consultation_time: 2,
+      clinic_environment: 3,
+      doctor_listening: 3,
+      explanation_clarity: 3,
+      consultation_time: 3,
       nps_score: 5,
       additional_comments: '',
-      how_did_you_know_us: '',
-      referral_details: '',
     },
   });
 
@@ -96,8 +90,6 @@ export const SurveyForm = () => {
           consultation_time: data.consultation_time,
           nps_score: data.nps_score,
           additional_comments: data.additional_comments || null,
-          how_did_you_know_us: data.how_did_you_know_us,
-          referral_details: data.referral_details || null,
         }]);
 
       if (error) throw error;
@@ -134,9 +126,11 @@ export const SurveyForm = () => {
               className="flex flex-wrap gap-4"
             >
               {[
-                { value: 1, label: 'Muy mal' },
-                { value: 2, label: 'Normal' },
-                { value: 3, label: 'Muy bien' }
+                { value: 1, label: 'No, en absoluto' },
+                { value: 2, label: 'No mucho' },
+                { value: 3, label: 'Normal' },
+                { value: 4, label: 'Sí' },
+                { value: 5, label: 'Sí, mucho' }
               ].map((option) => (
                 <div key={option.value} className="flex items-center space-x-2">
                   <RadioGroupItem value={option.value.toString()} id={`${name}-${option.value}`} />
@@ -341,9 +335,11 @@ export const SurveyForm = () => {
                           className="flex flex-wrap gap-4"
                         >
                           {[
-                            { value: 1, label: 'Muy mal' },
-                            { value: 2, label: 'Normal' },
-                            { value: 3, label: 'Muy bien' }
+                            { value: 1, label: 'Malo' },
+                            { value: 2, label: 'Regular' },
+                            { value: 3, label: 'Bueno' },
+                            { value: 4, label: 'Muy bueno' },
+                            { value: 5, label: 'Excelente' }
                           ].map((option) => (
                             <div key={option.value} className="flex items-center space-x-2">
                               <RadioGroupItem value={option.value.toString()} id={`reception-${option.value}`} />
@@ -396,9 +392,11 @@ export const SurveyForm = () => {
                           className="flex flex-wrap gap-4"
                         >
                           {[
-                            { value: 1, label: 'Muy mal' },
-                            { value: 2, label: 'Normal' },
-                            { value: 3, label: 'Muy bien' }
+                            { value: 1, label: 'Desagradable' },
+                            { value: 2, label: 'No muy agradable' },
+                            { value: 3, label: 'Normal' },
+                            { value: 4, label: 'Agradable' },
+                            { value: 5, label: 'Sí, muy agradable' }
                           ].map((option) => (
                             <div key={option.value} className="flex items-center space-x-2">
                               <RadioGroupItem value={option.value.toString()} id={`environment-${option.value}`} />
@@ -435,9 +433,11 @@ export const SurveyForm = () => {
                           className="flex flex-wrap gap-4"
                         >
                           {[
-                            { value: 1, label: 'Muy mal' },
-                            { value: 2, label: 'Normal' },
-                            { value: 3, label: 'Muy bien' }
+                            { value: 1, label: 'No, nada fluida ni escuchado/a' },
+                            { value: 2, label: 'No muy fluida' },
+                            { value: 3, label: 'Normal' },
+                            { value: 4, label: 'Sí, fluida' },
+                            { value: 5, label: 'Sí, muy fluida y escuchado/a' }
                           ].map((option) => (
                             <div key={option.value} className="flex items-center space-x-2">
                               <RadioGroupItem value={option.value.toString()} id={`listening-${option.value}`} />
@@ -466,9 +466,11 @@ export const SurveyForm = () => {
                           className="flex flex-wrap gap-4"
                         >
                           {[
-                            { value: 1, label: 'Muy mal' },
-                            { value: 2, label: 'Normal' },
-                            { value: 3, label: 'Muy bien' }
+                            { value: 1, label: 'No, nada claras' },
+                            { value: 2, label: 'No muy claras' },
+                            { value: 3, label: 'Normal' },
+                            { value: 4, label: 'Sí, claras' },
+                            { value: 5, label: 'Sí, muy claras' }
                           ].map((option) => (
                             <div key={option.value} className="flex items-center space-x-2">
                               <RadioGroupItem value={option.value.toString()} id={`clarity-${option.value}`} />
@@ -497,9 +499,11 @@ export const SurveyForm = () => {
                           className="flex flex-wrap gap-4"
                         >
                           {[
-                            { value: 1, label: 'Muy mal' },
-                            { value: 2, label: 'Normal' },
-                            { value: 3, label: 'Muy bien' }
+                            { value: 1, label: 'No, en absoluto' },
+                            { value: 2, label: 'No' },
+                            { value: 3, label: 'Normal' },
+                            { value: 4, label: 'Sí' },
+                            { value: 5, label: 'Sí, totalmente' }
                           ].map((option) => (
                             <div key={option.value} className="flex items-center space-x-2">
                               <RadioGroupItem value={option.value.toString()} id={`time-${option.value}`} />
@@ -565,60 +569,6 @@ export const SurveyForm = () => {
                         <Textarea
                           placeholder="Comparte tus comentarios aquí..."
                           className="min-h-[100px]"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </CardContent>
-            </Card>
-
-            {/* Sección 6: Fuente de Conocimiento */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-xl text-primary">Sección 6: ¿Cómo nos has conocido?</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <FormField
-                  control={form.control}
-                  name="how_did_you_know_us"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-base font-medium">¿Cómo nos has conocido?</FormLabel>
-                      <Select onValueChange={field.onChange} value={field.value}>
-                        <FormControl>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Selecciona una opción" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          <SelectItem value="redes_sociales">Redes sociales</SelectItem>
-                          <SelectItem value="clinica_fisioterapia">Clínica de fisioterapia</SelectItem>
-                          <SelectItem value="un_amigo">Un amigo</SelectItem>
-                          <SelectItem value="un_conocido">Un conocido</SelectItem>
-                        </SelectContent>
-                      </Select>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="referral_details"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-base font-medium">
-                        Detalles adicionales (opcional)
-                      </FormLabel>
-                      <p className="text-sm text-muted-foreground">
-                        Por ejemplo: nombre del amigo, nombre de la clínica, red social específica, etc.
-                      </p>
-                      <FormControl>
-                        <Input
-                          placeholder="Comparte más detalles aquí..."
                           {...field}
                         />
                       </FormControl>
