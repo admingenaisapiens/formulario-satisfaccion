@@ -164,6 +164,16 @@ export const SurveyCharts = () => {
     return { nps, promoters, passives, detractors };
   };
 
+  const getSourceLabel = (source: string) => {
+    switch (source) {
+      case 'redes_sociales': return 'Redes sociales';
+      case 'clinica_fisioterapia': return 'Clínica de fisioterapia';
+      case 'un_amigo': return 'Un amigo';
+      case 'un_conocido': return 'Un conocido';
+      default: return source;
+    }
+  };
+
   const averages = calculateAverages(filteredSurveys);
   const npsData = calculateNPS(filteredSurveys);
 
@@ -238,16 +248,6 @@ export const SurveyCharts = () => {
       percentage: Math.round((count / filteredSurveys.length) * 100)
     }));
   }, [filteredSurveys]);
-
-  const getSourceLabel = (source: string) => {
-    switch (source) {
-      case 'redes_sociales': return 'Redes sociales';
-      case 'clinica_fisioterapia': return 'Clínica de fisioterapia';
-      case 'un_amigo': return 'Un amigo';
-      case 'un_conocido': return 'Un conocido';
-      default: return source;
-    }
-  };
 
   const pieChartData = [
     { name: 'Promotores', value: npsData.promoters, fill: '#22c55e' },
