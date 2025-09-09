@@ -171,49 +171,49 @@ export const SurveyCharts = () => {
     {
       category: 'Web',
       fullName: 'Facilidad Web',
-      promedio: Math.round((((averages.website_design_rating || 0) - 1) / 2 * 9 + 1) * 100) / 100, // Convertir 1-3 a 1-10
+      promedio: Math.round(((Math.max(1, Math.min(3, averages.website_design_rating || 1)) - 1) / 2 * 9 + 1) * 100) / 100, // Convertir 1-3 a 1-10 con límites
       fill: 'var(--color-website)',
       escala: '1-3'
     },
     {
       category: 'Comunicación',
       fullName: 'Comunicación Previa',
-      promedio: Math.round((((averages.communication_clarity || 0) - 1) / 2 * 9 + 1) * 100) / 100, // Convertir 1-3 a 1-10
+      promedio: Math.round(((Math.max(1, Math.min(3, averages.communication_clarity || 1)) - 1) / 2 * 9 + 1) * 100) / 100, // Convertir 1-3 a 1-10 con límites
       fill: 'var(--color-communication)',
       escala: '1-3'
     },
     {
       category: 'Recepción',
       fullName: 'Recepción',
-      promedio: Math.round((((averages.reception_friendliness || 0) - 1) / 4 * 9 + 1) * 100) / 100, // Convertir 1-5 a 1-10
+      promedio: Math.round(((Math.max(1, Math.min(5, averages.reception_friendliness || 1)) - 1) / 4 * 9 + 1) * 100) / 100, // Convertir 1-5 a 1-10 con límites
       fill: 'var(--color-reception)',
       escala: '1-5'
     },
     {
       category: 'Ambiente',
       fullName: 'Ambiente Clínica',
-      promedio: Math.round((((averages.clinic_environment || 0) - 1) / 4 * 9 + 1) * 100) / 100, // Convertir 1-5 a 1-10
+      promedio: Math.round(((Math.max(1, Math.min(5, averages.clinic_environment || 1)) - 1) / 4 * 9 + 1) * 100) / 100, // Convertir 1-5 a 1-10 con límites
       fill: 'var(--color-environment)',
       escala: '1-5'
     },
     {
       category: 'Doctor',
       fullName: 'Comunicación Doctor',
-      promedio: Math.round((((averages.doctor_listening || 0) - 1) / 4 * 9 + 1) * 100) / 100, // Convertir 1-5 a 1-10
+      promedio: Math.round(((Math.max(1, Math.min(5, averages.doctor_listening || 1)) - 1) / 4 * 9 + 1) * 100) / 100, // Convertir 1-5 a 1-10 con límites
       fill: 'var(--color-doctor)',
       escala: '1-5'
     },
     {
       category: 'Explicación',
       fullName: 'Claridad Explicación',
-      promedio: Math.round((((averages.explanation_clarity || 0) - 1) / 4 * 9 + 1) * 100) / 100, // Convertir 1-5 a 1-10
+      promedio: Math.round(((Math.max(1, Math.min(5, averages.explanation_clarity || 1)) - 1) / 4 * 9 + 1) * 100) / 100, // Convertir 1-5 a 1-10 con límites
       fill: 'var(--color-explanation)',
       escala: '1-5'
     },
     {
       category: 'Tiempo',
       fullName: 'Tiempo Consulta',
-      promedio: Math.round((((averages.consultation_time || 0) - 1) / 4 * 9 + 1) * 100) / 100, // Convertir 1-5 a 1-10
+      promedio: Math.round(((Math.max(1, Math.min(5, averages.consultation_time || 1)) - 1) / 4 * 9 + 1) * 100) / 100, // Convertir 1-5 a 1-10 con límites
       fill: 'var(--color-time)',
       escala: '1-5'
     }
@@ -282,18 +282,18 @@ export const SurveyCharts = () => {
   }, [filteredSurveys]);
 
   // Calculate overall satisfaction average with normalized scores
-  const normalizeWebsiteRating = (rating: number) => ((rating - 1) / 2 * 9 + 1);
-  const normalizeCommunicationRating = (rating: number) => ((rating - 1) / 2 * 9 + 1);
-  const normalizeOtherRatings = (rating: number) => ((rating - 1) / 4 * 9 + 1);
+  const normalizeWebsiteRating = (rating: number) => ((Math.max(1, Math.min(3, rating)) - 1) / 2 * 9 + 1);
+  const normalizeCommunicationRating = (rating: number) => ((Math.max(1, Math.min(3, rating)) - 1) / 2 * 9 + 1);
+  const normalizeOtherRatings = (rating: number) => ((Math.max(1, Math.min(5, rating)) - 1) / 4 * 9 + 1);
 
   const averageSatisfaction = (
-    normalizeWebsiteRating(averages.website_design_rating || 0) +
-    normalizeCommunicationRating(averages.communication_clarity || 0) +
-    normalizeOtherRatings(averages.reception_friendliness || 0) +
-    normalizeOtherRatings(averages.clinic_environment || 0) +
-    normalizeOtherRatings(averages.doctor_listening || 0) +
-    normalizeOtherRatings(averages.explanation_clarity || 0) +
-    normalizeOtherRatings(averages.consultation_time || 0)
+    normalizeWebsiteRating(averages.website_design_rating || 1) +
+    normalizeCommunicationRating(averages.communication_clarity || 1) +
+    normalizeOtherRatings(averages.reception_friendliness || 1) +
+    normalizeOtherRatings(averages.clinic_environment || 1) +
+    normalizeOtherRatings(averages.doctor_listening || 1) +
+    normalizeOtherRatings(averages.explanation_clarity || 1) +
+    normalizeOtherRatings(averages.consultation_time || 1)
   ) / 7;
 
   if (isLoading) {
