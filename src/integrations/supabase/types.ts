@@ -52,11 +52,13 @@ export type Database = {
           created_at: string
           doctor_listening: number
           explanation_clarity: number
+          how_did_you_know_us: string | null
           id: string
           nps_score: number
           other_body_area: string | null
           other_treatment: string | null
           reception_friendliness: number
+          referral_details: string | null
           treatment_type: string
           updated_at: string
           waiting_time: string
@@ -72,11 +74,13 @@ export type Database = {
           created_at?: string
           doctor_listening: number
           explanation_clarity: number
+          how_did_you_know_us?: string | null
           id?: string
           nps_score: number
           other_body_area?: string | null
           other_treatment?: string | null
           reception_friendliness: number
+          referral_details?: string | null
           treatment_type: string
           updated_at?: string
           waiting_time: string
@@ -92,11 +96,13 @@ export type Database = {
           created_at?: string
           doctor_listening?: number
           explanation_clarity?: number
+          how_did_you_know_us?: string | null
           id?: string
           nps_score?: number
           other_body_area?: string | null
           other_treatment?: string | null
           reception_friendliness?: number
+          referral_details?: string | null
           treatment_type?: string
           updated_at?: string
           waiting_time?: string

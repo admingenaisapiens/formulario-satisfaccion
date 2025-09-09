@@ -42,8 +42,8 @@ interface SurveyResponse {
   consultation_time: number;
   nps_score: number;
   additional_comments: string | null;
-  how_did_you_know_us: string | null;
-  referral_details: string | null;
+  how_did_you_know_us?: string | null;
+  referral_details?: string | null;
   created_at: string;
 }
 
@@ -616,6 +616,80 @@ export const SurveyCharts = () => {
           </CardContent>
         </Card>
       </div>
+
+      {/* New How Did You Know Us Analysis */}
+      {referralSourceData.length > 0 && (
+        <Card className="border-0 shadow-xl bg-white/95 backdrop-blur-sm overflow-hidden">
+          <div className="bg-gradient-to-r from-orange-500/80 via-pink-500/80 to-rose-500/80 p-1">
+            <CardHeader className="bg-white m-1 rounded-lg">
+              <CardTitle className="flex items-center gap-3 text-gray-800">
+                <div className="p-3 bg-gradient-to-br from-orange-500/90 to-pink-600/90 rounded-xl shadow-lg">
+                  <Users className="w-6 h-6 text-white" />
+                </div>
+                <div>
+                  <span className="text-xl sm:text-2xl font-bold">¿Cómo nos conocieron?</span>
+                  <p className="text-xs sm:text-sm font-normal text-gray-600 mt-1">Fuentes de referencia de nuestros pacientes</p>
+                </div>
+              </CardTitle>
+            </CardHeader>
+          </div>
+          <CardContent className="p-8 bg-gradient-to-b from-white to-orange-50/30">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div>
+                <ChartContainer
+                  config={{
+                    count: { label: "Cantidad", color: "hsl(var(--primary))" }
+                  }}
+                  className="h-80 w-full"
+                >
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart data={referralSourceData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
+                      <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" opacity={0.2} />
+                      <XAxis 
+                        dataKey="source" 
+                        tick={{ fontSize: 11, fill: "hsl(var(--foreground))", fontWeight: 500 }}
+                        axisLine={{ stroke: "hsl(var(--border))" }}
+                        tickLine={{ stroke: "hsl(var(--border))" }}
+                        interval={0}
+                        angle={-45}
+                        textAnchor="end"
+                        height={60}
+                      />
+                      <YAxis 
+                        tick={{ fontSize: 12, fill: "hsl(var(--foreground))", fontWeight: 500 }}
+                        axisLine={{ stroke: "hsl(var(--border))" }}
+                        tickLine={{ stroke: "hsl(var(--border))" }}
+                      />
+                      <ChartTooltip content={<ChartTooltipContent />} />
+                      <Bar 
+                        dataKey="count" 
+                        fill="hsl(var(--primary))"
+                        radius={[4, 4, 0, 0]}
+                        stroke="hsl(var(--primary))"
+                        strokeWidth={1}
+                      />
+                    </BarChart>
+                  </ResponsiveContainer>
+                </ChartContainer>
+              </div>
+              <div className="flex flex-col justify-center space-y-4">
+                {referralSourceData.map((item, index) => (
+                  <div key={item.source} className="flex items-center justify-between p-4 bg-white/70 rounded-xl shadow-md border border-gray-100/50">
+                    <div className="flex items-center gap-3">
+                      <div className="w-4 h-4 rounded-full bg-primary"></div>
+                      <span className="font-medium text-gray-800">{item.source}</span>
+                    </div>
+                    <div className="text-right">
+                      <div className="text-lg font-bold text-primary">{item.count}</div>
+                      <div className="text-sm text-gray-500">{item.percentage}%</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Enhanced Time Series Chart */}
       {npsTimeData.length > 1 && (

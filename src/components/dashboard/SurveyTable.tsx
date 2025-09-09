@@ -30,8 +30,8 @@ interface SurveyResponse {
   consultation_time: number;
   nps_score: number;
   additional_comments: string | null;
-  how_did_you_know_us: string | null;
-  referral_details: string | null;
+  how_did_you_know_us?: string | null;
+  referral_details?: string | null;
   created_at: string;
 }
 
