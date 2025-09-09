@@ -242,10 +242,13 @@ export const SurveyCharts = () => {
       return acc;
     }, {} as Record<string, number>);
 
-    return Object.entries(sourceCount).map(([source, count]) => ({
-      source,
-      count,
-      percentage: Math.round((count / filteredSurveys.length) * 100)
+    const colors = ['#22c55e', '#f59e0b', '#ef4444', '#8b5cf6', '#06b6d4', '#f97316'];
+    
+    return Object.entries(sourceCount).map(([source, count], index) => ({
+      name: source,
+      value: count,
+      percentage: Math.round((count / filteredSurveys.length) * 100),
+      fill: colors[index % colors.length]
     }));
   }, [filteredSurveys]);
 
@@ -664,57 +667,45 @@ export const SurveyCharts = () => {
                   <ResponsiveContainer width="100%" height="100%">
                     <PieChart>
                       <Pie
-                        data={referralSourceData.map((item, index) => ({
-                          ...item,
-                          fill: `hsl(${(index * 60) % 360}, 70%, 50%)`
-                        }))}
+                        data={referralSourceData}
                         cx="50%"
                         cy="50%"
-                        outerRadius={100}
-                        innerRadius={30}
-                        paddingAngle={5}
-                        dataKey="count"
-                        stroke="white"
-                        strokeWidth={2}
+                        labelLine={false}
+                        label={({ name, value, percent }) => {
+                          if (value > 0) {
+                            const percentage = (percent * 100).toFixed(0);
+                            return window.innerWidth < 640 ? `${percentage}%` : `${name}\n${value} (${percentage}%)`;
+                          }
+                          return "";
+                        }}
+                        outerRadius={130}
+                        innerRadius={45}
+                        fill="#8884d8"
+                        dataKey="value"
+                        stroke="#fff"
+                        strokeWidth={3}
                       >
-                        {referralSourceData.map((_, index) => (
-                          <Cell key={`cell-${index}`} fill={`hsl(${(index * 60) % 360}, 70%, 50%)`} />
+                        {referralSourceData.map((entry, index) => (
+                          <Cell key={`cell-${index}`} fill={entry.fill} />
                         ))}
                       </Pie>
-                      <ChartTooltip 
-                        content={({ active, payload }) => {
-                          if (active && payload && payload[0]) {
-                            const data = payload[0].payload;
-                            return (
-                              <div className="bg-white p-3 border border-gray-200 rounded-lg shadow-lg">
-                                <p className="font-semibold text-gray-800">{data.source}</p>
-                                <p className="text-primary font-bold">{data.count} personas ({data.percentage}%)</p>
-                              </div>
-                            );
-                          }
-                          return null;
-                        }}
-                      />
-                      <Legend 
-                        verticalAlign="bottom" 
-                        height={36}
-                      />
+                      <ChartTooltip content={<ChartTooltipContent />} />
                     </PieChart>
                   </ResponsiveContainer>
                 </ChartContainer>
               </div>
               <div className="flex flex-col justify-center space-y-4">
                 {referralSourceData.map((item, index) => (
-                  <div key={item.source} className="flex items-center justify-between p-4 bg-white/70 rounded-xl shadow-md border border-gray-100/50">
+                  <div key={item.name} className="flex items-center justify-between p-4 bg-white/70 rounded-xl shadow-md border border-gray-100/50">
                     <div className="flex items-center gap-3">
                       <div 
                         className="w-4 h-4 rounded-full" 
-                        style={{ backgroundColor: `hsl(${(index * 60) % 360}, 70%, 50%)` }}
+                        style={{ backgroundColor: item.fill }}
                       ></div>
-                      <span className="font-medium text-gray-800">{item.source}</span>
+                      <span className="font-medium text-gray-800">{item.name}</span>
                     </div>
                     <div className="text-right">
-                      <div className="text-lg font-bold text-primary">{item.count}</div>
+                      <div className="text-lg font-bold text-primary">{item.value}</div>
                       <div className="text-sm text-gray-500">{item.percentage}%</div>
                     </div>
                   </div>
