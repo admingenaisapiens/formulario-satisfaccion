@@ -657,12 +657,12 @@ export const SurveyCharts = () => {
           </div>
           <CardContent className="p-8 bg-gradient-to-b from-white to-orange-50/30">
             <div className="flex flex-col items-center space-y-8">
-              <div className="w-full max-w-lg">
+              <div className="w-full max-w-2xl">
                 <ChartContainer
                   config={{
                     count: { label: "Cantidad", color: "hsl(var(--primary))" }
                   }}
-                  className="h-80 w-full"
+                  className="h-96 w-full"
                 >
                   <ResponsiveContainer width="100%" height="100%">
                     <PieChart>
@@ -674,12 +674,12 @@ export const SurveyCharts = () => {
                         label={({ name, value, percent }) => {
                           if (value > 0) {
                             const percentage = (percent * 100).toFixed(0);
-                            return window.innerWidth < 640 ? `${percentage}%` : `${name}\n${value} (${percentage}%)`;
+                            return `${percentage}%`;
                           }
                           return "";
                         }}
-                        outerRadius={130}
-                        innerRadius={45}
+                        outerRadius={140}
+                        innerRadius={50}
                         fill="#8884d8"
                         dataKey="value"
                         stroke="#fff"
