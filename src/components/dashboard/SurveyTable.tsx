@@ -30,6 +30,8 @@ interface SurveyResponse {
   consultation_time: number;
   nps_score: number;
   additional_comments: string | null;
+  how_did_you_know_us: string | null;
+  referral_details: string | null;
   created_at: string;
 }
 
@@ -178,7 +180,7 @@ export const SurveyTable = () => {
     switch (fieldType) {
       case 'website_design_rating':
       case 'communication_clarity':
-        const generalLabels = ['', 'No, en absoluto', 'No mucho', 'Normal', 'Sí', 'Sí, mucho'];
+        const generalLabels = ['', 'Muy mal', 'Normal', 'Muy bien'];
         return generalLabels[rating] || rating.toString();
       case 'reception_friendliness':
         const receptionLabels = ['', 'Malo', 'Regular', 'Bueno', 'Muy bueno', 'Excelente'];
@@ -200,6 +202,16 @@ export const SurveyTable = () => {
     }
   };
 
+  const getSourceLabel = (source: string) => {
+    switch (source) {
+      case 'redes_sociales': return 'Redes sociales';
+      case 'clinica_fisioterapia': return 'Clínica de fisioterapia';
+      case 'un_amigo': return 'Un amigo';
+      case 'un_conocido': return 'Un conocido';
+      default: return source;
+    }
+  };
+
   const getNPSBadge = (score: number) => {
     if (score >= 9) {
       return <Badge className="bg-accent/20 text-accent border-accent">Promotor</Badge>;
@@ -214,7 +226,7 @@ export const SurveyTable = () => {
     const headers = [
       'ID', 'Fecha', 'Tipo Cita', 'Tratamiento', 'Zona Cuerpo', 'Facilidad Web', 
       'Comunicación Previa', 'Recepción', 'Tiempo Espera', 'Ambiente', 
-      'Comunicación Doctor', 'Explicación', 'Tiempo Consulta', 'NPS', 'Comentarios'
+      'Comunicación Doctor', 'Explicación', 'Tiempo Consulta', 'NPS', 'Cómo nos conoció', 'Comentarios'
     ];
 
     const csvData = filteredSurveys.map(survey => [
@@ -232,6 +244,7 @@ export const SurveyTable = () => {
       getRatingLabel(survey.explanation_clarity || 0, 'explanation_clarity'),
       getRatingLabel(survey.consultation_time || 0, 'consultation_time'),
       survey.nps_score,
+      getSourceLabel(survey.how_did_you_know_us || ''),
       survey.additional_comments || ''
     ]);
 
@@ -402,6 +415,7 @@ export const SurveyTable = () => {
               <TableHead>Explicación</TableHead>
               <TableHead>T. Consulta</TableHead>
               <TableHead>NPS</TableHead>
+              <TableHead>Cómo nos conoció</TableHead>
               <TableHead>Comentarios</TableHead>
             </TableRow>
           </TableHeader>
@@ -432,6 +446,7 @@ export const SurveyTable = () => {
                     {getNPSBadge(survey.nps_score)}
                   </div>
                 </TableCell>
+                <TableCell>{getSourceLabel(survey.how_did_you_know_us || '')}</TableCell>
                 <TableCell className="max-w-xs">
                   <div className="truncate" title={survey.additional_comments || 'Sin comentarios'}>
                     {survey.additional_comments || 'Sin comentarios'}

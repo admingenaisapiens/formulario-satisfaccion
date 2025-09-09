@@ -16,8 +16,8 @@ import { Heart, ClipboardCheck } from 'lucide-react';
 
 const surveySchema = z.object({
   // Sección 1: Experiencia General y Reserva
-  website_design_rating: z.number().min(1).max(5),
-  communication_clarity: z.number().min(1).max(5),
+  website_design_rating: z.number().min(1).max(3),
+  communication_clarity: z.number().min(1).max(3),
   
   // Sección 2: Tipo de Cita y Tratamiento  
   appointment_type: z.enum(['presencial', 'telematica']),
@@ -39,6 +39,10 @@ const surveySchema = z.object({
   // Sección 5: Valoración Global
   nps_score: z.number().min(0).max(10),
   additional_comments: z.string().optional(),
+  
+  // Sección 6: Cómo nos conociste
+  how_did_you_know_us: z.string().min(1),
+  referral_details: z.string().optional(),
 });
 
 type SurveyFormData = z.infer<typeof surveySchema>;
@@ -51,8 +55,8 @@ export const SurveyForm = () => {
   const form = useForm<SurveyFormData>({
     resolver: zodResolver(surveySchema),
     defaultValues: {
-      website_design_rating: 3,
-      communication_clarity: 3,
+      website_design_rating: 2,
+      communication_clarity: 2,
       appointment_type: 'presencial',
       treatment_type: '',
       other_treatment: '',
@@ -66,6 +70,8 @@ export const SurveyForm = () => {
       consultation_time: 3,
       nps_score: 5,
       additional_comments: '',
+      how_did_you_know_us: '',
+      referral_details: '',
     },
   });
 
@@ -90,6 +96,8 @@ export const SurveyForm = () => {
           consultation_time: data.consultation_time,
           nps_score: data.nps_score,
           additional_comments: data.additional_comments || null,
+          how_did_you_know_us: data.how_did_you_know_us,
+          referral_details: data.referral_details || null,
         }]);
 
       if (error) throw error;
@@ -126,11 +134,9 @@ export const SurveyForm = () => {
               className="flex flex-wrap gap-4"
             >
               {[
-                { value: 1, label: 'No, en absoluto' },
-                { value: 2, label: 'No mucho' },
-                { value: 3, label: 'Normal' },
-                { value: 4, label: 'Sí' },
-                { value: 5, label: 'Sí, mucho' }
+                { value: 1, label: 'Muy mal' },
+                { value: 2, label: 'Normal' },
+                { value: 3, label: 'Muy bien' }
               ].map((option) => (
                 <div key={option.value} className="flex items-center space-x-2">
                   <RadioGroupItem value={option.value.toString()} id={`${name}-${option.value}`} />
@@ -576,6 +582,67 @@ export const SurveyForm = () => {
                     </FormItem>
                   )}
                 />
+              </CardContent>
+            </Card>
+
+            {/* Sección 6: Cómo nos conociste */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-xl text-primary">Sección 6: Cómo nos conociste</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <FormField
+                  control={form.control}
+                  name="how_did_you_know_us"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-base font-medium">¿Cómo nos has conocido?</FormLabel>
+                      <Select onValueChange={field.onChange} value={field.value}>
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Selecciona una opción" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value="redes_sociales">Redes sociales</SelectItem>
+                          <SelectItem value="clinica_fisioterapia">Clínica de fisioterapia</SelectItem>
+                          <SelectItem value="un_amigo">Un amigo</SelectItem>
+                          <SelectItem value="un_conocido">Un conocido</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                {(form.watch('how_did_you_know_us') === 'clinica_fisioterapia' || 
+                  form.watch('how_did_you_know_us') === 'un_amigo' || 
+                  form.watch('how_did_you_know_us') === 'un_conocido') && (
+                  <FormField
+                    control={form.control}
+                    name="referral_details"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-base font-medium">
+                          {form.watch('how_did_you_know_us') === 'clinica_fisioterapia' && 'Especifica el nombre de la clínica:'}
+                          {form.watch('how_did_you_know_us') === 'un_amigo' && 'Especifica el nombre del amigo:'}
+                          {form.watch('how_did_you_know_us') === 'un_conocido' && 'Especifica el nombre del conocido:'}
+                        </FormLabel>
+                        <FormControl>
+                          <Input 
+                            placeholder={
+                              form.watch('how_did_you_know_us') === 'clinica_fisioterapia' ? 'Nombre de la clínica...' :
+                              form.watch('how_did_you_know_us') === 'un_amigo' ? 'Nombre del amigo...' :
+                              'Nombre del conocido...'
+                            } 
+                            {...field} 
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                )}
               </CardContent>
             </Card>
 

@@ -42,6 +42,8 @@ interface SurveyResponse {
   consultation_time: number;
   nps_score: number;
   additional_comments: string | null;
+  how_did_you_know_us: string | null;
+  referral_details: string | null;
   created_at: string;
 }
 
@@ -209,6 +211,36 @@ export const SurveyCharts = () => {
       fill: 'var(--color-time)'
     }
   ];
+
+  // Calculate referral source data
+  const referralSourceData = useMemo(() => {
+    if (filteredSurveys.length === 0) return [];
+
+    const sourceCount = filteredSurveys.reduce((acc, survey) => {
+      const source = survey.how_did_you_know_us;
+      if (source) {
+        const sourceLabel = getSourceLabel(source);
+        acc[sourceLabel] = (acc[sourceLabel] || 0) + 1;
+      }
+      return acc;
+    }, {} as Record<string, number>);
+
+    return Object.entries(sourceCount).map(([source, count]) => ({
+      source,
+      count,
+      percentage: Math.round((count / filteredSurveys.length) * 100)
+    }));
+  }, [filteredSurveys]);
+
+  const getSourceLabel = (source: string) => {
+    switch (source) {
+      case 'redes_sociales': return 'Redes sociales';
+      case 'clinica_fisioterapia': return 'Clínica de fisioterapia';
+      case 'un_amigo': return 'Un amigo';
+      case 'un_conocido': return 'Un conocido';
+      default: return source;
+    }
+  };
 
   const pieChartData = [
     { name: 'Promotores', value: npsData.promoters, fill: '#22c55e' },
