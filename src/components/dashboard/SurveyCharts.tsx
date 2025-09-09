@@ -171,49 +171,49 @@ export const SurveyCharts = () => {
     {
       category: 'Web',
       fullName: 'Facilidad Web',
-      promedio: Math.round((((averages.website_design_rating || 0) - 1) * 2 + 1) * 100) / 100, // Convertir 1-3 a 1-5
+      promedio: Math.round((((averages.website_design_rating || 0) - 1) / 2 * 9 + 1) * 100) / 100, // Convertir 1-3 a 1-10
       fill: 'var(--color-website)',
       escala: '1-3'
     },
     {
       category: 'Comunicación',
       fullName: 'Comunicación Previa',
-      promedio: Math.round((((averages.communication_clarity || 0) - 1) * 2 + 1) * 100) / 100, // Convertir 1-3 a 1-5
+      promedio: Math.round((((averages.communication_clarity || 0) - 1) / 2 * 9 + 1) * 100) / 100, // Convertir 1-3 a 1-10
       fill: 'var(--color-communication)',
       escala: '1-3'
     },
     {
       category: 'Recepción',
       fullName: 'Recepción',
-      promedio: Math.round((averages.reception_friendliness || 0) * 100) / 100,
+      promedio: Math.round((((averages.reception_friendliness || 0) - 1) / 4 * 9 + 1) * 100) / 100, // Convertir 1-5 a 1-10
       fill: 'var(--color-reception)',
       escala: '1-5'
     },
     {
       category: 'Ambiente',
       fullName: 'Ambiente Clínica',
-      promedio: Math.round((averages.clinic_environment || 0) * 100) / 100,
+      promedio: Math.round((((averages.clinic_environment || 0) - 1) / 4 * 9 + 1) * 100) / 100, // Convertir 1-5 a 1-10
       fill: 'var(--color-environment)',
       escala: '1-5'
     },
     {
       category: 'Doctor',
       fullName: 'Comunicación Doctor',
-      promedio: Math.round((averages.doctor_listening || 0) * 100) / 100,
+      promedio: Math.round((((averages.doctor_listening || 0) - 1) / 4 * 9 + 1) * 100) / 100, // Convertir 1-5 a 1-10
       fill: 'var(--color-doctor)',
       escala: '1-5'
     },
     {
       category: 'Explicación',
       fullName: 'Claridad Explicación',
-      promedio: Math.round((averages.explanation_clarity || 0) * 100) / 100,
+      promedio: Math.round((((averages.explanation_clarity || 0) - 1) / 4 * 9 + 1) * 100) / 100, // Convertir 1-5 a 1-10
       fill: 'var(--color-explanation)',
       escala: '1-5'
     },
     {
       category: 'Tiempo',
       fullName: 'Tiempo Consulta',
-      promedio: Math.round((averages.consultation_time || 0) * 100) / 100,
+      promedio: Math.round((((averages.consultation_time || 0) - 1) / 4 * 9 + 1) * 100) / 100, // Convertir 1-5 a 1-10
       fill: 'var(--color-time)',
       escala: '1-5'
     }
@@ -282,17 +282,18 @@ export const SurveyCharts = () => {
   }, [filteredSurveys]);
 
   // Calculate overall satisfaction average with normalized scores
-  const normalizeWebsiteRating = (rating: number) => ((rating - 1) * 2 + 1);
-  const normalizeCommunicationRating = (rating: number) => ((rating - 1) * 2 + 1);
+  const normalizeWebsiteRating = (rating: number) => ((rating - 1) / 2 * 9 + 1);
+  const normalizeCommunicationRating = (rating: number) => ((rating - 1) / 2 * 9 + 1);
+  const normalizeOtherRatings = (rating: number) => ((rating - 1) / 4 * 9 + 1);
 
   const averageSatisfaction = (
     normalizeWebsiteRating(averages.website_design_rating || 0) +
     normalizeCommunicationRating(averages.communication_clarity || 0) +
-    (averages.reception_friendliness || 0) +
-    (averages.clinic_environment || 0) +
-    (averages.doctor_listening || 0) +
-    (averages.explanation_clarity || 0) +
-    (averages.consultation_time || 0)
+    normalizeOtherRatings(averages.reception_friendliness || 0) +
+    normalizeOtherRatings(averages.clinic_environment || 0) +
+    normalizeOtherRatings(averages.doctor_listening || 0) +
+    normalizeOtherRatings(averages.explanation_clarity || 0) +
+    normalizeOtherRatings(averages.consultation_time || 0)
   ) / 7;
 
   if (isLoading) {
@@ -436,7 +437,7 @@ export const SurveyCharts = () => {
           <CardHeader className="relative pb-2 flex flex-row items-center justify-between space-y-0">
             <div>
               <CardTitle className="text-xs sm:text-sm font-medium text-violet-100">Satisfacción Promedio</CardTitle>
-              <div className="text-2xl sm:text-3xl font-bold mb-1 mt-2">{Math.round(averageSatisfaction * 100) / 100}/5</div>
+              <div className="text-2xl sm:text-3xl font-bold mb-1 mt-2">{Math.round(averageSatisfaction * 100) / 100}/10</div>
               <p className="text-violet-100 text-xs">Promedio general</p>
             </div>
             <div className="p-3 bg-white/15 rounded-2xl backdrop-blur-sm">
@@ -474,7 +475,7 @@ export const SurveyCharts = () => {
                 </div>
                 <div>
                   <span className="text-2xl font-bold">Puntuaciones Promedio</span>
-                  <p className="text-sm font-normal text-gray-600 mt-1">Puntuaciones normalizadas a escala 1-5 para comparación</p>
+                  <p className="text-sm font-normal text-gray-600 mt-1">Puntuaciones normalizadas a escala 1-10 para comparación</p>
                 </div>
               </CardTitle>
             </CardHeader>
@@ -511,7 +512,7 @@ export const SurveyCharts = () => {
                     tickLine={{ stroke: "hsl(var(--border))" }}
                   />
                   <YAxis 
-                    domain={[0, 5]} 
+                    domain={[0, 10]} 
                     tick={{ fontSize: window.innerWidth < 640 ? 10 : 12, fill: "hsl(var(--foreground))", fontWeight: 500 }}
                     axisLine={{ stroke: "hsl(var(--border))" }}
                     tickLine={{ stroke: "hsl(var(--border))" }}
@@ -520,7 +521,7 @@ export const SurveyCharts = () => {
                   <ChartTooltip 
                     content={<ChartTooltipContent />}
                     formatter={(value, name, props) => [
-                      `${Number(value).toFixed(1)}/5`,
+                      `${Number(value).toFixed(1)}/10`,
                       props.payload?.fullName || name
                     ]}
                     cursor={{ fill: "hsl(var(--muted))", opacity: 0.15 }}
@@ -545,7 +546,7 @@ export const SurveyCharts = () => {
               <div className="flex items-center justify-between">
                 <span className="text-xs sm:text-sm font-semibold text-gray-700">Promedio General:</span>
                 <span className="text-base sm:text-lg font-bold text-blue-600">
-                  {(Object.values(averages).reduce((sum, avg) => sum + (avg || 0), 0) / Object.keys(averages).length).toFixed(1)}/5
+                  {averageSatisfaction.toFixed(1)}/10
                 </span>
               </div>
             </div>
