@@ -452,7 +452,7 @@ export const SurveyCharts = () => {
             <div>
               <CardTitle className="text-xs sm:text-sm font-medium text-orange-100">Con Comentarios</CardTitle>
               <div className="text-2xl sm:text-3xl font-bold mb-1 mt-2">
-                {filteredSurveys.filter(s => s.additional_comments && s.additional_comments.trim() !== '').length}
+                {filteredSurveys.filter(survey => survey.additional_comments && survey.additional_comments.trim() !== '').length}
               </div>
               <p className="text-orange-100 text-xs">Con feedback</p>
             </div>
