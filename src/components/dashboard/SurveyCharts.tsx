@@ -673,8 +673,7 @@ export const SurveyCharts = () => {
                         labelLine={false}
                         label={({ name, value, percent }) => {
                           if (value > 0) {
-                            const percentage = (percent * 100).toFixed(0);
-                            return `${percentage}%`;
+                            return name;
                           }
                           return "";
                         }}
