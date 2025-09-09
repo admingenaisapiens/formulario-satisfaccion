@@ -171,44 +171,51 @@ export const SurveyCharts = () => {
     {
       category: 'Web',
       fullName: 'Facilidad Web',
-      promedio: Math.round((averages.website_design_rating || 0) * 100) / 100,
-      fill: 'var(--color-website)'
+      promedio: Math.round((((averages.website_design_rating || 0) - 1) / 2 * 4 + 1) * 100) / 100, // Normalizar de escala 1-3 a 1-5
+      fill: 'var(--color-website)',
+      escala: '1-3'
     },
     {
       category: 'Comunicación',
       fullName: 'Comunicación Previa',
-      promedio: Math.round((averages.communication_clarity || 0) * 100) / 100,
-      fill: 'var(--color-communication)'
+      promedio: Math.round((((averages.communication_clarity || 0) - 1) / 2 * 4 + 1) * 100) / 100, // Normalizar de escala 1-3 a 1-5
+      fill: 'var(--color-communication)',
+      escala: '1-3'
     },
     {
       category: 'Recepción',
       fullName: 'Recepción',
       promedio: Math.round((averages.reception_friendliness || 0) * 100) / 100,
-      fill: 'var(--color-reception)'
+      fill: 'var(--color-reception)',
+      escala: '1-5'
     },
     {
       category: 'Ambiente',
       fullName: 'Ambiente Clínica',
       promedio: Math.round((averages.clinic_environment || 0) * 100) / 100,
-      fill: 'var(--color-environment)'
+      fill: 'var(--color-environment)',
+      escala: '1-5'
     },
     {
       category: 'Doctor',
       fullName: 'Comunicación Doctor',
       promedio: Math.round((averages.doctor_listening || 0) * 100) / 100,
-      fill: 'var(--color-doctor)'
+      fill: 'var(--color-doctor)',
+      escala: '1-5'
     },
     {
       category: 'Explicación',
       fullName: 'Claridad Explicación',
       promedio: Math.round((averages.explanation_clarity || 0) * 100) / 100,
-      fill: 'var(--color-explanation)'
+      fill: 'var(--color-explanation)',
+      escala: '1-5'
     },
     {
       category: 'Tiempo',
       fullName: 'Tiempo Consulta',
       promedio: Math.round((averages.consultation_time || 0) * 100) / 100,
-      fill: 'var(--color-time)'
+      fill: 'var(--color-time)',
+      escala: '1-5'
     }
   ];
 
@@ -274,8 +281,19 @@ export const SurveyCharts = () => {
       .sort((a, b) => a.mes.localeCompare(b.mes));
   }, [filteredSurveys]);
 
-  // Calculate overall satisfaction average
-  const averageSatisfaction = Object.values(averages).reduce((sum, avg) => sum + (avg || 0), 0) / Object.keys(averages).length;
+  // Calculate overall satisfaction average with normalized scores
+  const normalizeWebsiteRating = (rating: number) => ((rating - 1) / 2 * 4 + 1);
+  const normalizeCommunicationRating = (rating: number) => ((rating - 1) / 2 * 4 + 1);
+
+  const averageSatisfaction = (
+    normalizeWebsiteRating(averages.website_design_rating || 0) +
+    normalizeCommunicationRating(averages.communication_clarity || 0) +
+    (averages.reception_friendliness || 0) +
+    (averages.clinic_environment || 0) +
+    (averages.doctor_listening || 0) +
+    (averages.explanation_clarity || 0) +
+    (averages.consultation_time || 0)
+  ) / 7;
 
   if (isLoading) {
     return (
@@ -456,7 +474,7 @@ export const SurveyCharts = () => {
                 </div>
                 <div>
                   <span className="text-2xl font-bold">Puntuaciones Promedio</span>
-                  <p className="text-sm font-normal text-gray-600 mt-1">Evaluación de cada aspecto de la experiencia (1-5)</p>
+                  <p className="text-sm font-normal text-gray-600 mt-1">Puntuaciones normalizadas a escala 1-5 para comparación</p>
                 </div>
               </CardTitle>
             </CardHeader>
