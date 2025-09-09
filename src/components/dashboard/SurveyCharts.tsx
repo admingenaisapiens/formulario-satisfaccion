@@ -171,14 +171,14 @@ export const SurveyCharts = () => {
     {
       category: 'Web',
       fullName: 'Facilidad Web',
-      promedio: Math.round((((averages.website_design_rating || 0) - 1) / 2 * 4 + 1) * 100) / 100, // Normalizar de escala 1-3 a 1-5
+      promedio: Math.round((((averages.website_design_rating || 0) - 1) * 2 + 1) * 100) / 100, // Convertir 1-3 a 1-5
       fill: 'var(--color-website)',
       escala: '1-3'
     },
     {
       category: 'Comunicación',
       fullName: 'Comunicación Previa',
-      promedio: Math.round((((averages.communication_clarity || 0) - 1) / 2 * 4 + 1) * 100) / 100, // Normalizar de escala 1-3 a 1-5
+      promedio: Math.round((((averages.communication_clarity || 0) - 1) * 2 + 1) * 100) / 100, // Convertir 1-3 a 1-5
       fill: 'var(--color-communication)',
       escala: '1-3'
     },
@@ -282,8 +282,8 @@ export const SurveyCharts = () => {
   }, [filteredSurveys]);
 
   // Calculate overall satisfaction average with normalized scores
-  const normalizeWebsiteRating = (rating: number) => ((rating - 1) / 2 * 4 + 1);
-  const normalizeCommunicationRating = (rating: number) => ((rating - 1) / 2 * 4 + 1);
+  const normalizeWebsiteRating = (rating: number) => ((rating - 1) * 2 + 1);
+  const normalizeCommunicationRating = (rating: number) => ((rating - 1) * 2 + 1);
 
   const averageSatisfaction = (
     normalizeWebsiteRating(averages.website_design_rating || 0) +
