@@ -42,6 +42,8 @@ interface SurveyResponse {
   consultation_time: number;
   nps_score: number;
   additional_comments: string | null;
+  how_did_you_know_us: string;
+  referral_details: string | null;
   created_at: string;
 }
 
@@ -423,8 +425,8 @@ export const SurveyCharts = () => {
                   <Star className="w-6 h-6 text-white" />
                 </div>
                 <div>
-                  <span className="text-2xl font-bold">Puntuaciones Promedio</span>
-                  <p className="text-sm font-normal text-gray-600 mt-1">Evaluación de cada aspecto de la experiencia (1-5)</p>
+                  <span className="text-xl sm:text-2xl font-bold">Puntuaciones Promedio</span>
+                  <p className="text-sm font-normal text-gray-600 mt-1">Evaluación de cada aspecto de la experiencia (1-3)</p>
                 </div>
               </CardTitle>
             </CardHeader>
@@ -461,7 +463,7 @@ export const SurveyCharts = () => {
                     tickLine={{ stroke: "hsl(var(--border))" }}
                   />
                   <YAxis 
-                    domain={[0, 5]} 
+                    domain={[0, 3]} 
                     tick={{ fontSize: window.innerWidth < 640 ? 10 : 12, fill: "hsl(var(--foreground))", fontWeight: 500 }}
                     axisLine={{ stroke: "hsl(var(--border))" }}
                     tickLine={{ stroke: "hsl(var(--border))" }}
@@ -470,7 +472,7 @@ export const SurveyCharts = () => {
                   <ChartTooltip 
                     content={<ChartTooltipContent />}
                     formatter={(value, name, props) => [
-                      `${Number(value).toFixed(1)}/5`,
+                      `${Number(value).toFixed(1)}/3`,
                       props.payload?.fullName || name
                     ]}
                     cursor={{ fill: "hsl(var(--muted))", opacity: 0.15 }}
@@ -495,7 +497,7 @@ export const SurveyCharts = () => {
               <div className="flex items-center justify-between">
                 <span className="text-xs sm:text-sm font-semibold text-gray-700">Promedio General:</span>
                 <span className="text-base sm:text-lg font-bold text-blue-600">
-                  {(Object.values(averages).reduce((sum, avg) => sum + (avg || 0), 0) / Object.keys(averages).length).toFixed(1)}/5
+                  {(Object.values(averages).reduce((sum, avg) => sum + (avg || 0), 0) / Object.keys(averages).length).toFixed(1)}/3
                 </span>
               </div>
             </div>
@@ -637,6 +639,105 @@ export const SurveyCharts = () => {
                 </LineChart>
               </ResponsiveContainer>
             </ChartContainer>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Análisis de Fuente de Conocimiento */}
+      {filteredSurveys.length > 0 && (
+        <Card className="border-0 shadow-xl bg-white/95 backdrop-blur-sm overflow-hidden">
+          <div className="bg-gradient-to-r from-rose-500/80 via-pink-500/80 to-purple-500/80 p-1">
+            <CardHeader className="bg-white m-1 rounded-lg">
+              <CardTitle className="flex items-center gap-3 text-gray-800">
+                <div className="p-3 bg-gradient-to-br from-rose-500/90 to-pink-600/90 rounded-xl shadow-lg">
+                  <Users className="w-6 h-6 text-white" />
+                </div>
+                <div>
+                  <span className="text-2xl font-bold">¿Cómo nos conocieron?</span>
+                  <p className="text-sm font-normal text-gray-600 mt-1">Análisis de las fuentes de referencia de pacientes</p>
+                </div>
+              </CardTitle>
+            </CardHeader>
+          </div>
+          <CardContent className="p-8 bg-gradient-to-b from-white to-rose-50/30">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              {/* Distribución por fuente */}
+              <div>
+                <h3 className="text-lg font-semibold mb-4 text-gray-800">Distribución por fuente</h3>
+                <div className="space-y-3">
+                  {Object.entries(
+                    filteredSurveys.reduce((acc, survey) => {
+                      if (survey.how_did_you_know_us) {
+                        const source = survey.how_did_you_know_us;
+                        const sourceLabels = {
+                          'redes_sociales': 'Redes sociales',
+                          'clinica_fisioterapia': 'Clínica de fisioterapia',
+                          'un_amigo': 'Un amigo',
+                          'un_conocido': 'Un conocido'
+                        };
+                        const label = sourceLabels[source as keyof typeof sourceLabels] || source;
+                        acc[label] = (acc[label] || 0) + 1;
+                      }
+                      return acc;
+                    }, {} as Record<string, number>)
+                  ).map(([source, count]) => {
+                    const percentage = ((count / filteredSurveys.length) * 100).toFixed(1);
+                    const colors = {
+                      'Redes sociales': 'bg-blue-500',
+                      'Clínica de fisioterapia': 'bg-green-500',
+                      'Un amigo': 'bg-purple-500',
+                      'Un conocido': 'bg-orange-500'
+                    };
+                    return (
+                      <div key={source} className="flex items-center justify-between p-3 bg-white/70 rounded-lg border border-gray-100/50">
+                        <div className="flex items-center gap-3">
+                          <div className={`w-4 h-4 rounded-full ${colors[source as keyof typeof colors] || 'bg-gray-500'}`}></div>
+                          <span className="font-medium">{source}</span>
+                        </div>
+                        <div className="text-right">
+                          <div className="font-bold text-lg">{count}</div>
+                          <div className="text-sm text-gray-600">{percentage}%</div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Detalles de referencia */}
+              <div>
+                <h3 className="text-lg font-semibold mb-4 text-gray-800">Detalles específicos</h3>
+                <div className="space-y-2 max-h-64 overflow-y-auto">
+                  {filteredSurveys
+                    .filter(survey => survey.referral_details && survey.referral_details.trim() !== '')
+                    .slice(0, 10)
+                    .map((survey, index) => {
+                      const sourceLabels = {
+                        'redes_sociales': 'Redes sociales',
+                        'clinica_fisioterapia': 'Clínica de fisioterapia',
+                        'un_amigo': 'Un amigo',
+                        'un_conocido': 'Un conocido'
+                      };
+                      const sourceLabel = sourceLabels[survey.how_did_you_know_us as keyof typeof sourceLabels] || survey.how_did_you_know_us;
+                      return (
+                        <div key={survey.id} className="p-3 bg-white/70 rounded-lg border border-gray-100/50">
+                          <div className="flex items-start gap-2">
+                            <div className="text-xs text-gray-500 font-medium min-w-0 flex-shrink-0">
+                              {sourceLabel}:
+                            </div>
+                            <div className="text-sm text-gray-700 italic">
+                              "{survey.referral_details}"
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  {filteredSurveys.filter(s => s.referral_details && s.referral_details.trim() !== '').length === 0 && (
+                    <p className="text-gray-500 text-sm italic">No hay detalles específicos disponibles.</p>
+                  )}
+                </div>
+              </div>
+            </div>
           </CardContent>
         </Card>
       )}
