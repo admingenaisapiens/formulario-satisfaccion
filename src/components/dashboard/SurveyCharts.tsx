@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { format, startOfMonth, eachMonthOfInterval, subMonths } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { Button } from '@/components/ui/button';
@@ -56,6 +56,43 @@ export const SurveyCharts = () => {
   const [customDateTo, setCustomDateTo] = useState<Date | undefined>();
   const { toast } = useToast();
 
+  const filterSurveysByDate = useCallback(() => {
+    let filtered = surveys;
+    const now = new Date();
+
+    switch (dateFilter) {
+      case 'last_7_days':
+        const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+        filtered = surveys.filter(survey => new Date(survey.created_at) >= sevenDaysAgo);
+        break;
+      case 'last_30_days':
+        const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+        filtered = surveys.filter(survey => new Date(survey.created_at) >= thirtyDaysAgo);
+        break;
+      case 'last_3_months':
+        const threeMonthsAgo = new Date(now.getTime() - 90 * 24 * 60 * 60 * 1000);
+        filtered = surveys.filter(survey => new Date(survey.created_at) >= threeMonthsAgo);
+        break;
+      case 'custom':
+        if (customDateFrom) {
+          const fromDate = new Date(customDateFrom);
+          fromDate.setHours(0, 0, 0, 0); // Start of day
+          filtered = filtered.filter(survey => new Date(survey.created_at) >= fromDate);
+        }
+        if (customDateTo) {
+          const toDate = new Date(customDateTo);
+          toDate.setHours(23, 59, 59, 999); // End of day
+          filtered = filtered.filter(survey => new Date(survey.created_at) <= toDate);
+        }
+        break;
+      default:
+        // 'all' - no filtering
+        break;
+    }
+
+    setFilteredSurveys(filtered);
+  }, [surveys, dateFilter, customDateFrom, customDateTo]);
+
   useEffect(() => {
     fetchSurveys();
     
@@ -83,7 +120,7 @@ export const SurveyCharts = () => {
 
   useEffect(() => {
     filterSurveysByDate();
-  }, [surveys, dateFilter, customDateFrom, customDateTo]);
+  }, [filterSurveysByDate]);
 
   const fetchSurveys = async () => {
     try {
@@ -103,39 +140,6 @@ export const SurveyCharts = () => {
     } finally {
       setIsLoading(false);
     }
-  };
-
-  const filterSurveysByDate = () => {
-    let filtered = surveys;
-    const now = new Date();
-
-    switch (dateFilter) {
-      case 'last_7_days':
-        const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
-        filtered = surveys.filter(survey => new Date(survey.created_at) >= sevenDaysAgo);
-        break;
-      case 'last_30_days':
-        const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
-        filtered = surveys.filter(survey => new Date(survey.created_at) >= thirtyDaysAgo);
-        break;
-      case 'last_3_months':
-        const threeMonthsAgo = new Date(now.getTime() - 90 * 24 * 60 * 60 * 1000);
-        filtered = surveys.filter(survey => new Date(survey.created_at) >= threeMonthsAgo);
-        break;
-      case 'custom':
-        if (customDateFrom) {
-          filtered = filtered.filter(survey => new Date(survey.created_at) >= customDateFrom);
-        }
-        if (customDateTo) {
-          filtered = filtered.filter(survey => new Date(survey.created_at) <= customDateTo);
-        }
-        break;
-      default:
-        // 'all' - no filtering
-        break;
-    }
-
-    setFilteredSurveys(filtered);
   };
 
   const calculateAverages = (surveys: SurveyResponse[]) => {
