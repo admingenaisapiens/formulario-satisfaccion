@@ -1,10 +1,16 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import { format } from 'date-fns';
+import { es } from 'date-fns/locale';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Calendar } from '@/components/ui/calendar';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
-import { Activity, Users, Stethoscope, MapPin } from 'lucide-react';
+import { Activity, Users, Stethoscope, MapPin, CalendarIcon } from 'lucide-react';
 import {
   PieChart,
   Pie,
@@ -35,8 +41,49 @@ interface BodyZoneData {
 
 export const TreatmentAnalytics = () => {
   const [surveys, setSurveys] = useState<SurveyResponse[]>([]);
+  const [filteredSurveys, setFilteredSurveys] = useState<SurveyResponse[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [dateFilter, setDateFilter] = useState('all');
+  const [customDateFrom, setCustomDateFrom] = useState<Date | undefined>();
+  const [customDateTo, setCustomDateTo] = useState<Date | undefined>();
   const { toast } = useToast();
+
+  const filterSurveysByDate = useCallback(() => {
+    let filtered = surveys;
+    const now = new Date();
+
+    switch (dateFilter) {
+      case 'last_7_days':
+        const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+        filtered = surveys.filter(survey => new Date(survey.created_at) >= sevenDaysAgo);
+        break;
+      case 'last_30_days':
+        const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+        filtered = surveys.filter(survey => new Date(survey.created_at) >= thirtyDaysAgo);
+        break;
+      case 'last_3_months':
+        const threeMonthsAgo = new Date(now.getTime() - 90 * 24 * 60 * 60 * 1000);
+        filtered = surveys.filter(survey => new Date(survey.created_at) >= threeMonthsAgo);
+        break;
+      case 'custom':
+        if (customDateFrom) {
+          const fromDate = new Date(customDateFrom);
+          fromDate.setHours(0, 0, 0, 0); // Start of day
+          filtered = filtered.filter(survey => new Date(survey.created_at) >= fromDate);
+        }
+        if (customDateTo) {
+          const toDate = new Date(customDateTo);
+          toDate.setHours(23, 59, 59, 999); // End of day
+          filtered = filtered.filter(survey => new Date(survey.created_at) <= toDate);
+        }
+        break;
+      default:
+        // 'all' - no filtering
+        break;
+    }
+
+    setFilteredSurveys(filtered);
+  }, [surveys, dateFilter, customDateFrom, customDateTo]);
 
   // Helper functions - defined before useMemo hooks
   const getTreatmentLabel = (treatmentType: string) => {
@@ -91,6 +138,10 @@ export const TreatmentAnalytics = () => {
     };
   }, []);
 
+  useEffect(() => {
+    filterSurveysByDate();
+  }, [filterSurveysByDate]);
+
   const fetchSurveys = async () => {
     try {
       const { data, error } = await supabase
@@ -113,7 +164,7 @@ export const TreatmentAnalytics = () => {
 
   // Process appointment types
   const appointmentTypeData = useMemo(() => {
-    const counts = surveys.reduce((acc, survey) => {
+    const counts = filteredSurveys.reduce((acc, survey) => {
       const type = survey.appointment_type === 'presencial' ? 'Presencial' : 'Telemática';
       acc[type] = (acc[type] || 0) + 1;
       return acc;
@@ -124,7 +175,7 @@ export const TreatmentAnalytics = () => {
       value,
       fill: name === 'Presencial' ? '#10b981' : '#3b82f6' // Verde para presencial, azul para telemática
     }));
-  }, [surveys]);
+  }, [filteredSurveys]);
 
   // Process treatment types for pie chart
   const treatmentTypeData = useMemo(() => {
@@ -146,7 +197,7 @@ export const TreatmentAnalytics = () => {
     }, {} as Record<string, number>);
 
     // Count actual occurrences
-    surveys.forEach(survey => {
+    filteredSurveys.forEach(survey => {
       const treatment = getTreatmentLabel(survey.treatment_type);
       counts[treatment] = (counts[treatment] || 0) + 1;
     });
@@ -171,11 +222,11 @@ export const TreatmentAnalytics = () => {
         fill: colors[index % colors.length]
       }))
       .sort((a, b) => b.count - a.count);
-  }, [surveys]);
+  }, [filteredSurveys]);
 
   // Process body zones
   const bodyZoneData = useMemo(() => {
-    const counts = surveys.reduce((acc, survey) => {
+    const counts = filteredSurveys.reduce((acc, survey) => {
       const zone = survey.body_area === 'otra' && survey.other_body_area 
         ? survey.other_body_area 
         : survey.body_area;
@@ -192,7 +243,7 @@ export const TreatmentAnalytics = () => {
       label,
       percentage: Math.round((count / total) * 100)
     })).sort((a, b) => b.count - a.count);
-  }, [surveys]);
+  }, [filteredSurveys]);
 
   const HumanBodyDiagram = ({ bodyZoneData }: { bodyZoneData: BodyZoneData[] }) => {
     const getZoneCount = (zone: string) => {
@@ -473,6 +524,77 @@ export const TreatmentAnalytics = () => {
           </div>
         </div>
 
+        {/* Date Filter - Enhanced */}
+        <Card className="border-0 shadow-2xl bg-white/80 backdrop-blur-sm hover:shadow-3xl transition-all duration-500 overflow-hidden">
+          <div className="bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 p-1">
+            <CardHeader className="bg-white m-1 rounded-lg">
+              <CardTitle className="flex items-center gap-3 text-gray-800">
+                <div className="p-3 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-xl shadow-lg">
+                  <CalendarIcon className="w-6 h-6 text-white" />
+                </div>
+                <div>
+                  <span className="text-lg sm:text-xl font-bold">Filtro de Fecha</span>
+                  <p className="text-xs sm:text-sm font-normal text-gray-600 mt-1">Selecciona el período de tiempo</p>
+                </div>
+              </CardTitle>
+            </CardHeader>
+          </div>
+          <CardContent className="p-8 bg-gradient-to-b from-white to-emerald-50/50">
+            <div className="flex flex-col sm:flex-row gap-4">
+              <Select value={dateFilter} onValueChange={setDateFilter}>
+                <SelectTrigger className="w-full sm:w-[200px] border-2 border-emerald-100 hover:border-emerald-300 transition-colors">
+                  <SelectValue placeholder="Seleccionar período" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Todos los datos</SelectItem>
+                  <SelectItem value="last_7_days">Últimos 7 días</SelectItem>
+                  <SelectItem value="last_30_days">Últimos 30 días</SelectItem>
+                  <SelectItem value="last_3_months">Últimos 3 meses</SelectItem>
+                  <SelectItem value="custom">Personalizado</SelectItem>
+                </SelectContent>
+              </Select>
+
+              {dateFilter === 'custom' && (
+                <div className="flex gap-2">
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button variant="outline" className="w-[150px] justify-start text-left font-normal border-2 border-emerald-100 hover:border-emerald-300 hover:bg-emerald-50">
+                        <CalendarIcon className="mr-2 h-4 w-4" />
+                        {customDateFrom ? format(customDateFrom, 'dd/MM/yyyy') : 'Desde'}
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <Calendar
+                        mode="single"
+                        selected={customDateFrom}
+                        onSelect={setCustomDateFrom}
+                        initialFocus
+                      />
+                    </PopoverContent>
+                  </Popover>
+
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button variant="outline" className="w-[150px] justify-start text-left font-normal border-2 border-emerald-100 hover:border-emerald-300 hover:bg-emerald-50">
+                        <CalendarIcon className="mr-2 h-4 w-4" />
+                        {customDateTo ? format(customDateTo, 'dd/MM/yyyy') : 'Hasta'}
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <Calendar
+                        mode="single"
+                        selected={customDateTo}
+                        onSelect={setCustomDateTo}
+                        initialFocus
+                      />
+                    </PopoverContent>
+                  </Popover>
+                </div>
+              )}
+            </div>
+          </CardContent>
+        </Card>
+
         {/* Enhanced Summary Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
           <Card className="group relative overflow-hidden border-0 shadow-xl bg-gradient-to-br from-emerald-500 to-teal-600 text-white hover:scale-105 transition-all duration-300">
@@ -486,7 +608,7 @@ export const TreatmentAnalytics = () => {
               </div>
             </CardHeader>
             <CardContent className="relative">
-              <div className="text-2xl sm:text-3xl font-bold mb-1">{surveys.length}</div>
+              <div className="text-2xl sm:text-3xl font-bold mb-1">{filteredSurveys.length}</div>
               <p className="text-emerald-100 text-xs">
                 Consultas registradas
               </p>
