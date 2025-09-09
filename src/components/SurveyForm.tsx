@@ -192,13 +192,65 @@ export const SurveyForm = () => {
                 <CardTitle className="text-xl text-primary">Sección 1: Experiencia General y Reserva</CardTitle>
               </CardHeader>
               <CardContent className="space-y-6">
-                <RatingField
+                <FormField
+                  control={form.control}
                   name="website_design_rating"
-                  label="¿Te resultó fácil usar nuestra página web?"
+                  render={({ field }) => (
+                    <FormItem className="space-y-3">
+                      <FormLabel className="text-base font-medium">¿Te resultó fácil usar nuestra página web?</FormLabel>
+                      <FormControl>
+                        <RadioGroup
+                          onValueChange={(value) => field.onChange(parseInt(value))}
+                          value={field.value?.toString()}
+                          className="flex flex-col gap-3"
+                        >
+                          {[
+                            { value: 1, label: 'Tuve dificultades, no fue fácil de usar' },
+                            { value: 2, label: 'Pude usarla, pero con alguna complicación' },
+                            { value: 3, label: 'Fue muy fácil e intuitiva de navegar' }
+                          ].map((option) => (
+                            <div key={option.value} className="flex items-center space-x-2">
+                              <RadioGroupItem value={option.value.toString()} id={`website-${option.value}`} />
+                              <label htmlFor={`website-${option.value}`} className="text-sm font-medium cursor-pointer">
+                                {option.label}
+                              </label>
+                            </div>
+                          ))}
+                        </RadioGroup>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
                 />
-                <RatingField
+                <FormField
+                  control={form.control}
                   name="communication_clarity"
-                  label="¿Fue clara y útil la comunicación previa a tu cita (correos, recordatorios, instrucciones)?"
+                  render={({ field }) => (
+                    <FormItem className="space-y-3">
+                      <FormLabel className="text-base font-medium">¿Fue clara y útil la comunicación previa a tu cita (correos, recordatorios, instrucciones)?</FormLabel>
+                      <FormControl>
+                        <RadioGroup
+                          onValueChange={(value) => field.onChange(parseInt(value))}
+                          value={field.value?.toString()}
+                          className="flex flex-col gap-3"
+                        >
+                          {[
+                            { value: 1, label: 'No fue clara ni me ayudó mucho' },
+                            { value: 2, label: 'Fue adecuada, cumplió su propósito' },
+                            { value: 3, label: 'Muy clara y útil, me sentí bien informado/a' }
+                          ].map((option) => (
+                            <div key={option.value} className="flex items-center space-x-2">
+                              <RadioGroupItem value={option.value.toString()} id={`communication-${option.value}`} />
+                              <label htmlFor={`communication-${option.value}`} className="text-sm font-medium cursor-pointer">
+                                {option.label}
+                              </label>
+                            </div>
+                          ))}
+                        </RadioGroup>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
                 />
               </CardContent>
             </Card>
