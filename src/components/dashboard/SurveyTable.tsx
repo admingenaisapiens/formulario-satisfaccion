@@ -179,9 +179,11 @@ export const SurveyTable = () => {
   const getRatingLabel = (rating: number, fieldType: string) => {
     switch (fieldType) {
       case 'website_design_rating':
+        const websiteLabels = ['', 'Tuve dificultades, no fue fácil de usar', 'Pude usarla, pero con alguna complicación', 'Fue muy fácil e intuitiva de navegar'];
+        return websiteLabels[rating] || rating.toString();
       case 'communication_clarity':
-        const generalLabels = ['', 'Muy mal', 'Normal', 'Muy bien'];
-        return generalLabels[rating] || rating.toString();
+        const communicationLabels = ['', 'No fue clara ni me ayudó mucho', 'Fue adecuada, cumplió su propósito', 'Muy clara y útil, me sentí bien informado/a'];
+        return communicationLabels[rating] || rating.toString();
       case 'reception_friendliness':
         const receptionLabels = ['', 'Malo', 'Regular', 'Bueno', 'Muy bueno', 'Excelente'];
         return receptionLabels[rating] || rating.toString();
