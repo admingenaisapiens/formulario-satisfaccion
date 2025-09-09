@@ -698,7 +698,6 @@ export const SurveyCharts = () => {
                       <Legend 
                         verticalAlign="bottom" 
                         height={36}
-                        formatter={(value) => <span className="text-sm font-medium text-gray-700">{value}</span>}
                       />
                     </PieChart>
                   </ResponsiveContainer>
