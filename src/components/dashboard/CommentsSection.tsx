@@ -164,10 +164,10 @@ export const CommentsSection = () => {
   };
 
   const getSatisfactionLevel = (avgSatisfaction: number) => {
-    if (avgSatisfaction >= 4.5) return { label: 'Excelente', color: 'text-green-600' };
-    if (avgSatisfaction >= 4) return { label: 'Muy Bueno', color: 'text-blue-600' };
-    if (avgSatisfaction >= 3.5) return { label: 'Bueno', color: 'text-yellow-600' };
-    if (avgSatisfaction >= 3) return { label: 'Regular', color: 'text-orange-600' };
+    if (avgSatisfaction >= 8.5) return { label: 'Excelente', color: 'text-green-600' };
+    if (avgSatisfaction >= 7.5) return { label: 'Muy Bueno', color: 'text-blue-600' };
+    if (avgSatisfaction >= 6.5) return { label: 'Bueno', color: 'text-yellow-600' };
+    if (avgSatisfaction >= 5.5) return { label: 'Regular', color: 'text-orange-600' };
     return { label: 'Malo', color: 'text-red-600' };
   };
 
@@ -390,7 +390,7 @@ export const CommentsSection = () => {
                   <div className="flex justify-between items-center p-3 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl">
                     <span className="text-sm font-semibold text-gray-700">Satisfacción General:</span>
                     <span className={`text-sm font-bold ${satisfactionLevel.color}`}>
-                      {satisfactionLevel.label} ({avgSatisfaction.toFixed(1)}/5)
+                      {satisfactionLevel.label} ({avgSatisfaction.toFixed(1)}/10)
                     </span>
                   </div>
                   
