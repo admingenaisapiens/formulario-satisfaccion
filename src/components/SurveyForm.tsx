@@ -27,14 +27,14 @@ const surveySchema = z.object({
   other_body_area: z.string().optional(),
   
   // Sección 3: Experiencia en la Consulta (OBLIGATORIAS)
-  reception_friendliness: z.number().min(1).max(5),
-  waiting_time: z.enum(['less_than_5', '5_to_15', '15_to_30', 'more_than_30']),
-  clinic_environment: z.number().min(1).max(5),
+  reception_friendliness: z.number().min(1).max(3),
+  waiting_time: z.enum(['malo', 'normal', 'bueno']),
+  clinic_environment: z.number().min(1).max(3),
   
   // Sección 4: Experiencia con el Doctor/Profesional (OBLIGATORIAS)
-  doctor_listening: z.number().min(1).max(5),
-  explanation_clarity: z.number().min(1).max(5),
-  consultation_time: z.number().min(1).max(5),
+  doctor_listening: z.number().min(1).max(3),
+  explanation_clarity: z.number().min(1).max(3),
+  consultation_time: z.number().min(1).max(3),
   
   // Sección 5: Valoración Global (primera obligatoria, segunda opcional)
   nps_score: z.number().min(0).max(10),
@@ -62,12 +62,12 @@ export const SurveyForm = () => {
       other_treatment: '',
       body_area: '',
       other_body_area: '',
-      reception_friendliness: 3,
-      waiting_time: 'less_than_5',
-      clinic_environment: 3,
-      doctor_listening: 3,
-      explanation_clarity: 3,
-      consultation_time: 3,
+      reception_friendliness: 2,
+      waiting_time: 'normal',
+      clinic_environment: 2,
+      doctor_listening: 2,
+      explanation_clarity: 2,
+      consultation_time: 2,
       nps_score: 5,
       additional_comments: '',
       how_did_you_know_us: '',
@@ -394,10 +394,8 @@ export const SurveyForm = () => {
                         >
                           {[
                             { value: 1, label: 'Malo' },
-                            { value: 2, label: 'Regular' },
-                            { value: 3, label: 'Bueno' },
-                            { value: 4, label: 'Muy bueno' },
-                            { value: 5, label: 'Excelente' }
+                            { value: 2, label: 'Normal' },
+                            { value: 3, label: 'Bueno' }
                           ].map((option) => (
                             <div key={option.value} className="flex items-center space-x-2">
                               <RadioGroupItem value={option.value.toString()} id={`reception-${option.value}`} />
@@ -426,10 +424,9 @@ export const SurveyForm = () => {
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          <SelectItem value="less_than_5">Menos de 5 minutos</SelectItem>
-                          <SelectItem value="5_to_15">Entre 5 y 15 minutos</SelectItem>
-                          <SelectItem value="15_to_30">Entre 15 y 30 minutos</SelectItem>
-                          <SelectItem value="more_than_30">Más de 30 minutos</SelectItem>
+                          <SelectItem value="malo">Más de 20 minutos (demasiado tiempo)</SelectItem>
+                          <SelectItem value="normal">Entre 5 y 20 minutos (tiempo aceptable)</SelectItem>
+                          <SelectItem value="bueno">Menos de 5 minutos (muy rápido)</SelectItem>
                         </SelectContent>
                       </Select>
                       <FormMessage />
@@ -450,11 +447,9 @@ export const SurveyForm = () => {
                           className="flex flex-wrap gap-4"
                         >
                           {[
-                            { value: 1, label: 'Desagradable' },
-                            { value: 2, label: 'No muy agradable' },
-                            { value: 3, label: 'Normal' },
-                            { value: 4, label: 'Agradable' },
-                            { value: 5, label: 'Sí, muy agradable' }
+                            { value: 1, label: 'Malo' },
+                            { value: 2, label: 'Normal' },
+                            { value: 3, label: 'Bueno' }
                           ].map((option) => (
                             <div key={option.value} className="flex items-center space-x-2">
                               <RadioGroupItem value={option.value.toString()} id={`environment-${option.value}`} />
@@ -491,11 +486,9 @@ export const SurveyForm = () => {
                           className="flex flex-wrap gap-4"
                         >
                           {[
-                            { value: 1, label: 'No, nada fluida ni escuchado/a' },
-                            { value: 2, label: 'No muy fluida' },
-                            { value: 3, label: 'Normal' },
-                            { value: 4, label: 'Sí, fluida' },
-                            { value: 5, label: 'Sí, muy fluida y escuchado/a' }
+                            { value: 1, label: 'Malo' },
+                            { value: 2, label: 'Normal' },
+                            { value: 3, label: 'Bueno' }
                           ].map((option) => (
                             <div key={option.value} className="flex items-center space-x-2">
                               <RadioGroupItem value={option.value.toString()} id={`listening-${option.value}`} />
@@ -524,11 +517,9 @@ export const SurveyForm = () => {
                           className="flex flex-wrap gap-4"
                         >
                           {[
-                            { value: 1, label: 'No, nada claras' },
-                            { value: 2, label: 'No muy claras' },
-                            { value: 3, label: 'Normal' },
-                            { value: 4, label: 'Sí, claras' },
-                            { value: 5, label: 'Sí, muy claras' }
+                            { value: 1, label: 'Malo' },
+                            { value: 2, label: 'Normal' },
+                            { value: 3, label: 'Bueno' }
                           ].map((option) => (
                             <div key={option.value} className="flex items-center space-x-2">
                               <RadioGroupItem value={option.value.toString()} id={`clarity-${option.value}`} />
@@ -557,11 +548,9 @@ export const SurveyForm = () => {
                           className="flex flex-wrap gap-4"
                         >
                           {[
-                            { value: 1, label: 'No, en absoluto' },
-                            { value: 2, label: 'No' },
-                            { value: 3, label: 'Normal' },
-                            { value: 4, label: 'Sí' },
-                            { value: 5, label: 'Sí, totalmente' }
+                            { value: 1, label: 'Malo' },
+                            { value: 2, label: 'Normal' },
+                            { value: 3, label: 'Bueno' }
                           ].map((option) => (
                             <div key={option.value} className="flex items-center space-x-2">
                               <RadioGroupItem value={option.value.toString()} id={`time-${option.value}`} />

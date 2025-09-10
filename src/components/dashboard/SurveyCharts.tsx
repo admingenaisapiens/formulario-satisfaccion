@@ -199,37 +199,37 @@ export const SurveyCharts = () => {
     {
       category: 'Recepción',
       fullName: 'Recepción',
-      promedio: Math.round(((Math.max(1, Math.min(5, averages.reception_friendliness || 1)) - 1) / 4 * 9 + 1) * 100) / 100, // Convertir 1-5 a 1-10 con límites
+      promedio: Math.round(((Math.max(1, Math.min(3, averages.reception_friendliness || 1)) - 1) / 2 * 9 + 1) * 100) / 100, // Convertir 1-3 a 1-10 con límites
       fill: 'var(--color-reception)',
-      escala: '1-5'
+      escala: '1-3'
     },
     {
       category: 'Ambiente',
       fullName: 'Ambiente Clínica',
-      promedio: Math.round(((Math.max(1, Math.min(5, averages.clinic_environment || 1)) - 1) / 4 * 9 + 1) * 100) / 100, // Convertir 1-5 a 1-10 con límites
+      promedio: Math.round(((Math.max(1, Math.min(3, averages.clinic_environment || 1)) - 1) / 2 * 9 + 1) * 100) / 100, // Convertir 1-3 a 1-10 con límites
       fill: 'var(--color-environment)',
-      escala: '1-5'
+      escala: '1-3'
     },
     {
       category: 'Doctor',
       fullName: 'Comunicación Doctor',
-      promedio: Math.round(((Math.max(1, Math.min(5, averages.doctor_listening || 1)) - 1) / 4 * 9 + 1) * 100) / 100, // Convertir 1-5 a 1-10 con límites
+      promedio: Math.round(((Math.max(1, Math.min(3, averages.doctor_listening || 1)) - 1) / 2 * 9 + 1) * 100) / 100, // Convertir 1-3 a 1-10 con límites
       fill: 'var(--color-doctor)',
-      escala: '1-5'
+      escala: '1-3'
     },
     {
       category: 'Explicación',
       fullName: 'Claridad Explicación',
-      promedio: Math.round(((Math.max(1, Math.min(5, averages.explanation_clarity || 1)) - 1) / 4 * 9 + 1) * 100) / 100, // Convertir 1-5 a 1-10 con límites
+      promedio: Math.round(((Math.max(1, Math.min(3, averages.explanation_clarity || 1)) - 1) / 2 * 9 + 1) * 100) / 100, // Convertir 1-3 a 1-10 con límites
       fill: 'var(--color-explanation)',
-      escala: '1-5'
+      escala: '1-3'
     },
     {
       category: 'Tiempo',
       fullName: 'Tiempo Consulta',
-      promedio: Math.round(((Math.max(1, Math.min(5, averages.consultation_time || 1)) - 1) / 4 * 9 + 1) * 100) / 100, // Convertir 1-5 a 1-10 con límites
+      promedio: Math.round(((Math.max(1, Math.min(3, averages.consultation_time || 1)) - 1) / 2 * 9 + 1) * 100) / 100, // Convertir 1-3 a 1-10 con límites
       fill: 'var(--color-time)',
-      escala: '1-5'
+      escala: '1-3'
     }
   ];
 
@@ -288,19 +288,17 @@ export const SurveyCharts = () => {
       .sort((a, b) => a.mes.localeCompare(b.mes));
   }, [filteredSurveys]);
 
-  // Calculate overall satisfaction average with normalized scores
-  const normalizeWebsiteRating = (rating: number) => ((Math.max(1, Math.min(3, rating)) - 1) / 2 * 9 + 1);
-  const normalizeCommunicationRating = (rating: number) => ((Math.max(1, Math.min(3, rating)) - 1) / 2 * 9 + 1);
-  const normalizeOtherRatings = (rating: number) => ((Math.max(1, Math.min(5, rating)) - 1) / 4 * 9 + 1);
+  // Calculate overall satisfaction average with normalized scores (all ratings now 1-3 scale)
+  const normalizeRating = (rating: number) => ((Math.max(1, Math.min(3, rating)) - 1) / 2 * 9 + 1);
 
   const averageSatisfaction = (
-    normalizeWebsiteRating(averages.website_design_rating || 1) +
-    normalizeCommunicationRating(averages.communication_clarity || 1) +
-    normalizeOtherRatings(averages.reception_friendliness || 1) +
-    normalizeOtherRatings(averages.clinic_environment || 1) +
-    normalizeOtherRatings(averages.doctor_listening || 1) +
-    normalizeOtherRatings(averages.explanation_clarity || 1) +
-    normalizeOtherRatings(averages.consultation_time || 1)
+    normalizeRating(averages.website_design_rating || 1) +
+    normalizeRating(averages.communication_clarity || 1) +
+    normalizeRating(averages.reception_friendliness || 1) +
+    normalizeRating(averages.clinic_environment || 1) +
+    normalizeRating(averages.doctor_listening || 1) +
+    normalizeRating(averages.explanation_clarity || 1) +
+    normalizeRating(averages.consultation_time || 1)
   ) / 7;
 
   if (isLoading) {

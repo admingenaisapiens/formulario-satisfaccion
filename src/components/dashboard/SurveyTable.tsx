@@ -132,10 +132,9 @@ export const SurveyTable = () => {
 
   const getWaitingTimeLabel = (waitingTime: string) => {
     switch (waitingTime) {
-      case 'less_than_5': return 'Menos de 5 minutos';
-      case '5_to_15': return 'Entre 5 y 15 minutos';
-      case '15_to_30': return 'Entre 15 y 30 minutos';
-      case 'more_than_30': return 'Más de 30 minutos';
+      case 'bueno': return 'Menos de 5 minutos';
+      case 'normal': return 'Entre 5 y 20 minutos';
+      case 'malo': return 'Más de 20 minutos';
       default: return waitingTime;
     }
   };
@@ -185,19 +184,19 @@ export const SurveyTable = () => {
         const communicationLabels = ['', 'No fue clara ni me ayudó mucho', 'Fue adecuada, cumplió su propósito', 'Muy clara y útil, me sentí bien informado/a'];
         return communicationLabels[rating] || rating.toString();
       case 'reception_friendliness':
-        const receptionLabels = ['', 'Malo', 'Regular', 'Bueno', 'Muy bueno', 'Excelente'];
+        const receptionLabels = ['', 'Malo', 'Normal', 'Bueno'];
         return receptionLabels[rating] || rating.toString();
       case 'clinic_environment':
-        const environmentLabels = ['', 'Desagradable', 'No muy agradable', 'Normal', 'Agradable', 'Sí, muy agradable'];
+        const environmentLabels = ['', 'Malo', 'Normal', 'Bueno'];
         return environmentLabels[rating] || rating.toString();
       case 'doctor_listening':
-        const listeningLabels = ['', 'No, nada fluida ni escuchado/a', 'No muy fluida', 'Normal', 'Sí, fluida', 'Sí, muy fluida y escuchado/a'];
+        const listeningLabels = ['', 'Malo', 'Normal', 'Bueno'];
         return listeningLabels[rating] || rating.toString();
       case 'explanation_clarity':
-        const clarityLabels = ['', 'No, nada claras', 'No muy claras', 'Normal', 'Sí, claras', 'Sí, muy claras'];
+        const clarityLabels = ['', 'Malo', 'Normal', 'Bueno'];
         return clarityLabels[rating] || rating.toString();
       case 'consultation_time':
-        const timeLabels = ['', 'No, en absoluto', 'No', 'Normal', 'Sí', 'Sí, totalmente'];
+        const timeLabels = ['', 'Malo', 'Normal', 'Bueno'];
         return timeLabels[rating] || rating.toString();
       default:
         return rating.toString();
