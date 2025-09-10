@@ -156,16 +156,41 @@ export const SurveyCharts = () => {
     };
   };
 
-  const calculateNPS = (surveys: SurveyResponse[]) => {
-    if (surveys.length === 0) return { nps: 0, promoters: 0, passives: 0, detractors: 0 };
+  const normalizeRating = (rating: number) => ((Math.max(1, Math.min(3, rating)) - 1) / 2 * 9 + 1);
+
+  const calculateAverageSatisfaction = (survey: SurveyResponse): number => {
+    const ratings = [
+      survey.website_design_rating,
+      survey.communication_clarity,
+      survey.reception_friendliness,
+      survey.clinic_environment,
+      survey.doctor_listening,
+      survey.explanation_clarity,
+      survey.consultation_time
+    ].filter(rating => rating !== null && rating !== undefined);
     
-    const promoters = surveys.filter(survey => survey.nps_score >= 9).length;
-    const passives = surveys.filter(survey => survey.nps_score >= 7 && survey.nps_score <= 8).length;
-    const detractors = surveys.filter(survey => survey.nps_score <= 6).length;
+    const normalizedRatings = ratings.map(rating => normalizeRating(rating));
+    return normalizedRatings.reduce((sum, rating) => sum + rating, 0) / normalizedRatings.length;
+  };
+
+  const calculateSatisfactionData = (surveys: SurveyResponse[]) => {
+    if (surveys.length === 0) return { average: 0, excelentes: 0, buenos: 0, regulares: 0, malos: 0 };
     
-    const nps = Math.round(((promoters - detractors) / surveys.length) * 100);
+    const excelentes = surveys.filter(survey => calculateAverageSatisfaction(survey) >= 8.5).length;
+    const buenos = surveys.filter(survey => {
+      const avg = calculateAverageSatisfaction(survey);
+      return avg >= 6.5 && avg < 8.5;
+    }).length;
+    const regulares = surveys.filter(survey => {
+      const avg = calculateAverageSatisfaction(survey);
+      return avg >= 5.5 && avg < 6.5;
+    }).length;
+    const malos = surveys.filter(survey => calculateAverageSatisfaction(survey) < 5.5).length;
     
-    return { nps, promoters, passives, detractors };
+    const totalSatisfaction = surveys.reduce((sum, survey) => sum + calculateAverageSatisfaction(survey), 0);
+    const average = Math.round((totalSatisfaction / surveys.length) * 10) / 10;
+    
+    return { average, excelentes, buenos, regulares, malos };
   };
 
   const getSourceLabel = (source: string) => {
@@ -179,7 +204,7 @@ export const SurveyCharts = () => {
   };
 
   const averages = calculateAverages(filteredSurveys);
-  const npsData = calculateNPS(filteredSurveys);
+  const satisfactionData = calculateSatisfactionData(filteredSurveys);
 
   const barChartData = [
     {
@@ -257,12 +282,13 @@ export const SurveyCharts = () => {
   }, [filteredSurveys]);
 
   const pieChartData = [
-    { name: 'Promotores', value: npsData.promoters, fill: '#22c55e' },
-    { name: 'Pasivos', value: npsData.passives, fill: '#f59e0b' },
-    { name: 'Detractores', value: npsData.detractors, fill: '#ef4444' }
+    { name: 'Excelente', value: satisfactionData.excelentes, fill: '#22c55e' },
+    { name: 'Bueno', value: satisfactionData.buenos, fill: '#3b82f6' },
+    { name: 'Regular', value: satisfactionData.regulares, fill: '#f59e0b' },
+    { name: 'Malo', value: satisfactionData.malos, fill: '#ef4444' }
   ];
 
-  const npsTimeData = useMemo(() => {
+  const satisfactionTimeData = useMemo(() => {
     if (filteredSurveys.length === 0) return [];
 
     // Group surveys by month
@@ -275,13 +301,13 @@ export const SurveyCharts = () => {
       return acc;
     }, {} as Record<string, SurveyResponse[]>);
 
-    // Calculate NPS for each month
+    // Calculate satisfaction for each month
     return Object.entries(surveysByMonth)
       .map(([month, surveys]) => {
-        const nps = calculateNPS(surveys);
+        const satisfaction = calculateSatisfactionData(surveys);
         return {
           mes: format(new Date(month + '-01'), 'MMM yyyy', { locale: es }),
-          nps: nps.nps,
+          satisfaccion: satisfaction.average,
           respuestas: surveys.length
         };
       })
@@ -289,8 +315,6 @@ export const SurveyCharts = () => {
   }, [filteredSurveys]);
 
   // Calculate overall satisfaction average with normalized scores (all ratings now 1-3 scale)
-  const normalizeRating = (rating: number) => ((Math.max(1, Math.min(3, rating)) - 1) / 2 * 9 + 1);
-
   const averageSatisfaction = (
     normalizeRating(averages.website_design_rating || 1) +
     normalizeRating(averages.communication_clarity || 1) +
@@ -427,9 +451,9 @@ export const SurveyCharts = () => {
           <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -skew-x-12 translate-x-full group-hover:translate-x-[-200%] transition-transform duration-1000"></div>
           <CardHeader className="relative pb-2 flex flex-row items-center justify-between space-y-0">
             <div>
-              <CardTitle className="text-xs sm:text-sm font-medium text-emerald-100">Puntuación NPS</CardTitle>
-              <div className="text-2xl sm:text-3xl font-bold mb-1 mt-2">{npsData.nps}</div>
-              <p className="text-emerald-100 text-xs">Net Promoter Score</p>
+              <CardTitle className="text-xs sm:text-sm font-medium text-emerald-100">Satisfacción Promedio</CardTitle>
+              <div className="text-2xl sm:text-3xl font-bold mb-1 mt-2">{satisfactionData.average}</div>
+              <p className="text-emerald-100 text-xs">Puntuación de Satisfacción</p>
             </div>
             <div className="p-3 bg-white/15 rounded-2xl backdrop-blur-sm">
               <TrendingUp className="h-7 w-7" />
@@ -616,21 +640,22 @@ export const SurveyCharts = () => {
               {/* Central NPS Score */}
               <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                 <div className="text-center">
-                  <div className="text-4xl font-bold text-gray-800">{npsData.nps}</div>
-                  <div className="text-sm text-gray-600 font-medium">NPS Score</div>
+                  <div className="text-4xl font-bold text-gray-800">{satisfactionData.average}</div>
+                  <div className="text-sm text-gray-600 font-medium">Satisfacción</div>
                 </div>
               </div>
             </div>
             
-            {/* Enhanced NPS Summary */}
-            <div className="mt-6 grid grid-cols-3 gap-4">
+            {/* Enhanced Satisfaction Summary */}
+            <div className="mt-6 grid grid-cols-4 gap-3">
               {[
-                { label: "Promotores", value: npsData.promoters, color: "#10b981", desc: "9-10 puntos" },
-                { label: "Pasivos", value: npsData.passives, color: "#f59e0b", desc: "7-8 puntos" },
-                { label: "Detractores", value: npsData.detractors, color: "#ef4444", desc: "0-6 puntos" }
+                { label: "Excelente", value: satisfactionData.excelentes, color: "#22c55e", desc: "8.5+ puntos" },
+                { label: "Bueno", value: satisfactionData.buenos, color: "#3b82f6", desc: "6.5-8.4 puntos" },
+                { label: "Regular", value: satisfactionData.regulares, color: "#f59e0b", desc: "5.5-6.4 puntos" },
+                { label: "Malo", value: satisfactionData.malos, color: "#ef4444", desc: "<5.5 puntos" }
               ].map((item, index) => (
-                <div key={item.label} className="text-center p-4 bg-white/70 rounded-xl shadow-md border border-gray-100/50">
-                  <div className="w-4 h-4 rounded-full mx-auto mb-2" style={{ backgroundColor: item.color }}></div>
+                <div key={item.label} className="text-center p-3 bg-white/70 rounded-xl shadow-md border border-gray-100/50">
+                  <div className="w-3 h-3 rounded-full mx-auto mb-2" style={{ backgroundColor: item.color }}></div>
                   <div className="text-lg font-bold" style={{ color: item.color }}>{item.value}</div>
                   <div className="text-xs text-gray-600 font-medium">{item.label}</div>
                   <div className="text-xs text-gray-500">{item.desc}</div>
@@ -718,7 +743,7 @@ export const SurveyCharts = () => {
       )}
 
       {/* Enhanced Time Series Chart */}
-      {npsTimeData.length > 1 && (
+      {satisfactionTimeData.length > 1 && (
         <Card className="border-0 shadow-xl bg-white/95 backdrop-blur-sm overflow-hidden">
           <div className="bg-gradient-to-r from-violet-500/80 via-purple-500/80 to-indigo-500/80 p-1">
             <CardHeader className="bg-white m-1 rounded-lg">
@@ -727,7 +752,7 @@ export const SurveyCharts = () => {
                   <TrendingUp className="w-6 h-6 text-white" />
                 </div>
                 <div>
-                  <span className="text-2xl font-bold">Tendencia NPS Mensual</span>
+                  <span className="text-2xl font-bold">Tendencia Satisfacción Mensual</span>
                   <p className="text-sm font-normal text-gray-600 mt-1">Evolución de la puntuación NPS a lo largo del tiempo</p>
                 </div>
               </CardTitle>
@@ -736,13 +761,13 @@ export const SurveyCharts = () => {
           <CardContent className="p-8 bg-gradient-to-b from-white to-violet-50/30">
             <ChartContainer
               config={{
-                nps: { label: "NPS", color: "hsl(var(--primary))" },
+                satisfaccion: { label: "Satisfacción", color: "hsl(var(--primary))" },
                 respuestas: { label: "Respuestas", color: "hsl(var(--chart-2))" }
               }}
               className="h-80 w-full"
             >
               <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={npsTimeData} margin={{ top: 30, right: 30, left: 30, bottom: 20 }}>
+                <LineChart data={satisfactionTimeData} margin={{ top: 30, right: 30, left: 30, bottom: 20 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" opacity={0.2} />
                   <XAxis 
                     dataKey="mes" 
@@ -754,13 +779,13 @@ export const SurveyCharts = () => {
                     tick={{ fontSize: 12, fill: "hsl(var(--foreground))", fontWeight: 500 }}
                     axisLine={{ stroke: "hsl(var(--border))" }}
                     tickLine={{ stroke: "hsl(var(--border))" }}
-                    label={{ value: "Puntuación NPS", angle: -90, position: "insideLeft", style: { textAnchor: "middle", fontWeight: 600 } }}
+                    label={{ value: "Satisfacción Promedio", angle: -90, position: "insideLeft", style: { textAnchor: "middle", fontWeight: 600 } }}
                   />
                   <ChartTooltip content={<ChartTooltipContent />} />
                   <Legend />
                   <Line 
                     type="monotone" 
-                    dataKey="nps" 
+                    dataKey="satisfaccion" 
                     stroke="hsl(var(--primary))" 
                     strokeWidth={3}
                     dot={{ fill: "hsl(var(--primary))", strokeWidth: 2, r: 6 }}

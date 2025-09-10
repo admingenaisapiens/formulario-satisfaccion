@@ -107,15 +107,23 @@ export const SurveyTable = () => {
       );
     }
 
-    // Filter by NPS score
+    // Filter by satisfaction level
     if (npsFilter !== 'all') {
-      if (npsFilter === 'promoters') {
-        filtered = filtered.filter(survey => survey.nps_score >= 9);
-      } else if (npsFilter === 'passives') {
-        filtered = filtered.filter(survey => survey.nps_score >= 7 && survey.nps_score <= 8);
-      } else if (npsFilter === 'detractors') {
-        filtered = filtered.filter(survey => survey.nps_score <= 6);
-      }
+      filtered = filtered.filter(survey => {
+        const avgSatisfaction = calculateAverageSatisfaction(survey);
+        if (npsFilter === 'excelentes') {
+          return avgSatisfaction >= 8.5;
+        } else if (npsFilter === 'muy-buenos') {
+          return avgSatisfaction >= 7.5 && avgSatisfaction < 8.5;
+        } else if (npsFilter === 'buenos') {
+          return avgSatisfaction >= 6.5 && avgSatisfaction < 7.5;
+        } else if (npsFilter === 'regulares') {
+          return avgSatisfaction >= 5.5 && avgSatisfaction < 6.5;
+        } else if (npsFilter === 'malos') {
+          return avgSatisfaction < 5.5;
+        }
+        return true;
+      });
     }
 
     // Filter by date range
@@ -356,13 +364,15 @@ export const SurveyTable = () => {
 
             <Select value={npsFilter} onValueChange={setNpsFilter}>
               <SelectTrigger>
-                <SelectValue placeholder="Filtrar por NPS" />
+                <SelectValue placeholder="Filtrar por satisfacción" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">Todos</SelectItem>
-                <SelectItem value="promoters">Promotores (9-10)</SelectItem>
-                <SelectItem value="passives">Pasivos (7-8)</SelectItem>
-                <SelectItem value="detractors">Detractores (0-6)</SelectItem>
+                <SelectItem value="excelentes">Excelentes (8.5-10)</SelectItem>
+                <SelectItem value="muy-buenos">Muy Buenos (7.5-8.4)</SelectItem>
+                <SelectItem value="buenos">Buenos (6.5-7.4)</SelectItem>
+                <SelectItem value="regulares">Regulares (5.5-6.4)</SelectItem>
+                <SelectItem value="malos">Malos (0-5.4)</SelectItem>
               </SelectContent>
             </Select>
 
