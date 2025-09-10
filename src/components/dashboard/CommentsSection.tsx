@@ -394,7 +394,7 @@ export const CommentsSection = () => {
                   <div className="flex flex-col items-end gap-2">
                     {getSatisfactionBadge(calculateAverageSatisfaction(survey))}
                     <span className="text-sm text-gray-500 font-medium">
-                      NPS: {survey.nps_score}/10
+                      Satisfacción: {calculateAverageSatisfaction(survey).toFixed(1)}/10
                     </span>
                   </div>
                 </div>

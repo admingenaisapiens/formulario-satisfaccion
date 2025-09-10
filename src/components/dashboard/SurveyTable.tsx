@@ -474,7 +474,7 @@ export const SurveyTable = () => {
                 <TableCell>{getRatingLabel(survey.consultation_time || 0, 'consultation_time')}</TableCell>
                 <TableCell>
                   <div className="flex items-center gap-2">
-                    <span className="font-medium">{survey.nps_score}/10</span>
+                    <span className="font-medium">{calculateAverageSatisfaction(survey).toFixed(1)}/10</span>
                     {getSatisfactionBadge(calculateAverageSatisfaction(survey))}
                   </div>
                 </TableCell>
