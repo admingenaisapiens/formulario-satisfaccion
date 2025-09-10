@@ -103,15 +103,23 @@ export const CommentsSection = () => {
       );
     }
 
-    // Filter by NPS score
+    // Filter by satisfaction level
     if (npsFilter !== 'all') {
-      if (npsFilter === 'promoters') {
-        filtered = filtered.filter(survey => survey.nps_score >= 9);
-      } else if (npsFilter === 'passives') {
-        filtered = filtered.filter(survey => survey.nps_score >= 7 && survey.nps_score <= 8);
-      } else if (npsFilter === 'detractors') {
-        filtered = filtered.filter(survey => survey.nps_score <= 6);
-      }
+      filtered = filtered.filter(survey => {
+        const avgSatisfaction = calculateAverageSatisfaction(survey);
+        if (npsFilter === 'excelentes') {
+          return avgSatisfaction >= 8.5;
+        } else if (npsFilter === 'muy-buenos') {
+          return avgSatisfaction >= 7.5 && avgSatisfaction < 8.5;
+        } else if (npsFilter === 'buenos') {
+          return avgSatisfaction >= 6.5 && avgSatisfaction < 7.5;
+        } else if (npsFilter === 'regulares') {
+          return avgSatisfaction >= 5.5 && avgSatisfaction < 6.5;
+        } else if (npsFilter === 'malos') {
+          return avgSatisfaction < 5.5;
+        }
+        return true;
+      });
     }
 
     // Sort surveys
@@ -153,13 +161,17 @@ export const CommentsSection = () => {
     return normalizedRatings.reduce((sum, rating) => sum + rating, 0) / normalizedRatings.length;
   };
 
-  const getNPSBadge = (score: number) => {
-    if (score >= 9) {
-      return <Badge className="bg-accent/20 text-accent border-accent">Promotor</Badge>;
-    } else if (score >= 7) {
-      return <Badge variant="secondary">Pasivo</Badge>;
+  const getSatisfactionBadge = (avgSatisfaction: number) => {
+    if (avgSatisfaction >= 8.5) {
+      return <Badge className="bg-green-100 text-green-800 hover:bg-green-200">Excelente</Badge>;
+    } else if (avgSatisfaction >= 7.5) {
+      return <Badge className="bg-blue-100 text-blue-800 hover:bg-blue-200">Muy Bueno</Badge>;
+    } else if (avgSatisfaction >= 6.5) {
+      return <Badge className="bg-yellow-100 text-yellow-800 hover:bg-yellow-200">Bueno</Badge>;
+    } else if (avgSatisfaction >= 5.5) {
+      return <Badge className="bg-orange-100 text-orange-800 hover:bg-orange-200">Regular</Badge>;
     } else {
-      return <Badge variant="destructive">Detractor</Badge>;
+      return <Badge variant="destructive">Malo</Badge>;
     }
   };
 
@@ -205,8 +217,8 @@ export const CommentsSection = () => {
   const paginatedSurveys = filteredSurveys.slice(startIndex, startIndex + itemsPerPage);
 
   // Summary stats
-  const promoters = surveys.filter(s => s.nps_score >= 9).length;
-  const detractors = surveys.filter(s => s.nps_score <= 6).length;
+  const excelentes = surveys.filter(s => calculateAverageSatisfaction(s) >= 8.5).length;
+  const malos = surveys.filter(s => calculateAverageSatisfaction(s) < 5.5).length;
 
   if (isLoading) {
     return (
@@ -264,16 +276,16 @@ export const CommentsSection = () => {
           <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -skew-x-12 translate-x-full group-hover:translate-x-[-200%] transition-transform duration-1000"></div>
           <CardHeader className="relative pb-2">
             <div className="flex items-center justify-between">
-              <CardTitle className="text-sm font-medium text-emerald-100">Promotores</CardTitle>
+              <CardTitle className="text-sm font-medium text-emerald-100">Satisfacción Excelente</CardTitle>
               <div className="p-2 bg-white/20 rounded-xl backdrop-blur-sm">
                 <TrendingUp className="h-5 w-5" />
               </div>
             </div>
           </CardHeader>
           <CardContent className="relative">
-            <div className="text-3xl font-bold mb-1">{promoters}</div>
+            <div className="text-3xl font-bold mb-1">{excelentes}</div>
             <p className="text-emerald-100 text-sm">
-              Comentarios con NPS 9-10
+              Satisfacción Excelente (8.5+)
             </p>
           </CardContent>
         </Card>
@@ -282,16 +294,16 @@ export const CommentsSection = () => {
           <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -skew-x-12 translate-x-full group-hover:translate-x-[-200%] transition-transform duration-1000"></div>
           <CardHeader className="relative pb-2">
             <div className="flex items-center justify-between">
-              <CardTitle className="text-sm font-medium text-orange-100">Detractores</CardTitle>
+              <CardTitle className="text-sm font-medium text-orange-100">Satisfacción Baja</CardTitle>
               <div className="p-2 bg-white/20 rounded-xl backdrop-blur-sm">
                 <TrendingDown className="h-5 w-5" />
               </div>
             </div>
           </CardHeader>
           <CardContent className="relative">
-            <div className="text-3xl font-bold mb-1">{detractors}</div>
+            <div className="text-3xl font-bold mb-1">{malos}</div>
             <p className="text-orange-100 text-sm">
-              Comentarios con NPS 0-6
+              Satisfacción Mala (&lt;5.5)
             </p>
           </CardContent>
         </Card>
@@ -330,9 +342,11 @@ export const CommentsSection = () => {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">Todos</SelectItem>
-                <SelectItem value="promoters">Promotores (9-10)</SelectItem>
-                <SelectItem value="passives">Pasivos (7-8)</SelectItem>
-                <SelectItem value="detractors">Detractores (0-6)</SelectItem>
+                <SelectItem value="excelentes">Excelentes (8.5-10)</SelectItem>
+                <SelectItem value="muy-buenos">Muy Buenos (7.5-8.4)</SelectItem>
+                <SelectItem value="buenos">Buenos (6.5-7.4)</SelectItem>
+                <SelectItem value="regulares">Regulares (5.5-6.4)</SelectItem>
+                <SelectItem value="malos">Malos (0-5.4)</SelectItem>
               </SelectContent>
             </Select>
 
@@ -378,7 +392,7 @@ export const CommentsSection = () => {
                     </CardDescription>
                   </div>
                   <div className="flex flex-col items-end gap-2">
-                    {getNPSBadge(survey.nps_score)}
+                    {getSatisfactionBadge(calculateAverageSatisfaction(survey))}
                     <span className="text-sm text-gray-500 font-medium">
                       NPS: {survey.nps_score}/10
                     </span>

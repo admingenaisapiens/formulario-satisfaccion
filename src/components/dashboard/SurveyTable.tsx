@@ -213,13 +213,34 @@ export const SurveyTable = () => {
     }
   };
 
-  const getNPSBadge = (score: number) => {
-    if (score >= 9) {
-      return <Badge className="bg-accent/20 text-accent border-accent">Promotor</Badge>;
-    } else if (score >= 7) {
-      return <Badge variant="secondary">Pasivo</Badge>;
+  const normalizeRating = (rating: number) => ((Math.max(1, Math.min(3, rating)) - 1) / 2 * 9 + 1);
+
+  const calculateAverageSatisfaction = (survey: SurveyResponse): number => {
+    const ratings = [
+      survey.website_design_rating,
+      survey.communication_clarity,
+      survey.reception_friendliness,
+      survey.clinic_environment,
+      survey.doctor_listening,
+      survey.explanation_clarity,
+      survey.consultation_time
+    ].filter(rating => rating !== null && rating !== undefined);
+    
+    const normalizedRatings = ratings.map(rating => normalizeRating(rating));
+    return normalizedRatings.reduce((sum, rating) => sum + rating, 0) / normalizedRatings.length;
+  };
+
+  const getSatisfactionBadge = (avgSatisfaction: number) => {
+    if (avgSatisfaction >= 8.5) {
+      return <Badge className="bg-green-100 text-green-800 hover:bg-green-200">Excelente</Badge>;
+    } else if (avgSatisfaction >= 7.5) {
+      return <Badge className="bg-blue-100 text-blue-800 hover:bg-blue-200">Muy Bueno</Badge>;
+    } else if (avgSatisfaction >= 6.5) {
+      return <Badge className="bg-yellow-100 text-yellow-800 hover:bg-yellow-200">Bueno</Badge>;
+    } else if (avgSatisfaction >= 5.5) {
+      return <Badge className="bg-orange-100 text-orange-800 hover:bg-orange-200">Regular</Badge>;
     } else {
-      return <Badge variant="destructive">Detractor</Badge>;
+      return <Badge variant="destructive">Malo</Badge>;
     }
   };
 
@@ -444,7 +465,7 @@ export const SurveyTable = () => {
                 <TableCell>
                   <div className="flex items-center gap-2">
                     <span className="font-medium">{survey.nps_score}/10</span>
-                    {getNPSBadge(survey.nps_score)}
+                    {getSatisfactionBadge(calculateAverageSatisfaction(survey))}
                   </div>
                 </TableCell>
                 <TableCell>{getSourceLabel(survey.how_did_you_know_us || '')}</TableCell>
