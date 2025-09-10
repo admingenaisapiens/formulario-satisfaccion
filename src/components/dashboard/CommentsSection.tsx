@@ -136,6 +136,8 @@ export const CommentsSection = () => {
     setCurrentPage(1);
   };
 
+  const normalizeRating = (rating: number) => ((Math.max(1, Math.min(3, rating)) - 1) / 2 * 9 + 1);
+
   const calculateAverageSatisfaction = (survey: SurveyResponse): number => {
     const ratings = [
       survey.website_design_rating,
@@ -147,7 +149,8 @@ export const CommentsSection = () => {
       survey.consultation_time
     ].filter(rating => rating !== null && rating !== undefined);
     
-    return ratings.reduce((sum, rating) => sum + rating, 0) / ratings.length;
+    const normalizedRatings = ratings.map(rating => normalizeRating(rating));
+    return normalizedRatings.reduce((sum, rating) => sum + rating, 0) / normalizedRatings.length;
   };
 
   const getNPSBadge = (score: number) => {
